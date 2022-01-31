@@ -12,9 +12,9 @@ class Main {
     }
 
 
-    public function contact()
+    public function front()
     {
-        $view = new View("contact");
+        $view = new View("front_website");
     }
 
 

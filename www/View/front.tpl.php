@@ -9,7 +9,6 @@
 <body>
 
     <?php include "View/".$this->view.".view.php"; ?>
-    zrgizjrgoizj
-    
+
 </body>
 </html>

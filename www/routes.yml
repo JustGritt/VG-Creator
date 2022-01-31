@@ -2,9 +2,9 @@
   controller: main
   action: home
 
-/contact:
+/front_website:
   controller: main
-  action: contact
+  action: front
 
 /login:
   controller: user
