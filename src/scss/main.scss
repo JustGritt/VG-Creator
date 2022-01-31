@@ -1,0 +1,59 @@
+/* IMPORTS
+ ========== */
+
+@use './nav.scss';
+@use './signup.scss';
+
+@use './mixins/global' as g;
+@use './mixins/fonts' as f;
+@use './mixins/colors' as c;
+
+/* CLASSES MAIN
+ ========== */
+
+body {
+    background: c.$bleu;
+    color: #fff;
+
+    main .wrapper {
+        width: 90vw;
+        margin: 0 auto;
+
+        h1.title{
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-family: f.$primary;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        input {
+            border-radius: 50px;
+            padding: 5px 25px;
+            outline: none;
+            border: 2px solid c.$gris;
+            font-size: clamp(1rem, 5vw, 1.5rem);
+            font-family: f.$secondary;
+            :focus {
+                outline: none;
+            }
+        }
+        .main-inputs {
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            label {
+                font-size: clamp(1rem, 5vw, 1.5rem);
+                font-family: f.$primary;
+            }
+
+            input {
+                margin: 50px 25px;
+            }
+
+        }
+
+    }
+
+}

@@ -1,0 +1,19 @@
+/* IMPORTS
+ ========== */
+
+@use './mixins/colors' as c;
+
+/* CLASSES MAIN
+ ========== */
+
+.button {
+    padding: 15px;
+    margin: 15px;
+    background: #f3f3f3 ;
+    text-decoration: none;
+    color: #333;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+}

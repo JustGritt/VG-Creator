@@ -1,0 +1,106 @@
+/* IMPORTS
+======================= */
+
+@use './colors' as c;
+@use './fonts' as f;
+
+/* CLASSES GLOBALES
+======================= */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+    
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+
+body {
+
+    width: 100vw;
+    background: c.$blanc;
+    font-family: f.$primary;
+    overflow-x: hidden;
+
+    .no-selection {
+        -ms-user-select:none;
+        -moz-user-select:none;
+        -webkit-user-select:none;
+        -webkit-touch-callout: none;
+        -khtml-user-select: none;
+        user-select:none;
+    }
+
+    .is-flex {
+        display: flex;  
+        justify-content: center;
+        align-items: center;
+    }
+
+    .center-transform {
+        position: absolute ;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .is-underline {
+        color: c.$noir;
+        line-height: 1.5;
+        display: inline-block;
+        background-image: url('/src/assets/underline-vert-transparent.gif');
+        background-position: 0 120%;
+        background-size: 100% .7em;
+        background-repeat: repeat-x;
+        
+        &:nth-child(2n) {
+            color: c.$rouge;
+            background-image: url('/src/assets/underline-rouge-transparent.gif') ; 
+        }   
+
+        &:nth-child(3n) {
+            color: c.$violet;
+            background-image: url('/src/assets/underline-violet.gif') ; 
+        } 
+    }
+
+    .is-hidden {
+        display: none;
+        opacity: 0;
+        z-index: -999;
+    }
+
+    .button {
+        padding: 15px;
+        margin: 15px;
+        background: #f3f3f3 ;
+        text-decoration: none;
+        color: #333;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+    }
+
+    a:hover .emoji {
+        display: inline-block;
+        width: auto;
+        animation: .5s 1 spin ;
+        
+        @keyframes spin {
+            from { transform: rotate(360deg); }    
+        }
+    }
+
+    .section {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background: c.$jaune;
+        overflow-x: hidden;
+    }
+
+}

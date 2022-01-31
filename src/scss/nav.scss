@@ -1,0 +1,98 @@
+/* IMPORTS
+ ========== */
+
+@use './mixins/colors' as c;
+@use './mixins/global' as g;
+@use './mixins/fonts' as f;
+
+/* CLASSES MAIN
+ ========== */
+
+header {
+    background: c.$noir;
+
+    ul {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-right: 25px;
+
+        li {
+            display: inline-block;
+            padding: 20px 0;
+            margin: 0 10px;
+
+            a {
+                color: c.$blanc;
+                padding: 10px 20px;
+                border-radius: 25px;
+                text-decoration: none;
+                -webkit-transition: .2s;
+                transition: .2s;
+
+                &:hover {
+                    background: c.$blanc;
+                    color: c.$noir;
+                }
+            }
+        }
+    }
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 64px;
+    height: 34px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: c.$gris;
+        -webkit-transition: .2s;
+        transition: .2s;
+
+        &::before {
+            content: "";
+            position: absolute;
+            height: 24px;
+            width: 24px;
+            left: 6px;
+            bottom: 6px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+        &.round {
+            border-radius: 34px;
+            &:before {
+                border-radius: 50%;
+            }
+        }
+    }
+
+    input {
+        &:checked + .slider {
+            background-color: #2196F3;
+        }
+        &:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        &:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+    }
+}
+
