@@ -212,5 +212,15 @@ class User extends Sql
         ];
     }
 
+    public function setRegisterForm()
+    {
+        $firstname = $this->setFirstname($_POST['firstname']);
+        $lastname = $this->setLastname($_POST['lastname']);
+        $email = $this->setEmail($_POST['email']);
+        $password = $this->setPassword($_POST['password']);
+        $status = 0;
+        $token = null;
+    }
+
 
 }

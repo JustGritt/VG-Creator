@@ -46,7 +46,7 @@ class Verificator
 
     public static function checkEmail($email): bool
     {
-       return filter_var($email, FILTER_VALIDATE_EMAIL);
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
 
@@ -59,8 +59,5 @@ class Verificator
             && preg_match("/[A-Z]/", $password, $match)
             ;
     }
-
-
-
 
 }
