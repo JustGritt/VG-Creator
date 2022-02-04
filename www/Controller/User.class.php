@@ -7,31 +7,24 @@ use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 
-class User {
-
-    public function login()
-    {
-        $view = new View("Login", "back");
-
-        $view->assign("pseudo", "Prof");
-        $view->assign("firstname", "Yves");
-        $view->assign("lastname", "Skrzypczyk");
-
-    }
-
+class User extends Sql{
 
     public function register()
     {
 
         $user = new UserModel();
+        $form = new CleanWords();
 
         if( !empty($_POST)){
 
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
-            print_r($_POST);
+
             $user->setRegisterForm();
             $user->save();
-            print_r($result);
+            
+
+            // print_r($user);
+            // print_r($result);
 
         }
 

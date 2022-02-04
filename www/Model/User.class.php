@@ -27,8 +27,6 @@ class User extends Sql
         return $this->id;
     }
 
-
-
     /**
      * @return null|string
      */
@@ -217,10 +215,22 @@ class User extends Sql
         $firstname = $this->setFirstname($_POST['firstname']);
         $lastname = $this->setLastname($_POST['lastname']);
         $email = $this->setEmail($_POST['email']);
+        
+        
         $password = $this->setPassword($_POST['password']);
+        $initialPassword = password_verify($_POST['password'], $this->getPassword());
+        $verifyPassword = password_verify($_POST['passwordConfirm'], $this->getPassword());
+        
+        // Check password 
+        if( $initialPassword === $verifyPassword) 
+        {
+            return 'Mot de passe correct';
+        } else {
+            return 'Mot de passe invalide';
+        }
+        
         $status = 0;
-        $token = null;
+        $token = $this->generateToken();
     }
-
 
 }

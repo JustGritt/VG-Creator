@@ -25,6 +25,17 @@ abstract class Sql
     }
 
     /**
+     * @param string $password
+     */
+    public function login(): void
+    {
+        $sql = "SELECT * FROM ".$this->table." WHERE id=".$id;
+        $query = $this->pdo->query($sql);
+        print( $query->fetchObject(get_called_class()));
+    }
+
+
+    /**
      * @param int $id
      */
     public function setId(?int $id): object
