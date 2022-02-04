@@ -218,7 +218,7 @@ class User extends Sql
         $lastname = $this->setLastname($_POST['lastname']);
         $email = $this->setEmail($_POST['email']);
         $password = $this->setPassword($_POST['password']);
-        $status = 0;
+        $status = 0; //0 => non validé & 1 => email vlaidé 
         $token = $this->generateToken();
     }
 
