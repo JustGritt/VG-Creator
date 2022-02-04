@@ -6,7 +6,7 @@ use App\Core\Sql;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
-use App\Controller\Mail;
+use App\Core\Mail;
 
 
 class User {
@@ -26,9 +26,7 @@ class User {
     {
 
         $user = new UserModel();
-        
         $mail = new Mail();
-        
 
         if( !empty($_POST)){
 

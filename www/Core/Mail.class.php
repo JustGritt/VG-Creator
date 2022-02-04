@@ -1,15 +1,21 @@
 <?php
 
-require 'includes/PHPMailer.php';
-require 'includes/SMTP.php';
-require 'includes/Exeception.php';
+namespace App\Core;
+/*
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Execption;
+use PHPMailer\PHPMailer\SMTP;
+*/
 
-use App\Controller\PHPMailer;
-use App\Controller\SMTP;
-use App\Controller\Exception;
+require '/var/www/html/libs/PHPMailer/src/PHPMailer.php';
+require '/var/www/html/libs/PHPMailer/src/SMTP.php';
+require '/var/www/html/libs/PHPMailer/src/Exception.php';
 
-class Mail(){
-    
+
+class Mail
+{
+    private $mail;
+
     public function __construct(){
         
         $mail = new PHPMailer();
@@ -24,19 +30,26 @@ class Mail(){
     }
     
     public function sendMail(){
-
+    
         $mail->Subject = "TEst de email with phpmailer";
-        $mail->setForm("vgcreator1@gmail.com");
+        $mail->setForm("vgcreator1@gmail.com", "Mailer");
         $mail->Body = "this is a plain test";
         $mail->addAddress("vgcreator1@gmail.com");
-        $mail->$this->isMailSend();
+        //$mail->$this->isMailSend();
+        if($mail->Send()) {
+            echo "mail send";
+        }
+        else {
+            "Error phpmailer";
+            die();
+        }
         $mail->stmpClose();
     }
 
     public function isMailSend(){
         if($mail->Send()) {
             echo "mail send";
-        };
+        }
         else {
             "Error phpmailer";
             die();
