@@ -4,18 +4,47 @@
 @use './colors' as c;
 @use './fonts' as f;
 
+/* VARIABLES GLOBALES
+======================= */
+
+$breakpoint-big : 960 !default;
+$breakpoint-medium : 767 !default;
+$breakpoint-small : 640 !default;
+
 /* CLASSES GLOBALES
 ======================= */
 
-* {
+html { 
+    box-sizing: border-box; 
     margin: 0;
     padding: 0;
 }
-    
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased
+}
+
 ::-webkit-scrollbar {
     width: 0;
     height: 0;
     background: transparent;
+}
+
+html, body, ul, ol, form, button { 
+    margin: 0; 
+    padding: 0; 
+}
+
+p, ul, ol, blockquote, pre, td, th, label, textarea {
+    font-size: 1em;
+    line-height: $line-height;
+    margin: $line-height * 1em 0;
+}
+
+article, aside, figure, footer, header, main, menu, nav, section { 
+    display: block; 
 }
 
 body {
@@ -24,6 +53,28 @@ body {
     background: c.$blanc;
     font-family: f.$primary;
     overflow-x: hidden;
+    line-height: $line-height;
+
+    @if $typo-unit == 'use_em' {
+        @if $root-equiv-10-px == true {
+            font-size: em($base-font, 10);
+        }
+        @else {
+            font-size: em($base-font, $root-default-font-size);
+        }
+    }
+    @else if $typo-unit == 'use_rem' {
+        font-size: rem($base-font);
+    }
+    @else if $typo-unit == 'use_rem_with_em_fallback' {
+    @if $root-equiv-10-px == true {
+        font-size: em($base-font, 10);
+    }
+    @else {
+        font-size: em($base-font, $root-default-font-size);
+    }
+    font-size: rem($base-font);
+    }
 
     .no-selection {
         -ms-user-select:none;
@@ -32,6 +83,10 @@ body {
         -webkit-touch-callout: none;
         -khtml-user-select: none;
         user-select:none;
+    }
+
+    .is-uppercase {
+        text-transform: uppercase;
     }
 
     .is-flex {
@@ -48,23 +103,8 @@ body {
     }
     
     .is-underline {
-        color: c.$noir;
+        border-bottom: 2px solid c.$noir;
         line-height: 1.5;
-        display: inline-block;
-        background-image: url('/src/assets/underline-vert-transparent.gif');
-        background-position: 0 120%;
-        background-size: 100% .7em;
-        background-repeat: repeat-x;
-        
-        &:nth-child(2n) {
-            color: c.$rouge;
-            background-image: url('/src/assets/underline-rouge-transparent.gif') ; 
-        }   
-
-        &:nth-child(3n) {
-            color: c.$violet;
-            background-image: url('/src/assets/underline-violet.gif') ; 
-        } 
     }
 
     .is-hidden {
@@ -85,21 +125,16 @@ body {
         width: 200px;
     }
 
-    a:hover .emoji {
-        display: inline-block;
-        width: auto;
-        animation: .5s 1 spin ;
-        
-        @keyframes spin {
-            from { transform: rotate(360deg); }    
-        }
+    a.link {
+        text-decoration: none;
+        color: c.$link;
     }
 
     .section {
         position: relative;
         width: 100vw;
         height: 100vh;
-        background: c.$jaune;
+        background: c.$blanc;
         overflow-x: hidden;
     }
 

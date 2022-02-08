@@ -1,8 +1,11 @@
-<!-- <link rel="stylesheet" href="/dist/css/register.css"> -->
+<link rel="stylesheet" href="/dist/css/register.css">
 
-<h1>S'inscrire</h1>
+<div class="wrapper">
 
-<?php $this->includePartial("form", $user->getRegisterForm()) ?>
+    <h1 class="title">S'inscrire</h1>
+    <p class="sub-title">Vous avez déjà un compte ? <a class="link" href="#">S'inscrire</a></p>
+    <?php $this->includePartial("form", $user->getRegisterForm()) ?>
+</div>
 
 
 

@@ -6,8 +6,18 @@
 /* CLASSES 
 ======================= */
 
+$base-font : 16 !default; 
+$line-height : 1.5 !default;
+
+@function em($px, $base: $base-font) {
+    @return ($px / $base) * 1em;
+}
+
 $primary: 'Lato', sans-serif;
 $secondary: 'Lato', sans-serif;
 
 $title : 'Lato', serif;
 $paragraph : 'Lato', serif;
+
+/* CLASSES 
+======================= */

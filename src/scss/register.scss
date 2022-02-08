@@ -9,6 +9,32 @@
 /* CLASSES MAIN
  ========== */
 
-input {
+.wrapper {
 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: c.$noir;
+    background: rgba(255, 255, 255, 0.71);
+    box-shadow: 0px 4px 4px rgba(159, 159, 159, 0.25);
+    backdrop-filter: blur(4px);
+    width: 50vw;
+    border-radius: 31px;
+
+    .title {
+        font-weight: bold;
+        font-size: clamp(35px, 5vw, 2rem);
+        line-height: 52px;
+        margin-top: 80px;
+    }
+
+    .sub-title {
+        margin-bottom: 80px;
+    }
 }
