@@ -27,7 +27,7 @@ class Mail
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "tls";
         $mail->Ports = 587;
-        $mail->Username = SMTP_USERNAME; 
+        $mail->Username = SMTP_USERNAME;  
         $mail->Password = SMTP_PWD; 
        /*
         * Usage of mail.trap.io to do some test
