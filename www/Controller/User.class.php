@@ -32,7 +32,7 @@ class User {
 
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
             $user->setRegisterForm();
-            $mail->sendMail();
+            $mail->sendMail('vgcreator1@gmail.com');
             $user->save();
             print_r($result);
 
@@ -57,8 +57,6 @@ class User {
 
 
 }
-
-
 
 
 
