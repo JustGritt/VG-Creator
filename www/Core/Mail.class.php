@@ -15,43 +15,43 @@ require '/var/www/html/libs/PHPMailer/src/Exception.php';
 
 class Mail
 {
-    private $mail;
+  private $mail;
 
-    public static function sendMail($to){
-        
-        $mail = new PHPMailer(true);
-        try{
-          $mail->isSMTP();
-          $mail->SMTPDebug = 4;        
-          $mail->Host = 'smtp.gmail.com';
-          $mail->SMTPAuth = true;
-          $mail->SMTPSecure = "tls";
-          $mail->Ports = 587;
-          $mail->Username = 'vgcreator1@gmail.com'; //SMTP_USERNAME;
-          $mail->Password = 'ESGI2021'; SMTP_PWD;
-         /*
-          * Usage of mail.trap.io to do some test
-          $mail->isSMTP();
-          $mail->Host = 'smtp.mailtrap.io';
-          $mail->SMTPAuth = true;
-          $mail->Port = 2525;
-          $mail->Username = 'e23cce7384579d';
-          $mail->Password = '376a0f4a43e568';
-          */
+  public static function sendMail($to){
+      
+      $mail = new PHPMailer(true);
+      try{
+        $mail->isSMTP();
+        $mail->SMTPDebug = 4;        
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = "tls";
+        $mail->Ports = 587;
+        $mail->Username = SMTP_USERNAME; //'vgcreator1@gmail.com'; 
+        $mail->Password = SMTP_PWD; //'ESGI2021'; 
+       /*
+        * Usage of mail.trap.io to do some test
+        $mail->isSMTP();
+        $mail->Host = 'smtp.mailtrap.io';
+        $mail->SMTPAuth = true;
+        $mail->Port = 2525;
+        $mail->Username = 'e23cce7384579d';
+        $mail->Password = '376a0f4a43e568';
+        */
 
-          $mail->Subject = "TEst de email with phpmailer";
-          $mail->setFrom('vgcreator1@gmail.com');
-          $mail->Body = "this is a plain test";
-          $mail->addAddress($to);
-          $mail->Send();
-          $mail->smtpClose();
-          echo "Message have been send";
+        $mail->Subject = "TEst de email with phpmailer";
+        $mail->setFrom('vgcreator1@gmail.com');
+        $mail->Body = "this is a plain test";
+        $mail->addAddress($to);
+        $mail->Send();
+        $mail->smtpClose();
+        echo "Message have been send";
 
       }catch(Exception $e) {
-          echo "Message could not be sent.";
+        echo "Message could not be sent.";
       }
-  
-     
+
+   
   }
 
     /*
