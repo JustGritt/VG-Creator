@@ -27,11 +27,6 @@ class User extends Sql
         return $this->id;
     }
 
-
-
-    /**
-     * @return null|string
-     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -66,7 +61,7 @@ class User extends Sql
      */
     public function getEmail(): string
     {
-        return $this->email;
+        return  $this->email;
     }
 
     /**
@@ -104,7 +99,7 @@ class User extends Sql
     /**
      * @param int $status
      */
-    public function setStatus(int $status): void
+    public function setStatus(int $statug): void
     {
         $this->status = $status;
     }
@@ -218,7 +213,7 @@ class User extends Sql
         $lastname = $this->setLastname($_POST['lastname']);
         $email = $this->setEmail($_POST['email']);
         $password = $this->setPassword($_POST['password']);
-        $status = 0;
+        $status = 0; //0 => non validé & 1 => email vlaidé 
         $token = $this->generateToken();
     }
 

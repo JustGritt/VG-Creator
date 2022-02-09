@@ -9,14 +9,13 @@ function myAutoloader($class)
     // $class => CleanWords
     $class = str_replace("App\\","",$class);
     $class = str_replace("\\", "/",$class);
+    $class = str_replace("libs\\", "/",$class);
     if(file_exists($class.".class.php")){
         include $class.".class.php";
     }
 }
 
 spl_autoload_register("App\myAutoloader");
-
-
 
 //Réussir à récupérer l'URI
 $uri = $_SERVER["REQUEST_URI"];
