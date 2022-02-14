@@ -6,10 +6,9 @@ require "conf.inc.php";
 
 function myAutoloader($class)
 {
-    // $class => CleanWords
+  // $class => CleanWords
     $class = str_replace("App\\","",$class);
     $class = str_replace("\\", "/",$class);
-    $class = str_replace("libs\\", "/",$class);
     if(file_exists($class.".class.php")){
         include $class.".class.php";
     }
@@ -26,14 +25,23 @@ if(!file_exists($routeFile)){
 }
 
 $routes = yaml_parse_file($routeFile);
+$global_uri = strtok($uri, '?');
 
+if (empty($routes[$global_uri]) ||  empty($routes[$global_uri]["controller"])  ||  empty($routes[$global_uri]["action"])) {
+    die("Erreur 404");
+}
+
+$controller = ucfirst(strtolower($routes[$global_uri]["controller"]));
+$action = strtolower($routes[$global_uri]["action"]);
+
+/*
 if( empty($routes[$uri]) ||  empty($routes[$uri]["controller"])  ||  empty($routes[$uri]["action"])){
     die("Erreur 404");
 }
 
 $controller = ucfirst(strtolower($routes[$uri]["controller"]));
 $action = strtolower($routes[$uri]["action"]);
-
+*/
 
 /*
  *

@@ -209,6 +209,7 @@ class User extends Sql
 
     public function setRegisterForm(): void 
     {
+        $id = $this->getId();
         $firstname = $this->setFirstname($_POST['firstname']);
         $lastname = $this->setLastname($_POST['lastname']);
         $email = $this->setEmail($_POST['email']);

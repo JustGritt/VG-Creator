@@ -2,22 +2,21 @@
 
 namespace App\Core;
 
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Execption;
 use PHPMailer\PHPMailer\SMTP;
 
 
-require '/var/www/html/libs/PHPMailer/src/PHPMailer.php';
-require '/var/www/html/libs/PHPMailer/src/SMTP.php';
-require '/var/www/html/libs/PHPMailer/src/Exception.php';
+require 'libs/PHPMailer/src/PHPMailer.php';
+require 'libs/PHPMailer/src/SMTP.php';
+require 'libs/PHPMailer/src/Exception.php';
 
 
 class Mail
 {
   private $mail;
 
-  public static function sendMail($to){
+  public static function sendMail($to, $body, $subject){
 
     $mail = new PHPMailer(true);
     try{
@@ -40,9 +39,9 @@ class Mail
       $mail->Password = '376a0f4a43e568';
        */
 
-      $mail->Subject = "TEst de email with phpmailer";
+      $mail->Subject = $subject;
       $mail->setFrom('vgcreator1@gmail.com');
-      $mail->Body = "this is a plain test";
+      $mail->Body = $body; //"http://localhost/register/confirmationmail.php?id=".$_SESSION['id']."&cles=".$cles;
       $mail->addAddress($to);
       $mail->Send();
       $mail->smtpClose();

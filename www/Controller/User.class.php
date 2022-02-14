@@ -24,16 +24,21 @@ class User {
 
     public function register()
     {
-
+        session_start();
         $user = new UserModel();
         $mail = new Mail();
 
         if( !empty($_POST)){
-
+            
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
             $user->setRegisterForm();
-            $mail->sendMail('vgcreator1@gmail.com');
             $user->save();
+            $id = $user->getIdFromEmail($user->getEmail());
+            $_SESSION['id'] = $id;
+            $body = 'http://localhost/Confirmation.class.php?id='.$id.'&token='.$user->getToken();
+            $subject = "Veuillez confirmee votre email";
+            $mail->sendMail('vgcreator1@gmail.com' , $body, $subject);
+
             print_r($result);
 
         }
@@ -41,7 +46,6 @@ class User {
         $view = new View("register");
         $view->assign("user", $user);
     }
-
 
     public function logout()
     {

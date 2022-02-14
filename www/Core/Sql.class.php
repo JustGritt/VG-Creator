@@ -24,6 +24,35 @@ abstract class Sql
 
     }
 
+    public function updateStatus($getId){
+      $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = ? WHERE id = ?");
+      $updateStatus->execute(array(1, $getId));
+    }
+    
+    public function getUserById($getId , $getToken){
+
+      $user = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE id = ? AND token = ?");
+      $user->execute($getidm, $gettoken);
+      if($user->rowCount > 0) {
+        $userInfo = $user->fetch();
+        if($userInfo['status'] == 1){
+          $this->updateStatus($getId);
+        }else{
+          echo 'sql pbm';
+          $_SESSION['token'] = $gettoken;
+          header('Location: index.php');
+        }
+      }
+
+    }
+    public function getIdFromEmail($email){
+      //$idd = "SELECT id FROM esgi_user where email = charles@hotmail.fr";
+      $id = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+      $id->execute(array($email));
+      $result = $id->fetch();
+      return $result['id'];
+    }
+
     /**
      * @param int $id
      */
@@ -58,5 +87,15 @@ abstract class Sql
 
     }
 
+  public function isValidConfirmationEmail(){
+    if(isset($_GET['id']) && !empty($_GET['id']) && isset($_GET['token']) && !empty($_GET['id'])){
+      
+    }else{
+      echo 'aucnun utilisateur trouvé' ;
+    
+    }
+
+  
+  }
 
 }
