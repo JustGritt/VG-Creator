@@ -26,6 +26,8 @@
   controller: confirmation
   action: confirmation  
 
+
+
 /dashboard:
   controller: admin
   action: dashboard
