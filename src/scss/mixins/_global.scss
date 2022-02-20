@@ -4,6 +4,7 @@
 @use './colors' as c;
 @use './fonts' as f;
 
+
 /* VARIABLES GLOBALES
 ======================= */
 
@@ -11,7 +12,7 @@ $breakpoint-big : 960 !default;
 $breakpoint-medium : 767 !default;
 $breakpoint-small : 640 !default;
 
-/* CLASSES GLOBALES
+/* RESET
 ======================= */
 
 html { 
@@ -37,15 +38,40 @@ html, body, ul, ol, form, button {
     padding: 0; 
 }
 
-p, ul, ol, blockquote, pre, td, th, label, textarea {
+p, ul, ol, blockquote, pre, 
+td, th, label, textarea {
+    margin: f.$line-height * 1em 0;
+    line-height: f.$line-height;
     font-size: 1em;
-    line-height: $line-height;
-    margin: $line-height * 1em 0;
 }
 
-article, aside, figure, footer, header, main, menu, nav, section { 
+article, aside, figure, footer, 
+header, main, menu, nav, section { 
     display: block; 
 }
+
+sup, sub {
+    position: relative;
+    vertical-align: 0;
+}
+
+li p, li ul {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+table, td, th, pre, div, p {
+    word-wrap: break-word;
+}
+
+img, iframe { 
+    vertical-align: middle; 
+    margin: 0;
+}
+
+
+/* BODY 
+======================= */
 
 body {
 
@@ -53,28 +79,7 @@ body {
     background: c.$blanc;
     font-family: f.$primary;
     overflow-x: hidden;
-    line-height: $line-height;
-
-    @if $typo-unit == 'use_em' {
-        @if $root-equiv-10-px == true {
-            font-size: em($base-font, 10);
-        }
-        @else {
-            font-size: em($base-font, $root-default-font-size);
-        }
-    }
-    @else if $typo-unit == 'use_rem' {
-        font-size: rem($base-font);
-    }
-    @else if $typo-unit == 'use_rem_with_em_fallback' {
-    @if $root-equiv-10-px == true {
-        font-size: em($base-font, 10);
-    }
-    @else {
-        font-size: em($base-font, $root-default-font-size);
-    }
-    font-size: rem($base-font);
-    }
+    line-height: f.$line-height;
 
     .no-selection {
         -ms-user-select:none;
@@ -85,14 +90,25 @@ body {
         user-select:none;
     }
 
-    .is-uppercase {
+    .uppercase {
         text-transform: uppercase;
     }
 
-    .is-flex {
+    .flex {
         display: flex;  
         justify-content: center;
         align-items: center;
+    }
+
+    .underline {
+        border-bottom: 2px solid c.$noir;
+        line-height: 1.5;
+    }
+
+    .hidden {
+        display: none;
+        opacity: 0;
+        z-index: -999;
     }
 
     .center-transform {
@@ -100,29 +116,6 @@ body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-    }
-    
-    .is-underline {
-        border-bottom: 2px solid c.$noir;
-        line-height: 1.5;
-    }
-
-    .is-hidden {
-        display: none;
-        opacity: 0;
-        z-index: -999;
-    }
-
-    .button {
-        padding: 15px;
-        margin: 15px;
-        background: #f3f3f3 ;
-        text-decoration: none;
-        color: #333;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 200px;
     }
 
     a.link {

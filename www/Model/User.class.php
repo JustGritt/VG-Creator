@@ -130,12 +130,31 @@ class User extends Sql
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"S'inscrire"
+                "submit"=>"S'inscrire",
+                "id"=>"formulaire"
             ],
             'inputs'=>[
+                "firstname"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Prénom",
+                    "class"=>"inputForm tmp",
+                    "id"=>"firstnameForm",
+                    "min"=>2,
+                    "max"=>50,
+                    "error"=>"Prénom incorrect"
+                ],
+                "lastname"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Nom",
+                    "class"=>"inputForm tmp",
+                    "id"=>"lastnameForm",
+                    "min"=>2,
+                    "max"=>100,
+                    "error"=>"Nom incorrect"
+                ],
                 "email"=>[
                     "type"=>"email",
-                    "placeholder"=>"Votre email ...",
+                    "placeholder"=>"Email",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"emailForm",
@@ -145,7 +164,7 @@ class User extends Sql
                 ],
                 "password"=>[
                     "type"=>"password",
-                    "placeholder"=>"Votre mot de passe ...",
+                    "placeholder"=>"Mot de passe",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
@@ -153,30 +172,12 @@ class User extends Sql
                     ],
                 "passwordConfirm"=>[
                     "type"=>"password",
-                    "placeholder"=>"Confirmation ...",
+                    "placeholder"=>"Confirmation du mot de passe",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"pwdConfirmForm",
                     "confirm"=>"password",
                     "error"=>"Votre mot de passe de confirmation ne correspond pas",
-                ],
-                "firstname"=>[
-                    "type"=>"text",
-                    "placeholder"=>"Votre prénom ...",
-                    "class"=>"inputForm",
-                    "id"=>"firstnameForm",
-                    "min"=>2,
-                    "max"=>50,
-                    "error"=>"Prénom incorrect"
-                ],
-                "lastname"=>[
-                    "type"=>"text",
-                    "placeholder"=>"Votre nom ...",
-                    "class"=>"inputForm",
-                    "id"=>"lastnameForm",
-                    "min"=>2,
-                    "max"=>100,
-                    "error"=>"Nom incorrect"
                 ],
             ]
         ];
