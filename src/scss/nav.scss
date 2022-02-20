@@ -1,0 +1,80 @@
+/* IMPORTS
+ ========== */
+
+@use './partials/buttons';
+
+@use './mixins/global' as g;
+@use './mixins/fonts' as f;
+@use './mixins/colors' as c;
+
+/* CLASSES MAIN
+   ========== */
+
+header {
+    background: c.$noir;
+
+    ul {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        a {
+            text-decoration: none;
+            color: c.$blanc;
+            padding: 6px 12px;
+        }
+
+        .navigation-left-items {
+            justify-content: flex-start;
+            margin-left: 0;
+            margin-right: auto;
+
+        }
+
+        .navigation-center-items {
+            justify-content: center;
+        }
+
+        .navigation-right-items {
+            justify-content: flex-end;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        li {
+            display: inline-block;
+            padding: 20px 0;
+            margin: 0 10px;
+        }
+    }
+
+    /* MEDIA QUERIES
+      ========== */
+    @media screen and (max-width: 768px) {
+        ul {
+            display: flex;
+
+            div.navigation-left-items {
+                justify-content: flex-start;
+                align-items: flex-start;
+                margin-left: 0;
+                margin-right: auto;
+            }
+
+            div.navigation-center-items {
+                display: none;
+            }
+
+            div.navigation-right-items {
+                justify-content: flex-end;
+                align-items: center;
+                display: flex;
+
+                &>li:nth-child(2) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,148 @@
+/* IMPORTS
+========== */
+
+@use '../mixins/colors' as c;
+
+/* CLASSES MAIN
+========== */
+
+
+
+/* DEFAULT BUTTON
+ ========== */
+
+.button {
+    color: c.$blanc;
+    padding: 6px 16px;
+    border-radius: 25px;
+    width: auto;
+    text-decoration: none;
+    -webkit-transition: .2s;
+    transition: .2s;
+    border: none;
+    
+    &:hover {
+        background: c.$blanc;
+        color: c.$noir;
+    }
+
+    &--primary {
+        border: 1px solid c.$blanc;
+        color: c.$blanc;
+        background: c.$noir;
+    }
+    &--secondary {
+        border: 1px solid c.$blanc;
+        color: c.$blanc;
+        background: c.$noir;
+    }
+    &--accent {
+        border: 1px solid c.$blanc;
+        color: c.$blanc;
+        background: c.$noir;
+    }
+    &--squared {
+        border: 1px solid c.$blanc;
+        color: c.$blanc;
+        background: c.$noir;
+    }
+    &--arrow {
+        border: 1px solid c.$blanc;
+        color: c.$blanc;
+        background: c.$noir;
+    }
+}
+
+/* RADIO BUTTON
+ ========== */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 64px;
+    height: 34px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: c.$gris;
+        -webkit-transition: .2s;
+        transition: .2s;
+
+        &::before {
+            content: "";
+            position: absolute;
+            height: 24px;
+            width: 24px;
+            left: 6px;
+            bottom: 6px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        &.round {
+            border-radius: 34px;
+
+            &:before {
+                border-radius: 50%;
+            }
+        }
+    }
+
+    input {
+        &:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        &:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        &:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+    }
+}
+
+input[type="submit"] {
+    background: transparent;
+    border-radius: 60px;
+    border: 1px solid #0C0E1D;
+    transition: all .2s ease-in-out;
+
+    box-shadow: 0px 0px 5px 1px rgba(185, 185, 185, 0.17);
+    border-radius: 100px;
+
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    &:hover {
+        background: c.$blanc;
+        color: c.$noir;
+    }
+
+    &.primary {
+        border: 1px solid c.$blanc;
+        color: c.$blanc;
+        background: c.$noir;
+    }
+
+}
+

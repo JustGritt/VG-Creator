@@ -1,0 +1,16 @@
+/* IMPORTS
+ ========== */
+
+@use './nav.scss';
+
+@use './mixins/global' as g;
+@use './mixins/fonts' as f;
+@use './mixins/colors' as c;
+
+/* CLASSES MAIN
+  ========== */
+
+body {
+    background: c.$noir;
+    color: #eee;
+}
