@@ -6,7 +6,8 @@ require "conf.inc.php";
 
 function myAutoloader($class)
 {
-  // $class => CleanWords
+
+    // $class => CleanWords();
     $class = str_replace("App\\","",$class);
     $class = str_replace("\\", "/",$class);
     if(file_exists($class.".class.php")){

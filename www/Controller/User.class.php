@@ -10,8 +10,6 @@ use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Model\PasswordRecovery; 
 
-
-
 class User {
 
     public function login()
@@ -52,7 +50,6 @@ class User {
         
        
     }
-
 
     public function register()
     {
@@ -116,7 +113,6 @@ class User {
                 echo 'Mot de passe different..';
                 //header("Location: http://localhost/register" ); 
             }
-            
         }
         
        

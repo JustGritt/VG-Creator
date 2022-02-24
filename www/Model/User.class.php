@@ -27,12 +27,7 @@ class User extends Sql
     {
         return $this->id;
     }
-    
-    public function setId($id): int
-    {
-        return $this->id = $id;
-    }
-    
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -126,34 +121,38 @@ class User extends Sql
         $this->token = substr(bin2hex(random_bytes(128)), 0, 255);
     }
 
-    /*
-    public function setTokenRecovery($recovery_token): void
-    {
-        $this->recovery_token = $recovery_token;
-    }
 
-    public function setTokenRecoveryExpiry($recovery_token_expiry): void
-    {
-        $this->recovery_token_expiry = $recovery_token_expiry;
-    }
-
-    public function setSelector($selector): void
-    {
-        $this->selector = $selector;
-    }
-    */
     public function getRegisterForm(): array
     {
         return [
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"S'inscrire"
+                "submit"=>"S'inscrire",
+                "id"=>"formulaire"
             ],
             'inputs'=>[
+                "firstname"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Prénom",
+                    "class"=>"inputForm tmp",
+                    "id"=>"firstnameForm",
+                    "min"=>2,
+                    "max"=>50,
+                    "error"=>"Prénom incorrect"
+                ],
+                "lastname"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Nom",
+                    "class"=>"inputForm tmp",
+                    "id"=>"lastnameForm",
+                    "min"=>2,
+                    "max"=>100,
+                    "error"=>"Nom incorrect"
+                ],
                 "email"=>[
                     "type"=>"email",
-                    "placeholder"=>"Votre email ...",
+                    "placeholder"=>"Email",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"emailForm",
@@ -163,7 +162,7 @@ class User extends Sql
                 ],
                 "password"=>[
                     "type"=>"password",
-                    "placeholder"=>"Votre mot de passe ...",
+                    "placeholder"=>"Mot de passe",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
@@ -171,30 +170,12 @@ class User extends Sql
                     ],
                 "passwordConfirm"=>[
                     "type"=>"password",
-                    "placeholder"=>"Confirmation ...",
+                    "placeholder"=>"Confirmation du mot de passe",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"pwdConfirmForm",
                     "confirm"=>"password",
                     "error"=>"Votre mot de passe de confirmation ne correspond pas",
-                ],
-                "firstname"=>[
-                    "type"=>"text",
-                    "placeholder"=>"Votre prénom ...",
-                    "class"=>"inputForm",
-                    "id"=>"firstnameForm",
-                    "min"=>2,
-                    "max"=>50,
-                    "error"=>"Prénom incorrect"
-                ],
-                "lastname"=>[
-                    "type"=>"text",
-                    "placeholder"=>"Votre nom ...",
-                    "class"=>"inputForm",
-                    "id"=>"lastnameForm",
-                    "min"=>2,
-                    "max"=>100,
-                    "error"=>"Nom incorrect"
                 ],
             ]
         ];
@@ -276,6 +257,7 @@ class User extends Sql
         $firstname = $this->setFirstname($_POST['firstname']);
         $lastname = $this->setLastname($_POST['lastname']);
         $email = $this->setEmail($_POST['email']);
+        
         $password = $this->setPassword($_POST['password']);
         $status = 0; //0 => non validé & 1 => email vlaidé 
         $token = $this->generateToken();
