@@ -19,16 +19,9 @@
   action: register
 
 /forget:
-  controller: passwordrecovery
+  controller: user
   action: pwdforget
 
-/confirmation:
-  controller: confirmation
-  action: confirmation  
-
-/reset-new-password:
-  controller: confirmation
-  action: confirmationPwd
 
 /dashboard:
   controller: admin
@@ -36,9 +29,3 @@
   security:
     - admin
     - user
-
-
-/payment:
-  controller: payment
-  action: payment
-
