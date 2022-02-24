@@ -12,6 +12,7 @@ class User extends Sql
     protected $password;
     protected $status = 0;
     protected $token = null;
+ 
 
     public function __construct()
     {
@@ -26,7 +27,12 @@ class User extends Sql
     {
         return $this->id;
     }
-
+    
+    public function setId($id): int
+    {
+        return $this->id = $id;
+    }
+    
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -99,7 +105,7 @@ class User extends Sql
     /**
      * @param int $status
      */
-    public function setStatus(int $statug): void
+    public function setStatus(int $status): void
     {
         $this->status = $status;
     }
@@ -120,7 +126,22 @@ class User extends Sql
         $this->token = substr(bin2hex(random_bytes(128)), 0, 255);
     }
 
+    /*
+    public function setTokenRecovery($recovery_token): void
+    {
+        $this->recovery_token = $recovery_token;
+    }
 
+    public function setTokenRecoveryExpiry($recovery_token_expiry): void
+    {
+        $this->recovery_token_expiry = $recovery_token_expiry;
+    }
+
+    public function setSelector($selector): void
+    {
+        $this->selector = $selector;
+    }
+    */
     public function getRegisterForm(): array
     {
         return [
@@ -201,13 +222,55 @@ class User extends Sql
                     "placeholder"=>"Votre mot de passe ...",
                     "required"=>true,
                     "class"=>"inputForm",
-                    "id"=>"pwdForm"
+                    "id"=>"pwdForm",
+                    "error"=>"Mot de passe incorrect"
                 ]
             ]
         ];
     }
 
-    public function setRegisterForm(): void 
+    public function getLogoutForm(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Deconnexion"
+            ],
+            'inputs'=>[
+                "deco"=>[
+                    "type"=>"button",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"deconnexion",
+                ]
+            ]
+        ];
+    }
+
+    public function getPasswordResetForm(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Se connecter"
+            ],
+            'inputs'=>[
+                "email"=>[
+                    "type"=>"email",
+                    "placeholder"=>"Votre email ...",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+            ]
+        ];
+    }
+
+
+    public function setRegisterForm(): bool
     {
         $id = $this->getId();
         $firstname = $this->setFirstname($_POST['firstname']);
@@ -216,7 +279,24 @@ class User extends Sql
         $password = $this->setPassword($_POST['password']);
         $status = 0; //0 => non validé & 1 => email vlaidé 
         $token = $this->generateToken();
+        
+        //$initialPassword = password_verify($_POST['password'], $this->getPassword());
+        $verifyPassword = password_verify($_POST['passwordConfirm'], $this->getPassword());
+        
+        // Check password 
+        if(!$verifyPassword) 
+        {   
+            return false;
+        }
+        return true;
     }
 
+    public function setLoginForm(): void 
+    {
+        $email = $this->setEmail($_POST['email']);
+        $password = $this->setPassword($_POST['password']);
+    }
+
+    
 
 }

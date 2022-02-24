@@ -17,6 +17,7 @@ function myAutoloader($class)
 spl_autoload_register("App\myAutoloader");
 
 //Réussir à récupérer l'URI
+
 $uri = $_SERVER["REQUEST_URI"];
 
 $routeFile = "routes.yml";
@@ -33,6 +34,7 @@ if (empty($routes[$global_uri]) ||  empty($routes[$global_uri]["controller"])  |
 
 $controller = ucfirst(strtolower($routes[$global_uri]["controller"]));
 $action = strtolower($routes[$global_uri]["action"]);
+
 
 /*
 if( empty($routes[$uri]) ||  empty($routes[$uri]["controller"])  ||  empty($routes[$uri]["action"])){
