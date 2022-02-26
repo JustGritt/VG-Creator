@@ -96,6 +96,17 @@ abstract class Sql
       $result = $sql->fetch();
       return $result;
     }
+
+    public function isUserExist($email)
+    {
+      $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+      $sql->execute(array($email));
+      $result = $sql->fetch();
+      if($sql->rowCount() !== 1){
+        return false;
+      }
+      return true;
+    }
     
     public function connexion($getEmail , $getPdw){
       $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE email = ?");

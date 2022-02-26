@@ -234,7 +234,7 @@ class User extends Sql
         return [
             "config"=>[
                 "method"=>"POST",
-                "action"=>"",
+                "action"=>"logout",
                 "submit"=>"Deconnexion"
             ],
             'inputs'=>[

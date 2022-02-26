@@ -30,14 +30,14 @@ class Mail
       $mail->Ports = 587;
       $mail->Username = SMTP_USERNAME;
       $mail->Password = SMTP_PWD;
-      */
+      /*
       $mail->Host = 'smtp-broadcasts.postmarkapp.com';
       $mail->SMTPAuth = true;
       $mail->SMTPSecure = "tls";
       $mail->Ports = 587;
       $mail->Username = SMTP_USERNAME;
       $mail->Password = SMTP_PWD;
-      /*
+      */
       // Usage of mail.trap.io to do some test
       $mail->isSMTP();
       $mail->Host = 'smtp.mailtrap.io';
@@ -45,7 +45,8 @@ class Mail
       $mail->Port = 2525;
       $mail->Username = '6f9ee7c7e727d6'; // you need to relog to get a new token
       $mail->Password = '7e313959bb4777';
-      */
+      
+
       $mail->CharSet = 'utf-8';
       $mail->isHTML(true);
       $mail->Subject = $subject;

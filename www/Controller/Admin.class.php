@@ -20,16 +20,26 @@ class Admin
             header("Location: http://localhost/login");   
         }
         
+        
         echo "Ceci est un beau dashboard";
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-        var_dump($_SESSION);
+        //var_dump($_SESSION);
     
 
         $view = new View("dashboard", "back");
         $view->assign("user", $user);
         
+        //var_dump($_POST);
+        if(!empty($_POST))
+        {
+            //var_dump($_POST);
+            $user->logout();
+        }
 
+        $view = new View("product", "back");
+        
+        
         
         //$view->assign("firstname", $user->getFirstname());
        
