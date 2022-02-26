@@ -6,8 +6,6 @@
 /* CLASSES MAIN
 ========== */
 
-
-
 /* DEFAULT BUTTON
  ========== */
 
@@ -20,26 +18,55 @@
     -webkit-transition: .2s;
     transition: .2s;
     border: none;
-    
     &:hover {
-        background: c.$blanc;
-        color: c.$noir;
+        background: c.$noir;
+        color: c.$blanc;
     }
 
     &--primary {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
         background: c.$noir;
+        color: c.$blanc;
+        padding: 6px 16px;
+        border-radius: 25px;
+        width: auto;
+        text-decoration: none;
+        -webkit-transition: .2s;
+        transition: .2s;
+        border: none;
+        &:hover {
+            background: transparent;
+            color: c.$noir;
+            border: 1px solid c.$noir;
+        }
     }
     &--secondary {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
-        background: c.$noir;
+        color: c.$noir;
+        background: transparent;
+        padding: 6px 16px;
+        border-radius: 25px;
+        width: auto;
+        text-decoration: none;
+        -webkit-transition: .2s;
+        transition: .2s;
+        border: none;
+        border: 1px solid c.$noir;
+        &:hover {
+            color: c.$blanc;
+            background: c.$noir;
+        }
     }
     &--accent {
         border: 1px solid c.$blanc;
         color: c.$blanc;
         background: c.$noir;
+        color: c.$blanc;
+        padding: 6px 16px;
+        border-radius: 25px;
+        width: auto;
+        text-decoration: none;
+        -webkit-transition: .2s;
+        transition: .2s;
+        border: none;
     }
     &--squared {
         border: 1px solid c.$blanc;
@@ -50,6 +77,15 @@
         border: 1px solid c.$blanc;
         color: c.$blanc;
         background: c.$noir;
+    }
+
+    &--dark {
+        background: c.$gris;
+        color: c.$blanc;
+        &:hover {
+            background: c.$gris;
+            color: c.$noir;
+        }
     }
 }
 
@@ -116,6 +152,9 @@
     }
 }
 
+/* INPUT BUTTON
+ ========== */
+
 input[type="submit"] {
     background: transparent;
     border-radius: 60px;
@@ -134,8 +173,8 @@ input[type="submit"] {
     text-align: center;
 
     &:hover {
-        background: c.$blanc;
-        color: c.$noir;
+        background: c.$noir;
+        color: c.$blanc;
     }
 
     &.primary {

@@ -2,7 +2,7 @@
 
 namespace App;
 
-require "conf.inc.php";
+require "config.php";
 
 function myAutoloader($class)
 {
