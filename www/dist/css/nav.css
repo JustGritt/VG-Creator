@@ -60,13 +60,6 @@
   color: #f2f2f2;
   background: #333333;
   color: #f2f2f2;
-  padding: 6px 16px;
-  border-radius: 25px;
-  width: auto;
-  text-decoration: none;
-  -webkit-transition: 0.2s;
-  transition: 0.2s;
-  border: none;
 }
 .button--squared {
   border: 1px solid #f2f2f2;
@@ -87,13 +80,78 @@
   color: #333333;
 }
 
-/* RADIO BUTTON
+/* TOGGLE BUTTON 
+ ========== *
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 69px;
+    height: 37px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+        border: 1px solid c.$noir;
+        -webkit-transition: .2s;
+        transition: .2s;
+
+        &::before {
+            content: "";
+            position: absolute;
+            height: 28px;
+            width: 28px;
+            left: 4px;
+            bottom: 4px;
+            background-color: c.$noir;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        &.round {
+            border-radius: 34px;
+
+            &:before {
+                border-radius: 50%;
+            }
+        }
+    }
+
+    input {
+        &:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        &:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        &:checked+.slider:before {
+            -webkit-transform: translateX(28px);
+            -ms-transform: translateX(28px);
+            transform: translateX(28px);
+            background-color: c.$blanc;
+        }
+    }
+}
+
+/* TOGGLE BUTTON 
  ========== */
 .switch {
   position: relative;
   display: inline-block;
-  width: 64px;
-  height: 34px;
+  width: 40px;
+  height: 22px;
 }
 .switch input {
   opacity: 0;
@@ -107,18 +165,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #616161;
+  background-color: transparent;
+  border: 1px solid #333333;
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
 .switch .slider::before {
   content: "";
   position: absolute;
-  height: 24px;
-  width: 24px;
-  left: 6px;
-  bottom: 6px;
-  background-color: white;
+  height: 14px;
+  width: 14px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #333333;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -135,9 +194,10 @@
   box-shadow: 0 0 1px #2196F3;
 }
 .switch input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+  background-color: #f2f2f2;
 }
 
 /* INPUT BUTTON
@@ -170,44 +230,29 @@ input[type=submit].primary {
 /* CLASSES 
 ======================= */
 /* CLASSES 
-======================= *
-
-h1, .h1 {
-    display: block;
-    @include f-hr(26); // equiv 26px
-    font-weight: normal;
+======================= */
+h1, .h1, .title {
+  display: block;
+  font-size: clamp(2rem, 5vw, 76px);
+  font-weight: bold;
 }
 
 h2, .h2 {
-    display: block;
-    @include f-hr(24); // equiv 24px
-    font-weight: normal;
+  display: block;
+  font-size: clamp(1rem, 5vw, 64px);
+  font-weight: normal;
 }
 
 h3, .h3 {
-    display: block;
-    @include f-hr(22); // equiv 22px
-    font-weight: normal;
+  display: block;
+  font-size: clamp(1rem, 5vw, 48px);
+  font-weight: normal;
 }
 
-h4, .h4 {
-    display: block;
-    @include f-hr(20); // equiv 20px
-    font-weight: normal;
+.subtitle {
+  font-size: clamp(1rem, 5vw, 24px);
 }
 
-h5, .h5 {
-    display: block;
-    @include f-hr(18); // equiv 18px
-    font-weight: normal;
-}
-
-h6, .h6 {
-    display: block;
-    @include f-hr(16); // equiv 16px
-    font-weight: normal;
-}
-*/
 .uppercase {
   text-transform: uppercase;
 }
@@ -347,65 +392,88 @@ body .section {
 /* CLASSES MAIN
    ========== */
 header {
+  position: relative;
   background: #f2f2f2;
   height: 70px;
-  /* MEDIA QUERIES
-    ========== */
+  font-weight: bold;
 }
 header .left-items {
   margin-left: 60px;
   margin-right: auto;
   text-decoration: none;
   color: #333;
+  font-weight: bolder;
+}
+@media only screen and (max-width: 1200px) {
+  header .left-items {
+    margin-left: 15px;
+  }
+}
+header .left-items .logo {
+  width: 80px;
+  height: auto;
 }
 header .center-items {
   justify-content: center;
+}
+header .center-items .link {
+  color: #333333;
+}
+header .center-items .link::after {
+  background: #333333;
+}
+@media only screen and (max-width: 1200px) {
+  header .center-items .link {
+    padding: 4px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  header .center-items {
+    position: absolute;
+    height: 70px;
+    top: 100%;
+    background: green;
+    width: 100%;
+    display: none;
+  }
 }
 header .right-items {
   margin-left: auto;
   margin-right: 60px;
 }
-header .right-items .switch, header .right-items a {
-  margin: 0 10px;
+@media only screen and (max-width: 1200px) {
+  header .right-items {
+    margin-right: 4px;
+  }
+  header .right-items a.button--secondary {
+    padding: 3px 12px;
+    font-size: 1rem;
+  }
 }
-header nav ul {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+header .right-items .switch {
+  margin-right: 10px;
 }
-header nav ul li {
-  display: inline-block;
+@media only screen and (max-width: 1200px) {
+  header .right-items .switch {
+    display: none;
+  }
 }
-header nav ul a {
-  text-decoration: none;
-  color: #f2f2f2;
-  padding: 6px 12px;
+header .right-items a.button--secondary {
+  margin: 0 8px;
 }
 header nav ul li {
   display: inline-block;
   padding: 20px 0;
   margin: 0 10px;
 }
-@media screen and (max-width: 768px) {
-  header ul {
-    display: flex;
-  }
-  header ul div.navigation-left-items {
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin-left: 0;
-    margin-right: auto;
-  }
-  header ul div.navigation-center-items {
-    display: none;
-  }
-  header ul div.navigation-right-items {
-    justify-content: flex-end;
-    align-items: center;
-    display: flex;
-  }
-  header ul div.navigation-right-items > li:nth-child(2) {
-    display: none;
+header nav ul li a {
+  text-decoration: none;
+  padding: 6px 12px;
+  font-size: clamp(12px, 5vw, 16px);
+}
+@media only screen and (max-width: 1200px) {
+  header nav ul li a {
+    text-align: center;
   }
 }
 

@@ -11,9 +11,10 @@
    ========== */
 
 header {
-
+    position: relative;
     background: c.$blanc;
     height: 70px;
+    font-weight: bold;
 
     .left-items {
         margin-left: 60px;
@@ -21,78 +22,80 @@ header {
 
         text-decoration: none;
         color: #333;
+        font-weight: bolder;
+        @media only screen and (max-width: 1200px) {
+            margin-left: 15px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+        }
         
     }
     
     .center-items {
         justify-content: center;
+        
+        .link {
+            color: c.$noir;
+            &::after { background: c.$noir; }
+            @media only screen and (max-width: 1200px) {
+                padding: 4px;
+            }
+        }
+        
+        @media only screen and (max-width: 768px) {
+
+            position: absolute;
+            height: 70px;
+            top: 100%;
+            background: green;
+            width: 100%;
+            display: none;
+
+        }
     }
 
     .right-items {
         
         margin-left: auto;
         margin-right: 60px;
-
-        .switch, a {
-            margin: 0 10px;
-        }
-    }
-    
-    nav {
-
-        ul {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-
-    
-            li {
-                display: inline-block;
-            }
-    
-            a {
-                text-decoration: none;
-                color: c.$blanc;
-                padding: 6px 12px;
-            }
-    
-            
-    
-            li {
-                display: inline-block;
-                padding: 20px 0;
-                margin: 0 10px;
+        
+        @media only screen and (max-width: 1200px) {
+            margin-right: 4px;
+            a.button--secondary {
+                padding: 3px 12px;
+                font-size: clamp(.7rem, 1rem, 1.2rem);
             }
         }
-    }
 
-    /* MEDIA QUERIES
-      ========== */
-    @media screen and (max-width: 768px) {
-        ul {
-            display: flex;
-
-            div.navigation-left-items {
-                justify-content: flex-start;
-                align-items: flex-start;
-                margin-left: 0;
-                margin-right: auto;
-            }
-
-            div.navigation-center-items {
+        .switch {
+            margin-right: 10px;
+            @media only screen and (max-width: 1200px) {
                 display: none;
             }
-
-            div.navigation-right-items {
-                justify-content: flex-end;
-                align-items: center;
-                display: flex;
-
-                &>li:nth-child(2) {
-                    display: none;
+        }
+        a.button--secondary {
+            margin: 0 8px;
+        }
+    }
+    
+    nav ul {
+        li {
+            display: inline-block;
+            padding: 20px 0;
+            margin: 0 10px;
+            a {
+                text-decoration: none;
+                padding: 6px 12px;
+                font-size: clamp(12px, 5vw, 16px);
+                @media only screen and (max-width: 1200px) {
+                    text-align: center;
                 }
             }
         }
+        
     }
 
 }

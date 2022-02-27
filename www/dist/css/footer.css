@@ -1,3 +1,68 @@
-
+/* COLORS VARIABLES  
+======================= */
+/* IMPORTS
+ ========== */
+/* CLASSES MAIN
+ ========== */
+footer {
+  background: #F2F2F2;
+  height: 380px;
+  position: relative;
+}
+footer .footer-logo {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+footer .footer-logo svg {
+  width: 80px;
+  height: auto;
+}
+footer .footer-list {
+  padding: 105px 0;
+}
+footer .footer-list ul {
+  list-style: none;
+  margin: 0;
+}
+@media only screen and (max-width: 1200px) {
+  footer .footer-list ul {
+    width: 100%;
+    text-align: center;
+  }
+}
+footer .footer-list ul li {
+  margin: 20px;
+}
+footer .footer-list ul li a {
+  font-weight: 500;
+  font-size: clamp(12px, 4vw, 22px);
+  line-height: 26px;
+  color: #333333;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+footer .footer-list ul li a::after {
+  background: #333333;
+}
+footer .footer-list-container {
+  width: 100%;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  text-align: left;
+}
+footer .footer-credits {
+  background: inherit;
+  justify-content: space-between;
+}
+footer .footer-credits p {
+  color: #333333;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.014em;
+  margin-left: 38px;
+}
 
 /*# sourceMappingURL=footer.css.map */
