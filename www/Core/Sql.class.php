@@ -31,7 +31,7 @@ abstract class Sql
     }
     
     public function confirmUser($getId , $getToken){
-
+      
       $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE id = ? AND token = ? ");
       $user->execute(array($getId ,$getToken));
       $userexist = $user->fetch();
@@ -59,13 +59,17 @@ abstract class Sql
     }
 
     /*
-    public function setId(?int $id): object
+
+    /**
+     * @param string $password
+     */
+    public function login(): void
     {
         $sql = "SELECT * FROM ".$this->table." WHERE id=".$id;
         $query = $this->pdo->query($sql);
-        return $query->fetchObject(get_called_class());
+        print( $query->fetchObject(get_called_class()));
     }
-    */
+    
     public function save()
     {
         $columns = get_object_vars($this);

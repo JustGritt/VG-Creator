@@ -1,10 +1,6 @@
 /:
   controller: main
-  action: home
-
-/front_website:
-  controller: main
-  action: front
+  action: home 
 
 /login:
   controller: user

@@ -12,7 +12,6 @@ use App\Model\PasswordRecovery;
 use App\Model\OauthUser;
 use App\Core\Facebook;
 
-
 class User {
     
     public function loginwithfb()
@@ -62,7 +61,6 @@ class User {
 
     public function login()
     {
-        
         $user = new UserModel();
         $view = new View("login");
         $view->assign("user", $user);
@@ -132,10 +130,9 @@ class User {
             }
         }
         
-       
+        
     }
     
-   
 
     public function register()
     {
@@ -200,10 +197,8 @@ class User {
                 //header("Location: http://localhost/register" );
                
             }
-            
         }
         
-       
     }
 
     public function logout()

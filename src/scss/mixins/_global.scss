@@ -17,6 +17,7 @@ $breakpoint-small : 640 !default;
 
 html { 
     box-sizing: border-box; 
+    scroll-behavior: smooth;
     margin: 0;
     padding: 0;
 }
@@ -121,6 +122,26 @@ body {
     a.link {
         text-decoration: none;
         color: c.$link;
+        display: inline-block;
+        margin-left: 5px;
+
+        &::after {
+            content: '';
+            position: relative;
+            display: block;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            border-radius: 100px;
+            background: #1538B5;
+            transition: all .4s ease-in-out;
+        }
+
+        &:hover::after {
+            width: 100%;
+        }
     }
 
     .section {
