@@ -22,44 +22,48 @@ $title : 'Lato', serif;
 $paragraph : 'Lato', serif;
 
 /* CLASSES 
-======================= *
+======================= */
 
-h1, .h1 {
+h1, .h1, .title {
     display: block;
-    @include f-hr(26); // equiv 26px
-    font-weight: normal;
+    font-size: clamp(2rem, 5vw, 76px);
+    font-weight: bold;
 }
 
 h2, .h2 {
     display: block;
-    @include f-hr(24); // equiv 24px
+    font-size: clamp(1rem, 5vw, 64px);
     font-weight: normal;
 }
 
 h3, .h3 {
     display: block;
-    @include f-hr(22); // equiv 22px
+    font-size: clamp(1rem, 5vw, 48px);
     font-weight: normal;
 }
 
-h4, .h4 {
-    display: block;
-    @include f-hr(20); // equiv 20px
-    font-weight: normal;
+// h4, .h4 {
+//     display: block;
+//     @include f-hr(20); // equiv 20px
+//     font-weight: normal;
+// }
+
+// h5, .h5 {
+//     display: block;
+//     @include f-hr(18); // equiv 18px
+//     font-weight: normal;
+// }
+
+// h6, .h6 {
+//     display: block;
+//     @include f-hr(16); // equiv 16px
+//     font-weight: normal;
+// }
+
+.subtitle {
+    font-size: clamp(1rem, 5vw, 24px);
 }
 
-h5, .h5 {
-    display: block;
-    @include f-hr(18); // equiv 18px
-    font-weight: normal;
-}
-
-h6, .h6 {
-    display: block;
-    @include f-hr(16); // equiv 16px
-    font-weight: normal;
-}
-*/
 .uppercase {
     text-transform: uppercase;
 }

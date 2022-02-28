@@ -6,8 +6,6 @@
 /* CLASSES MAIN
 ========== */
 
-
-
 /* DEFAULT BUTTON
  ========== */
 
@@ -20,26 +18,48 @@
     -webkit-transition: .2s;
     transition: .2s;
     border: none;
-    
     &:hover {
-        background: c.$blanc;
-        color: c.$noir;
+        background: c.$noir;
+        color: c.$blanc;
     }
 
     &--primary {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
         background: c.$noir;
+        color: c.$blanc;
+        padding: 6px 16px;
+        border-radius: 25px;
+        width: auto;
+        text-decoration: none;
+        -webkit-transition: .2s;
+        transition: .2s;
+        border: none;
+        &:hover {
+            background: transparent;
+            color: c.$noir;
+            border: 1px solid c.$noir;
+        }
     }
     &--secondary {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
-        background: c.$noir;
+        color: c.$noir;
+        background: transparent;
+        padding: 6px 16px;
+        border-radius: 25px;
+        width: auto;
+        text-decoration: none;
+        -webkit-transition: .2s;
+        transition: .2s;
+        border: none;
+        border: 1px solid c.$noir;
+        &:hover {
+            color: c.$blanc;
+            background: c.$noir;
+        }
     }
     &--accent {
         border: 1px solid c.$blanc;
         color: c.$blanc;
         background: c.$noir;
+        color: c.$blanc;
     }
     &--squared {
         border: 1px solid c.$blanc;
@@ -51,15 +71,25 @@
         color: c.$blanc;
         background: c.$noir;
     }
+
+    &--dark {
+        background: c.$gris;
+        color: c.$blanc;
+        &:hover {
+            background: c.$gris;
+            color: c.$noir;
+        }
+    }
 }
 
-/* RADIO BUTTON
- ========== */
+
+/* TOGGLE BUTTON 
+ ========== *
 .switch {
     position: relative;
     display: inline-block;
-    width: 64px;
-    height: 34px;
+    width: 69px;
+    height: 37px;
 
     input {
         opacity: 0;
@@ -74,18 +104,19 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: c.$gris;
+        background-color: transparent;
+        border: 1px solid c.$noir;
         -webkit-transition: .2s;
         transition: .2s;
 
         &::before {
             content: "";
             position: absolute;
-            height: 24px;
-            width: 24px;
-            left: 6px;
-            bottom: 6px;
-            background-color: white;
+            height: 28px;
+            width: 28px;
+            left: 4px;
+            bottom: 4px;
+            background-color: c.$noir;
             -webkit-transition: .4s;
             transition: .4s;
         }
@@ -109,12 +140,81 @@
         }
 
         &:checked+.slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
+            -webkit-transform: translateX(28px);
+            -ms-transform: translateX(28px);
+            transform: translateX(28px);
+            background-color: c.$blanc;
         }
     }
 }
+
+/* TOGGLE BUTTON 
+ ========== */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+        border: 1px solid c.$noir;
+        -webkit-transition: .2s;
+        transition: .2s;
+
+        &::before {
+            content: "";
+            position: absolute;
+            height: 14px;
+            width: 14px;
+            left: 4px;
+            bottom: 4px;
+            background-color: c.$noir;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        &.round {
+            border-radius: 34px;
+
+            &:before {
+                border-radius: 50%;
+            }
+        }
+    }
+
+    input {
+        &:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        &:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        &:checked+.slider:before {
+            -webkit-transform: translateX(16px);
+            -ms-transform: translateX(16px);
+            transform: translateX(16px);
+            background-color: c.$blanc;
+        }
+    }
+}
+
+/* INPUT BUTTON
+ ========== */
 
 input[type="submit"] {
     background: transparent;
@@ -134,8 +234,8 @@ input[type="submit"] {
     text-align: center;
 
     &:hover {
-        background: c.$blanc;
-        color: c.$noir;
+        background: c.$noir;
+        color: c.$blanc;
     }
 
     &.primary {

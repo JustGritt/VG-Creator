@@ -81,7 +81,7 @@ abstract class Sql
         $query = $this->pdo->query($sql);
         return $query->fetchObject(get_called_class());
     }
-    */
+    
     public function save()
     {
         $columns = get_object_vars($this);

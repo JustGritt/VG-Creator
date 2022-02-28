@@ -2,7 +2,10 @@
  ========== */
 
 @use './nav.scss';
+@use './footer.scss';
+@use './partials/inputs';
 
+@use './mixins/options';
 @use './mixins/global' as g;
 @use './mixins/fonts' as f;
 @use './mixins/colors' as c;
@@ -11,6 +14,221 @@
   ========== */
 
 body {
-    background: c.$noir;
-    color: #eee;
+  font-family: f.$primary;
+  font-family: Lato;
+  background: linear-gradient(to right, #4776e6, #5870e9, #6968eb, #7c5feb, #8e54e9);
+  color: #eee;
+  main {
+
+    section#home {
+      height: 75vh;
+      width: 100vw;
+
+      .hero-container {
+        margin: 150px 60px 0 60px;
+        flex-direction: column;
+        align-items: flex-start;
+        @media only screen and (max-width: 768px) {
+          text-align: center;
+          margin: 150px 15px;
+        }
+        
+        h1, h2 { 
+          margin: 25px 0;
+          width: 100%;
+          z-index: 1;
+          @media only screen and (max-width: 768px) {
+            text-align: center;
+            margin: 10px 0;
+          }
+        }
+      }
+
+      .hero-input {
+
+        position: relative;
+        width: 100%;
+        width: 100%;
+        max-width: 450px;
+        min-width: 100px;
+        z-index: 1;
+        @media only screen and (max-width: 768px) {
+
+          margin: 0 auto;
+        }
+
+        input {
+          
+          &[type="email"] {
+            background: rgba(12,14,29, .1);
+            box-shadow: 0px 0px 5px 1px rgba(185, 185, 185, .1);
+            color: #FDFDFD;
+            height: 60px;
+            width: 100%;
+            font-family: f.$primary;
+            @media only screen and (max-width: 768px) {
+              margin: 50px 0;
+              width: 100%;
+            }
+
+            &::placeholder{ color: inherit; }
+            & + input[type="submit"] {
+              position: absolute;
+              top: calc(50% - 10px);
+              left: calc(100% - 75px - 6px);
+              transform: translate(-50%,-50%);
+              background: rgba(12,14,29, .6);
+              justify-content: center;
+              width: 100%;
+              height: 48px;
+              max-width: 150px;
+              @media only screen and (max-width: 768px) {
+                max-width: fit-content;
+                left: calc(100%  - 55px);
+              }
+              
+            }
+          }
+        }
+      }
+
+
+      img.hero-img {
+        position: absolute;
+        top: 40vh;
+        right: 0;
+        width: 560px;
+        transition: all .2s ease-in-out;
+        @media only screen and (max-width: 1200px) {
+          top: 55vh;
+          width: 360px;
+        }
+        @media only screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+
+    section#templates {
+      width: 100vw;
+      background: #fff;
+      color: c.$noir;
+
+      h3, p {
+        margin: 0 60px;
+        text-align: center;
+      }
+      
+      h3 {
+        padding-top: 150px;
+      }
+
+      .template {
+
+        &-showcase {
+          width: 90%;
+          margin: 0 auto;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+          @media only screen and (max-width: 768px) {
+            flex-direction: column;
+          }
+        }
+        &-card {
+          margin: 75px 20px;
+          picture img {
+            border-radius: 15px;
+            width: 100%;
+            height: 100%;
+            max-width: 260px;
+            height: 368px;
+            display: block;
+            margin: 0 auto;
+            object-fit: cover;
+          }
+        }
+      } 
+
+    }
+
+    section#faq {
+      background: #EFF3FE;
+      color: c.$noir;
+      display: block;
+
+      .faq-wrapper {
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 100px;
+        padding-bottom: 200px;
+
+        .faq-container{
+          width: 100%;
+          & input[type=radio]{
+              display: none;
+          }
+          & label {
+            color: c.$noir;
+            font-size: 18px;
+            border-bottom: 1px solid c.$noir;
+
+            position: relative;
+            cursor: pointer;
+            display: block;
+            height: 50px;
+            line-height: 47px;
+            padding: 0 25px 0 10px;
+            margin: 50px 0 0 0;
+            
+            
+            &::after{
+              content: "";
+              display: block;
+              position: absolute;
+              right: 10px;
+              top: 20px;
+              opacity: 0;
+              -moz-transition: all .7s ease-in-out;
+              -ms-transition:all .7s ease-in-out;
+              -o-transition: all .7s ease-in-out;
+              -webkit-transition: all .7s ease-in-out;
+              transition: opacity .7s ease-in-out;
+            }
+          }
+          .content{
+              max-height: 0;
+              height: 0;
+              overflow: hidden;
+              -moz-transition: height,max-height 1.5s ease-in;
+              -o-transition: height,max-height 1.5s ease-in;
+              -webkit-transition: height,max-height 1.5s ease-in;
+              transition: height,max-height 1.5s ease-in;
+              & .inner{
+                font-size: 1.2rem;
+                color: c.$noir;
+                background: inherit;
+                line-height: 1.5;
+                padding: 20px 10px;
+            }
+          }
+          input[type=radio]:checked + label::after {
+            width: 8px;
+            height: 8px;
+            background: c.$noir;
+            border-radius: 100%;
+            transform: translateY(0%);
+
+            opacity: 1;
+          }
+    
+          input[type=radio]:checked + label + .content {
+            max-height: 2000px;
+            height: auto;
+          }
+        }
+      }
+
+    }
+  }
 }
