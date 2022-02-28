@@ -13,7 +13,9 @@
 /* CLASSES MAIN
   ========== */
 
+
 body {
+  scroll-behavior: smooth;
   font-family: f.$primary;
   font-family: Lato;
   background: linear-gradient(to right, #4776e6, #5870e9, #6968eb, #7c5feb, #8e54e9);
