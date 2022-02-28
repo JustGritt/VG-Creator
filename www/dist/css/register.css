@@ -1,21 +1,54 @@
-@charset "UTF-8";
 /* IMPORTS
 ======================= */
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap");
 /* COLORS VARIABLES  
 ======================= */
+/* CLASSES 
+======================= */
+/* CLASSES 
+======================= */
+h1, .h1 {
+  display: block;
+  font-size: clamp(2rem, 5vw, 76px);
+  font-weight: bold;
+  margin: 0;
+}
+
+h2, .h2 {
+  display: block;
+  font-size: clamp(1rem, 5vw, 64px);
+  font-weight: normal;
+}
+
+h3, .h3, .title {
+  display: block;
+  font-size: clamp(1rem, 5vw, 48px);
+  font-weight: normal;
+}
+
+.sub-title {
+  font-size: clamp(1rem, 5vw, 24px);
+  margin: 20px 0;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
 /* IMPORTS
 ======================= */
 /* CLASSES GLOBALES
 ======================= */
 input {
-  border-radius: 13px;
+  font-family: "Lato", sans-serif;
+  border-radius: 6px;
   padding: 10px 20px;
-  margin: 10px 0;
+  margin: 12px 0;
+  height: 55px;
+  font-size: 16px;
   border: none;
-  box-shadow: 0px 0px 5px 1px rgba(185, 185, 185, 0.1);
-  border-radius: 100px;
-  transition: all 0.2s ease-in-out;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  transition: box 0.5s ease-in-out;
 }
 input:focus, input:active {
   outline: none;
@@ -224,17 +257,15 @@ input:focus, input:active {
 input[type=submit] {
   background: transparent;
   border-radius: 60px;
-  border: 1px solid #0C0E1D;
+  border: 1px solid #1538B5;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0px 0px 5px 1px rgba(185, 185, 185, 0.17);
+  color: #1538B5;
   border-radius: 100px;
-  font-style: normal;
+  width: 100%;
+  height: 46px;
+  max-width: 279px;
   font-weight: bold;
-  font-size: 14px;
-  line-height: 17px;
-  display: flex;
-  align-items: center;
-  text-align: center;
+  filter: none;
 }
 input[type=submit]:hover {
   background: #333333;
@@ -244,36 +275,6 @@ input[type=submit].primary {
   border: 1px solid #f2f2f2;
   color: #f2f2f2;
   background: #333333;
-}
-
-/* CLASSES 
-======================= */
-/* CLASSES 
-======================= */
-h1, .h1, .title {
-  display: block;
-  font-size: clamp(2rem, 5vw, 76px);
-  font-weight: bold;
-}
-
-h2, .h2 {
-  display: block;
-  font-size: clamp(1rem, 5vw, 64px);
-  font-weight: normal;
-}
-
-h3, .h3 {
-  display: block;
-  font-size: clamp(1rem, 5vw, 48px);
-  font-weight: normal;
-}
-
-.subtitle {
-  font-size: clamp(1rem, 5vw, 24px);
-}
-
-.uppercase {
-  text-transform: uppercase;
 }
 
 /* IMPORTS
@@ -410,56 +411,75 @@ body .section {
  ========== */
 /* CLASSES MAIN
  ========== */
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+body main {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+body main section#register {
+  height: 100vh;
+  width: 100vw;
+}
+body main section#register .hero-container {
+  margin: 150px 60px 0 60px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+@media only screen and (max-width: 768px) {
+  body main section#register .hero-container {
+    text-align: center;
+    margin: 150px 15px;
+  }
+}
+body main .wrapper {
   flex-direction: column;
   color: #333333;
-  background: rgba(255, 255, 255, 0.71);
-  box-shadow: 0px 4px 4px rgba(159, 159, 159, 0.25);
   backdrop-filter: blur(4px);
   width: 75vw;
   min-width: 420px;
   max-width: 768px;
   border-radius: 31px;
 }
-.wrapper::after {
-  position: absolute;
-  content: "🠔";
-  top: 30px;
-  left: 30px;
-  font-size: 2rem;
-}
 @media only screen and (max-width: 768px) {
-  .wrapper {
+  body main .wrapper {
     width: 100%;
     height: 100%;
     border-radius: 0;
+    margin-top: 70px;
   }
 }
-.wrapper form {
+body main .wrapper .sub-title {
+  margin-top: 35px;
+}
+body main .wrapper form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 80%;
 }
-.wrapper form input[type=submit] {
+body main .wrapper form input {
+  margin: 0;
+}
+body main .wrapper form input:nth-child(1) {
+  margin-top: 25px;
+}
+body main .wrapper form input[type=submit] {
   margin-top: 50px;
 }
-.wrapper form + a {
+body main .wrapper form + a {
   position: relative;
   top: -42px;
   align-self: flex-end;
   margin-right: 75px;
 }
-.wrapper .title {
+body main .wrapper .title {
   font-weight: bold;
   font-size: em(1px, 6px);
   line-height: 52px;
   margin-top: 80px;
 }
-.wrapper .sub-title {
-  margin-bottom: 80px;
-}
-.wrapper .inputForm {
+body main .wrapper .inputForm {
   width: 100%;
 }
 

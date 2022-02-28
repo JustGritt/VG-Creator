@@ -41,32 +41,32 @@
 
     <section id="faq">
         <div class="faq-wrapper">
-            <h3>Personalisez vos templates</h3>
+            <h3>FAQ</h3>
     
             <div class="faq-container">
                 <input type="radio" name="show-icon" id="acc1" checked="checked">
-                <label for="acc1">1</label>
+                <label for="acc1">1.</label>
                 <div class="content">
                     <div class="inner">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.
                     </div>
                 </div>
                 <input type="radio" name="show-icon" id="acc2">
-                <label for="acc2">2</label>
+                <label for="acc2">2.</label>
                 <div class="content">
                     <div class="inner">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.
                     </div>
                 </div>
                 <input type="radio" name="show-icon" id="acc3">
-                <label for="acc3">3</label>
+                <label for="acc3">3.</label>
                 <div class="content">
                     <div class="inner">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.
                     </div>
                 </div>
                 <input type="radio" name="show-icon" id="acc4">
-                <label for="acc4">4</label>
+                <label for="acc4">4.</label>
                 <div class="content">
                     <div class="inner">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.

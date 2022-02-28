@@ -20,9 +20,14 @@ body {
   color: #eee;
   main {
 
+    section {
+      background: #fff;
+    }
+
     section#home {
       height: 75vh;
       width: 100vw;
+      background: transparent;
 
       .hero-container {
         margin: 150px 60px 0 60px;
@@ -65,6 +70,7 @@ body {
             color: #FDFDFD;
             height: 60px;
             width: 100%;
+            border-radius: 100px;
             font-family: f.$primary;
             @media only screen and (max-width: 768px) {
               margin: 50px 0;
@@ -78,6 +84,7 @@ body {
               left: calc(100% - 75px - 6px);
               transform: translate(-50%,-50%);
               background: rgba(12,14,29, .6);
+              color: c.$blanc;
               justify-content: center;
               width: 100%;
               height: 48px;

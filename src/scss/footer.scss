@@ -6,7 +6,7 @@
 /* CLASSES MAIN
  ========== */
 
-footer {
+body footer {
     background: #F2F2F2;
     height: 380px;
     position: relative;
@@ -57,8 +57,10 @@ footer {
             }
         }
         &-credits {
+            display: flex;
             background: inherit;
             justify-content: space-between;
+            align-items: center;
 
             p {
                 color: c.$noir;
@@ -67,6 +69,11 @@ footer {
                 line-height: 14px;
                 letter-spacing: 0.014em;
                 margin-left: 38px;
+                width: auto;
+            }
+
+            & .social-media {
+                margin-right: 38px;
             }
         }
     }
