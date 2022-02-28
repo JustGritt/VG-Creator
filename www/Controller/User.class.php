@@ -9,13 +9,56 @@ use App\Core\View;
 use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Model\PasswordRecovery;
-use App\Model\OauthUser; 
-
-
-
+use App\Model\OauthUser;
+use App\Core\Facebook;
 
 
 class User {
+    
+    public function loginwithfb()
+    {
+        $user = new UserModel();
+        $view = new View("login");
+        $view->assign("user", $user);
+        $facebooklogin = new Facebook();
+        //var_dump($_GET);
+        $token =  (string)$_GET['code'];
+        $user_info = $facebooklogin->login($token);
+        
+        if($user_info)
+        {
+            $oauth_user = new OauthUser();
+            $_SESSION['id'] = $user_info['id'];
+            $_SESSION['email'] = $user_info['email'];
+            $_SESSION['code'] = $token;
+            $user_name =  explode(" " , $user_info['name']);
+            $_SESSION['lastname'] = $user_name[1];
+            $_SESSION['firstname'] = $user_name[0];
+            if(!$oauth_user->isUserExist($user_info['email'])){
+                $oauth_user->setFirstname($user_name[0]);
+                $oauth_user->setLastname($user_name[1]);
+                $oauth_user->setEmail($user_info['email']);
+                $oauth_user->setOauth_id( $user_info['id']);
+                $oauth_user->setOauth_provider('facebook_api');
+                $oauth_user->save();     
+            }
+            echo "Bienvenue"; 
+            header("Location: http://localhost/dashboard"); 
+        
+            //echo 'Bienvenue' .$user_info['id'] . ' ' .$user_info['name'] . '' .$user_info['email'];
+            var_dump($_SESSION);
+        }else{
+            echo "OOps sorry something went wrong with google";
+            //unset($_SESSION['id']);
+            //unset($_SESSION['code']);
+            //unset($_SESSION['email']);
+            //var_dump(isset($_SESSION['id']));
+            var_dump($_SESSION);
+            header("Refresh: 5; http://localhost/login "); 
+        }
+        
+    }
+
 
     public function login()
     {
@@ -52,7 +95,7 @@ class User {
                 return false; 
             }
         }else if(!empty($_GET)){
-            //var_dump($_GET);
+            var_dump($_POST);
             $oauth_user = new OauthUser();
             $redirect_uri = 'http://localhost/login';
             $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
@@ -91,7 +134,8 @@ class User {
         
        
     }
-
+    
+   
 
     public function register()
     {

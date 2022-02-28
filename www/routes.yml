@@ -10,6 +10,10 @@
   controller: user
   action: login
 
+/login-fb:
+  controller: user
+  action: loginwithfb
+
 /logout:
   controller: user
   action: logout
