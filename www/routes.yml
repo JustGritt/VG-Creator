@@ -1,6 +1,6 @@
 /:
   controller: main
-  action: home
+  action: home 
 
 /login:
   controller: user
