@@ -13,7 +13,3 @@
     <a class='button' name='facebook' href="<?= $login_url_facebook ?>">FACEBOOK CONNEXION</a>
 </p>
 
-<form action= "<?= $login_url ?>" method="post">
-  <button type="submit">Google connexion</button>
-  <button type="submit" formaction="<?= $login_url_facebook ?>">Submit to another page</button>
-</form>
