@@ -14,7 +14,6 @@ class User {
 
     public function login()
     {
-        
         $user = new UserModel();
         $view = new View("login");
         $view->assign("user", $user);
@@ -47,8 +46,7 @@ class User {
                 return false; 
             }
         }
-        
-       
+
     }
 
     public function register()
@@ -115,7 +113,6 @@ class User {
             }
         }
         
-       
     }
 
     public function logout()
