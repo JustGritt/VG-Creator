@@ -1,4 +1,8 @@
 db_data
 www/.env*
 
+
+
 www/dist/*
+
+www/conf.inc.php
