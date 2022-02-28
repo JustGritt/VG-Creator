@@ -2,10 +2,6 @@
   controller: main
   action: home
 
-/front_website:
-  controller: main
-  action: front
-
 /login:
   controller: user
   action: login
