@@ -15,7 +15,7 @@ class PasswordRecovery {
 
     public function pwdforget()
     {
-        var_dump($_SESSION);
+        // var_dump($_SESSION);
         echo "Mot de passe oublié"."<br>";
         $user = new UserModel();
         $password_recovery = new Recovery();
@@ -33,7 +33,7 @@ class PasswordRecovery {
             }elseif(empty($usertoverify['status'])){
                 echo 'Vous devez d\'abord confirmé votre email'."<br>";
             }else{
-                var_dump($user->getUserByEmail($_POST['email']));
+                // var_dump($user->getUserByEmail($_POST['email']));
                 //$user = $user->getUserByEmail($_POST['email']);
                 $recovery_token = substr(bin2hex(random_bytes(128)), 0, 255);
                 $recovery_token_expiry = date("U") + 1800 ;

@@ -45,14 +45,14 @@ class User {
             header("Location: http://localhost/dashboard"); 
         
             //echo 'Bienvenue' .$user_info['id'] . ' ' .$user_info['name'] . '' .$user_info['email'];
-            var_dump($_SESSION);
+            // var_dump($_SESSION);
         }else{
             echo "OOps sorry something went wrong with google";
             //unset($_SESSION['id']);
             //unset($_SESSION['code']);
             //unset($_SESSION['email']);
             //var_dump(isset($_SESSION['id']));
-            var_dump($_SESSION);
+            // var_dump($_SESSION);
             header("Refresh: 5; http://localhost/login "); 
         }
         
@@ -93,7 +93,7 @@ class User {
                 return false; 
             }
         }else if(!empty($_GET)){
-            var_dump($_POST);
+            // var_dump($_POST);
             $oauth_user = new OauthUser();
             $redirect_uri = 'http://localhost/login';
             $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
@@ -125,7 +125,7 @@ class User {
                 unset($_SESSION['code']);
                 unset($_SESSION['email']);
                 //var_dump(isset($_SESSION['id']));
-                var_dump($_SESSION);
+                // var_dump($_SESSION);
                 header("Refresh: 5; http://localhost/login "); 
             }
         }

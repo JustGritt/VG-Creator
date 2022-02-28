@@ -72,7 +72,7 @@ class Confirmation {
         
         
         if($user->save()){
-          var_dump($_POST);
+          // var_dump($_POST);
           $user_recovery->setId($id);
           $user_recovery->setEmail($email);
           $user_recovery->setTokenExpiry(0);
@@ -89,7 +89,7 @@ class Confirmation {
         
       }
 
-      var_dump($currentDate);
+      // var_dump($currentDate);
     }
     
   }

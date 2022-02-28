@@ -28,6 +28,11 @@ class User extends Sql
         return $this->id;
     }
 
+    public function setId($id): ?int
+    {
+        return $this->id = $id;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
