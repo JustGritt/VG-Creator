@@ -23,7 +23,7 @@ class User {
         //var_dump($_GET);
         $token =  (string)$_GET['code'];
         $user_info = $facebooklogin->login($token);
-        
+        //var_dump($user_info);
         if($user_info)
         {
             $oauth_user = new OauthUser();
@@ -45,9 +45,9 @@ class User {
             header("Location: ".DOMAIN."/dashboard"); 
         
             //echo 'Bienvenue' .$user_info['id'] . ' ' .$user_info['name'] . '' .$user_info['email'];
-            var_dump($_SESSION);
+            //var_dump($_SESSION);
         }else{
-            echo "OOps sorry something went wrong with google";
+            echo "OOps sorry something went wrong with facebook";
             //unset($_SESSION['id']);
             //unset($_SESSION['code']);
             //unset($_SESSION['email']);
@@ -93,21 +93,21 @@ class User {
                 return false; 
             }
         }else if(!empty($_GET)){
-            var_dump($_POST);
+            //var_dump($_GET);
             $oauth_user = new OauthUser();
-            $redirect_uri = "".DOMAIN."/login";
+            $redirect_uri = DOMAIN."/login";
             $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
             //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
             $access_token = $data['access_token'];
             $user_info = $this->GetUserProfileInfo($access_token);
-            //var_dump($user_info);
+            var_dump($data);
             if($user_info['verified_email']){
                 $_SESSION['id'] = $user_info['id'];
                 $_SESSION['email'] = $user_info['email'];
                 $_SESSION['code'] = $access_token;
                 $_SESSION['lastname'] = $user_info['family_name'];
                 $_SESSION['firstname'] = $user_info['given_name'];
-                //var_dump($oauth_user->isUserExist($user_info['email']));
+                var_dump($oauth_user->isUserExist($user_info['email']));
                 if(!$oauth_user->isUserExist($user_info['email'])){
                     $oauth_user->setFirstname($user_info['given_name']);
                     $oauth_user->setLastname($user_info['family_name']);
@@ -126,7 +126,7 @@ class User {
                 unset($_SESSION['email']);
                 //var_dump(isset($_SESSION['id']));
                 var_dump($_SESSION);
-                header("Refresh: 5; ".DOMAIN."/login "); 
+                //header("Refresh: 5; ".DOMAIN."/login "); 
             }
         }
         
