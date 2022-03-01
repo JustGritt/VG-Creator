@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="../dist/css/back-right-panel.css">
     <link rel="stylesheet" href="../dist/css/back-home.css">
 
-
     <link rel="stylesheet" href="../dist/fontawesome/css/all.css">
-    <link rel="stylesheet" href="../dist/fontawesome/css/fontawesome.css">
-
+     <link rel="stylesheet" href="../dist/fontawesome/css/fontawesome.css">
 </head>
 <body>
 
