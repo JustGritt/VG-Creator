@@ -82,7 +82,7 @@ body {
             &::placeholder{ color: inherit; }
             & + input[type="submit"] {
               position: absolute;
-              top: calc(50% - 10px);
+              top: calc(50% - 12px);
               left: calc(100% - 75px - 6px);
               transform: translate(-50%,-50%);
               background: rgba(12,14,29, .6);
@@ -107,7 +107,7 @@ body {
         top: 40vh;
         right: 0;
         width: 560px;
-        transition: all .2s ease-in-out;
+        transition: width .2s ease-in-out;
         @media only screen and (max-width: 1200px) {
           top: 55vh;
           width: 360px;

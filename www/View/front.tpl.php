@@ -6,6 +6,7 @@
     <meta name="description" content="Description de ma page">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../dist/css/main.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -53,10 +54,10 @@
         <div class="footer-credits">
             <p>© 2022 VG-CREATOR, Inc. All rights reserved</p>
             <div class="social-media">
-                <a href="#"><img src="" alt=""><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><img src="" alt=""><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><img src="" alt=""><i class="fa-brands fa-github"></i></a>
-                <a href="#"><img src="" alt=""><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-github"></i></a>
             </div>
         </div>
     </footer>

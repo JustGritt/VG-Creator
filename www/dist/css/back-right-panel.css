@@ -1,0 +1,99 @@
+@charset "UTF-8";
+/* COLORS VARIABLES  
+======================= */
+/* DASHBOARD PALETTE  
+======================= */
+.right-panel-dasboard {
+  max-width: 300px;
+  min-width: 300px;
+  height: 100vh;
+  border-radius: 0;
+  background: #E6E9F4;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.4s ease-in-out;
+}
+.right-panel-dasboard header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  min-height: 107px;
+  justify-content: center;
+}
+.right-panel-dasboard header img {
+  width: 95px;
+}
+
+.right-panel-dasboard nav {
+  margin-top: 23px;
+}
+
+.right-panel-menu-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  justify-content: flex-end;
+  height: 100%;
+  bottom: 0;
+}
+.right-panel-menu-bottom img {
+  width: 72px;
+  height: 72px;
+  border-radius: 90px;
+}
+.right-panel-menu-bottom p {
+  font-size: 14px;
+  color: #141827;
+  margin-top: 10px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.right-panel-menu ul li {
+  padding: 10px;
+  margin: 2px 0;
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+}
+.right-panel-menu ul li:hover {
+  background: rgba(255, 255, 255, 0.685);
+  border-radius: 12px;
+}
+.right-panel-menu ul li img {
+  width: 22px;
+}
+.right-panel-menu ul li a {
+  color: #2D4392;
+  align-items: center;
+  display: flex;
+  text-decoration: none;
+  pointer-events: none;
+}
+.right-panel-menu ul li span {
+  margin-left: 10px;
+  display: block;
+}
+
+/* TEMP
+========== */
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono", "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Undefined variable.\a    ╷\a 74 │         background-color: $dark-moy-blue;\a    │                           ^^^^^^^^^^^^^^\a    ╵\a   src/scss/back-home.scss 74:27  root stylesheet";
+}
+
+/*# sourceMappingURL=back-right-panel.css.map */

@@ -52,10 +52,10 @@ class PasswordRecovery {
                 //Send a special link with a expiry 
 
                 $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;       
-               // $toanchor =  DOMAIN."/reset-new-password?selector='.$selector.'&token='.$recovery_token";
+                // $toanchor =  DOMAIN ."/reset-new-password?selector='.$selector.'&token='.$recovery_token;
                 
                 $template_var = array(
-                    "{{product_url}}" => "http://localhost/",
+                    "{{product_url}}" => DOMAIN."",
                     "{{product_name}}" => "VG-CREATOR",
                     "{{name}}" => $user->getFirstname(),
                     "{{action_url}}" => $toanchor,

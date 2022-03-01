@@ -72,11 +72,19 @@ body footer {
                 width: auto;
             }
 
-            & .social-media {
-                color: c.$noir;
-                font-weight: 500;
-                font-size: 12px;
-              
+            .social-media {
+
+                margin-right: 38px;
+
+                i {
+                    color: #000;
+                    margin: 0 10px;
+                    font-size: 24px;
+                    transition: transform .2s ease-in-out;
+                    &:hover {
+                        transform: scale(1.2);                   
+                     }
+                }
             }
 
         
