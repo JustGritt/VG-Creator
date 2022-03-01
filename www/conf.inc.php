@@ -21,4 +21,4 @@ define("SMTP_PWD", "ESGI2021");
 
 //Google aouth
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
-define("GOOGLE_SECRET" , "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");
+define("GOOGLE_SECRET" , "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");
