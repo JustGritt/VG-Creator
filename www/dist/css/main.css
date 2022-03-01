@@ -457,7 +457,7 @@ header .right-items {
   }
   header .right-items a.button--secondary {
     padding: 3px 12px;
-    font-size: 1rem;
+    font-size: clamp(.7rem, 1rem, 1.2rem);
   }
 }
 header .right-items .switch {
@@ -557,6 +557,15 @@ body footer .footer-credits p {
 }
 body footer .footer-credits .social-media {
   margin-right: 38px;
+}
+body footer .footer-credits .social-media i {
+  color: #000;
+  margin: 0 10px;
+  font-size: 24px;
+  transition: transform 0.2s ease-in-out;
+}
+body footer .footer-credits .social-media i:hover {
+  transform: scale(1.2);
 }
 
 /* IMPORTS
@@ -741,7 +750,7 @@ body main section#home .hero-input input[type=email]::placeholder {
 }
 body main section#home .hero-input input[type=email] + input[type=submit] {
   position: absolute;
-  top: calc(50% - 10px);
+  top: calc(50% - 12px);
   left: calc(100% - 75px - 6px);
   transform: translate(-50%, -50%);
   background: rgba(12, 14, 29, 0.6);
@@ -762,7 +771,7 @@ body main section#home img.hero-img {
   top: 40vh;
   right: 0;
   width: 560px;
-  transition: all 0.2s ease-in-out;
+  transition: width 0.2s ease-in-out;
 }
 @media only screen and (max-width: 1200px) {
   body main section#home img.hero-img {

@@ -3,7 +3,7 @@
 
         <div class="hero-container flex">
             <h1 class="title">Faites de vos idées une réalité</h1>
-            <h2 class="subtitle">Simplifiez vous la vie et optez pour un site web de qualité</h2>
+            <h2 class="sub-title">Simplifiez vous la vie et optez pour un site web de qualité</h2>
 
             <div class="hero-input">
                 <input type="email" name="mail" id="mail" placeholder="Saisir votre adresse mail">

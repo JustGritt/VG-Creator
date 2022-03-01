@@ -70,5 +70,14 @@ body footer .footer-credits p {
 body footer .footer-credits .social-media {
   margin-right: 38px;
 }
+body footer .footer-credits .social-media i {
+  color: #000;
+  margin: 0 10px;
+  font-size: 24px;
+  transition: transform 0.2s ease-in-out;
+}
+body footer .footer-credits .social-media i:hover {
+  transform: scale(1.2);
+}
 
 /*# sourceMappingURL=footer.css.map */

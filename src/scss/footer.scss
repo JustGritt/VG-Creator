@@ -72,8 +72,18 @@ body footer {
                 width: auto;
             }
 
-            & .social-media {
+            .social-media {
+
                 margin-right: 38px;
+
+                i {
+                    color: #000;
+                    margin: 0 10px;
+                    font-size: 24px;
+                    transition: transform .2s ease-in-out;
+                    &:hover {
+                        transform: scale(1.2);                    }
+                }
             }
         }
     }
