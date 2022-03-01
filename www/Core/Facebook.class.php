@@ -16,7 +16,7 @@ class Facebook
         $url = "https://graph.facebook.com/v13.0/oauth/access_token?";
         $client_id = "343703544163557";
         $client_secret = "543b46d85481555a39f341f663706972";
-        $redirect_uri = 'http://localhost/login-fb';
+        $redirect_uri = DOMAIN.'/"login-fb';
         //$token =  (string)$_GET['code'];
         
         $user_token = $this->GetAccessTokenfb($client_id , $redirect_uri , $client_secret , $token);

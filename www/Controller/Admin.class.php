@@ -17,7 +17,7 @@ class Admin
     {       
 
         if(empty($_SESSION['id']) && empty($_SESSION['token'])){
-            header("Location: http://localhost/login");   
+            header("Location: ".DOMAIN."/login");   
         }
         
         

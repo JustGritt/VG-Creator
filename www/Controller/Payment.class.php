@@ -25,7 +25,9 @@ class Payment {
 
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost/';
+        //$YOUR_DOMAIN = 'http://localhost/';
+        //$YOUR_DOMAIN = 'http://localhost/';
+
         $stripe = new \Stripe\StripeClient('sk_test_51KWK7NKk8eBsPmrsFxgEhYtLHITTT9Mks1lnwrwdtEdkQ5rMJB8llvUHVxk84ys262tBVGvgkMk1t71BT2nIilf900Roq5sRyD');
         $customer = $stripe->customers->create([
             'description' => 'Charles',
@@ -41,8 +43,8 @@ class Payment {
         'quantity' => 1,
         ]],
         'mode' => 'payment',
-        'success_url' => $YOUR_DOMAIN . 'view/success.view.php',
-        'cancel_url' => $YOUR_DOMAIN . 'view/cancel.view.php',
+        'success_url' => DOMAIN . 'view/success.view.php',
+        'cancel_url' => DOMAIN . 'view/cancel.view.php',
         'automatic_tax' => [
         'enabled' => true,
         ],

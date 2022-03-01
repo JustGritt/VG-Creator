@@ -3,9 +3,3 @@ www/.env*
 www/conf.inc.php
 
 
-
-<<<<<<< HEAD
-www/dist/*
-conf.inc.php
-=======
->>>>>>> hotfix-navigation

@@ -22,11 +22,11 @@ class Confirmation {
       $user->confirmUser($getId, $getToken);
       echo 'Your account has been validated! ' ."<br>";
       echo 'You will be redirect to the login page in few secondes ' ."<br>";
-      header("Refresh: 3; http://localhost/login" );   
+      header("Refresh: 3; ".DOMAIN."/login" );   
     }else {
       echo "une erreur sait produite...";
       sleep(5);
-      header("Location: http://localhost/" );   
+      header("Location: ".DOMAIN."/" );   
     } 
      
   }
@@ -52,7 +52,7 @@ class Confirmation {
       //var_dump($user_recovery);
       if(!$user_recovery->isExpiryResetToken($selector, $currentDate)){
           echo "Sorry. The link is no longer valid , you will be redirected soon...";
-          header("Refresh: 3; http://localhost/forget" ); 
+          header("Refresh: 3; ".DOMAIN."/forget" ); 
       }
   
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -79,11 +79,11 @@ class Confirmation {
           $user_recovery->save();
           echo 'You password has been reset!' ."<br>";
           echo 'You will be redirect to the login page soon..';
-          header("Refresh: 3; http://localhost/login" ); 
+          header("Refresh: 3; ".DOMAIN."/login" ); 
         }else{
           echo 'OOps something went wrong during the update of your password' ;
           echo 'You will be redirect soon ...';
-          header("Refresh: 3; http://localhost/forget" ); 
+          header("Refresh: 3; ".DOMAIN."/forget" ); 
         }
         
         

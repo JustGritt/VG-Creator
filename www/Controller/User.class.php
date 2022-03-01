@@ -42,7 +42,7 @@ class User {
                 $oauth_user->save();     
             }
             echo "Bienvenue"; 
-            header("Location: http://localhost/dashboard"); 
+            header("Location: ".DOMAIN."/dashboard"); 
         
             //echo 'Bienvenue' .$user_info['id'] . ' ' .$user_info['name'] . '' .$user_info['email'];
             var_dump($_SESSION);
@@ -53,7 +53,7 @@ class User {
             //unset($_SESSION['email']);
             //var_dump(isset($_SESSION['id']));
             var_dump($_SESSION);
-            header("Refresh: 5; http://localhost/login "); 
+            header("Refresh: 5; ".DOMAIN."/login "); 
         }
         
     }
@@ -87,7 +87,7 @@ class User {
                 $_SESSION['firstname']  = $userverify['firstname'];
                 $_SESSION['id'] = $userverify['id'];
                 echo "Bienvenue"; 
-                header("Location: http://localhost/dashboard" );   
+                header("Location: ".DOMAIN."/dashboard" );   
             }else{
                 echo "<strong class='alert'>mot de passe incorrect</strong>";
                 return false; 
@@ -95,7 +95,7 @@ class User {
         }else if(!empty($_GET)){
             var_dump($_POST);
             $oauth_user = new OauthUser();
-            $redirect_uri = 'http://localhost/login';
+            $redirect_uri = "".DOMAIN."/login";
             $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
             //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
             $access_token = $data['access_token'];
@@ -118,7 +118,7 @@ class User {
                 }
                 //TODO: envoyer en DB l'utilisateur
                 echo "Bienvenue"; 
-                header("Location: http://localhost/dashboard"); 
+                header("Location: ".DOMAIN."/dashboard"); 
             }else{
                 echo "OOps sorry something went wrong with google";
                 unset($_SESSION['id']);
@@ -126,7 +126,7 @@ class User {
                 unset($_SESSION['email']);
                 //var_dump(isset($_SESSION['id']));
                 var_dump($_SESSION);
-                header("Refresh: 5; http://localhost/login "); 
+                header("Refresh: 5; ".DOMAIN."/login "); 
             }
         }
         
@@ -154,15 +154,15 @@ class User {
                 $_SESSION['id'] = $id;
                 //var_dump($_SESSION);
                 //var_dump($user->setRegisterForm());
-                $toanchor = 'http://localhost/confirmation?id='.$id.'&token='.$user->getToken();
+                $toanchor = DOMAIN.'"/confirmation?id='.$id.'&token='.$user->getToken();
                 //$body =  "<a href=".$toanchor.">Click here</a>";
                 
                 $template_var = array(
-                    "{{product_url}}" => "http://localhost/",
+                    "{{product_url}}" => "".DOMAIN."/",
                     "{{product_name}}" => "VG-CREATOR",
                     "{{name}}" => $user->getFirstname(),
                     "{{action_url}}" => $toanchor,
-                    "{{login_url}}" => "http://localhost/login",
+                    "{{login_url}}" => "".DOMAIN."/login",
                     "{{username}}" =>  $user->getEmail(),
                     "{{support_email}}" => "contact@vgcreator.fr",
                     "{{sender_name}}" => "VG-CREATOR",
@@ -191,7 +191,7 @@ class User {
                 echo 'Merci pour votre inscription, confirmez votre email';
                 unset($_SESSION['id']);
                 session_destroy();
-                header("Refresh: 5; http://localhost/ "); 
+                header("Refresh: 5; ".DOMAIN."/"); 
             }else{
                 echo 'Mot de passe different..';
                 //header("Location: http://localhost/register" );
@@ -212,7 +212,7 @@ class User {
         unset($_SESSION['email']);
         unset($_SESSION['firstname']);
         session_destroy();
-        header("Location: http://localhost/login" );   
+        header("Location: ".DOMAIN."/login" );   
     }
 
 

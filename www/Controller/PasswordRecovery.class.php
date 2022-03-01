@@ -17,6 +17,7 @@ class PasswordRecovery {
     {
         //var_dump($_SESSION);
         echo "Mot de passe oublié"."<br>";
+        $template_file = "/var/www/html/Templates/password_recovery_email.php";
         $user = new UserModel();
         $password_recovery = new Recovery();
         $mail = new Mail();
@@ -49,9 +50,33 @@ class PasswordRecovery {
                 $password_recovery->recovery_password($selector, $email, $recovery_token, $recovery_token_expiry);
 
                 //Send a special link with a expiry 
-                $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;       
-                $body =  "<a href=".$toanchor.">Click here</a>";
-    
+
+                //$toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;       
+                $toanchor =  DOMAIN ."/reset-new-password?selector='.$selector.'&token='.$recovery_token;
+                
+                $template_var = array(
+                    "{{product_url}}" => ".DOMAIN."",
+                    "{{product_name}}" => "VG-CREATOR",
+                    "{{name}}" => $user->getFirstname(),
+                    "{{action_url}}" => $toanchor,
+                    "{{support_email}}" => "contact@vgcreator.fr",
+                    "{{company_name}}" => "VG-CREATOR",
+                );
+
+                if(file_exists($template_file)){
+                    $body = file_get_contents($template_file);
+                }else{
+                    die('ennable to load the templates');
+                }
+                
+                //swapping the variable into the templates
+                foreach(array_keys($template_var) as $key){
+                    if(strlen($key) > 2 && trim($key) != ""){
+                        $body = str_replace($key, $template_var[$key], $body);
+                        
+                    }
+                }
+            
                 $subject = "Mot de passe oublié ?";
                 $mail->sendMail($email , $body, $subject);
                
