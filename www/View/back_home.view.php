@@ -12,44 +12,127 @@
                 <h2>Bienvenue !</h2>
             </div>
 
-            <div class="card-info-dasboard">
-
-                <div>
+            <div class="all-card-info-dasboard">
+                <div class="card-info-dasboard">
                     <div>
-                        <div class="card-info-icons">
-                            <i class="fas fa-eye"></i>
+                        <div>
+                            <div class="card-info-icons">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h4>Vues</h4>
+                            <h5>5666</h5>
+                            <h4>Par jour</h4>
                         </div>
-                        <h4>Vues</h4>
-                        <h5>5666</h5>
-                        <h4>Par jour</h4>
-                    </div>
 
-                    <div>
-                        <div class="card-info-icons">
-                            <i class="fas fa-eye"></i>
+                        <div>
+                            <div class="card-info-icons">
+                                <i class="far fa-compass"></i>
+                            </div>
+                            <h4>Vues</h4>
+                            <h5>5666</h5>
+                            <h4>Par jour</h4>
                         </div>
-                        <h4>Vues</h4>
-                        <h5>5666</h5>
-                        <h4>Par jour</h4>
-                    </div>
 
-                    <div>
-                        <div class="card-info-icons">
-                            <i class="fas fa-eye"></i>
+                        <div>
+                            <div class="card-info-icons">
+                                <i class="fal fa-users"></i>
+                            </div>
+                            <h4>Utilisateurs</h4>
+                            <h5>5666</h5>
+                            <h4>Par jour</h4>
                         </div>
-                        <h4>Utilisateurs</h4>
-                        <h5>5666</h5>
-                        <h4>Par jour</h4>
                     </div>
                 </div>
 
+                <div class="other-cards-info-dasboard">
+                    <div class="first-part-other-cards-info">
+                        <div>
+                            <div class="left-part-card">
+                                <div>
+                                    <h4>Score SEO</h4>
+                                    <h5>Récap global</h5>
+                                </div>
+                                <h6>5666</h6>
+                            </div>
+                            <div class="right-part-card">
+                                <canvas id="myChart" width="160" height="150"></canvas>
+                            </div>
+                        </div>
 
+                        <div>
+                            <div class="left-part-card">
+                                <div>
+                                    <h4>Édition</h4>
+                                    <h5>Gestionnaire de blog</h5>
+                                </div>
+                                <h6>5666</h6>
+                            </div>
+                            <div class="right-part-card">
+                                <img src="../dist/assets/icons/star.png" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="left-part-card">
+                                <div>
+                                    <h4>Abonnements</h4>
+                                    <h5>Nombre total</h5>
+                                </div>
+                                <h6>66</h6>
+                            </div>
+                            <div class="right-part-card">
+                                <div style="width:160px" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-info-dasboard-right">
-
+            <div class="card-publications-dasboard">
+                <div>
+                  
+                </div>
             </div>
+
+
+
+
+            <!-- <div class="card-info-dasboard-right">
+
+            </div> -->
 
         </section>
     </div>
 </main>
+
+<script>
+    // const Chart = document.getElementById("myChart");
+
+    // console.log(Chart)
+
+    const myChart = new Chart("myChart", {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', ],
+            datasets: [{
+                label: null,
+                data: [0, 2, 3, 6],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                ],
+
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
