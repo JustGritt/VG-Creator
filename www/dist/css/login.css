@@ -167,7 +167,7 @@ input:focus, input:active {
         right: 0;
         bottom: 0;
         background-color: transparent;
-        border: 1px solid c.$noir;
+        border: 1px solid c.$black;
         -webkit-transition: .2s;
         transition: .2s;
 
@@ -178,7 +178,7 @@ input:focus, input:active {
             width: 28px;
             left: 4px;
             bottom: 4px;
-            background-color: c.$noir;
+            background-color: c.$black;
             -webkit-transition: .4s;
             transition: .4s;
         }
@@ -205,7 +205,7 @@ input:focus, input:active {
             -webkit-transform: translateX(28px);
             -ms-transform: translateX(28px);
             transform: translateX(28px);
-            background-color: c.$blanc;
+            background-color: c.$white;
         }
     }
 }

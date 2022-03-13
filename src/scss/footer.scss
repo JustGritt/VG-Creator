@@ -38,12 +38,12 @@ body footer {
                         font-weight: 500;
                         font-size: clamp(12px, 4vw, 22px);
                         line-height: 26px;
-                        color: c.$noir;
+                        color: c.$black;
                         text-decoration: none;
                         text-transform: uppercase;
 
                         &::after {
-                            background: c.$noir;
+                            background: c.$black;
                         }
                     }
                 }
@@ -63,7 +63,7 @@ body footer {
             align-items: center;
 
             p {
-                color: c.$noir;
+                color: c.$black;
                 font-weight: 500;
                 font-size: 12px;
                 line-height: 14px;

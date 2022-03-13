@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="../dist/css/template.css">
+
 <main>
     <section id="home">
 
@@ -6,8 +8,8 @@
             <h2 class="sub-title">Simplifiez vous la vie et optez pour un site web de qualité</h2>
 
             <div class="hero-input">
-                <input type="email" name="mail" id="mail" placeholder="Saisir votre adresse mail">
-                <input type="submit" value="S'inscrire" class="button">
+                <a href="#" class="button">Découvrir VG-Creator</a>
+                <a href="#" class="button">Découvrir VG-Creator</a>
             </div>
         </div>
 

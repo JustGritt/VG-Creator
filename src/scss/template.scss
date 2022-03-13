@@ -1,0 +1,23 @@
+/* IMPORTS
+ ========== */
+
+@use './partials/buttons';
+
+@use './mixins/global' as g;
+@use './mixins/fonts' as f;
+@use './mixins/colors' as c;
+
+/* CLASSES MAIN
+ ========== */
+
+body {
+    background: c.$black;
+    
+    main {
+        
+        section#home {
+            
+            background-image: linear-gradient(to top, #000000, #140004, #200106, #280104, #310000);
+        }
+    }
+}

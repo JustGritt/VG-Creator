@@ -86,7 +86,7 @@ body {
               left: calc(100% - 75px - 6px);
               transform: translate(-50%,-50%);
               background: rgba(12,14,29, .6);
-              color: c.$blanc;
+              color: c.$white;
               justify-content: center;
               width: 100%;
               height: 48px;
@@ -121,7 +121,7 @@ body {
     section#templates {
       width: 100vw;
       background: #fff;
-      color: c.$noir;
+      color: c.$black;
 
       h3, p {
         margin: 0 60px;
@@ -163,7 +163,7 @@ body {
 
     section#faq {
       background: #EFF3FE;
-      color: c.$noir;
+      color: c.$black;
       display: block;
 
       .faq-wrapper {
@@ -178,9 +178,9 @@ body {
               display: none;
           }
           & label {
-            color: c.$noir;
+            color: c.$black;
             font-size: 18px;
-            border-bottom: 1px solid c.$noir;
+            border-bottom: 1px solid c.$black;
 
             position: relative;
             cursor: pointer;
@@ -215,7 +215,7 @@ body {
               transition: height,max-height 1.5s ease-in;
               & .inner{
                 font-size: 1.2rem;
-                color: c.$noir;
+                color: c.$black;
                 background: inherit;
                 line-height: 1.5;
                 padding: 20px 10px;
@@ -224,7 +224,7 @@ body {
           input[type=radio]:checked + label::after {
             width: 8px;
             height: 8px;
-            background: c.$noir;
+            background: c.$black;
             border-radius: 100%;
             transform: translateY(0%);
 

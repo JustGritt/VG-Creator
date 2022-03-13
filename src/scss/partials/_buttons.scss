@@ -10,7 +10,7 @@
  ========== */
 
 .button {
-    color: c.$blanc;
+    color: c.$white;
     padding: 6px 16px;
     border-radius: 25px;
     width: auto;
@@ -19,13 +19,13 @@
     transition: .2s;
     border: none;
     &:hover {
-        background: c.$noir;
-        color: c.$blanc;
+        background: c.$black;
+        color: c.$white;
     }
 
     &--primary {
-        background: c.$noir;
-        color: c.$blanc;
+        background: c.$black;
+        color: c.$white;
         padding: 6px 16px;
         border-radius: 25px;
         width: auto;
@@ -35,12 +35,12 @@
         border: none;
         &:hover {
             background: transparent;
-            color: c.$noir;
-            border: 1px solid c.$noir;
+            color: c.$black;
+            border: 1px solid c.$black;
         }
     }
     &--secondary {
-        color: c.$noir;
+        color: c.$black;
         background: transparent;
         padding: 6px 16px;
         border-radius: 25px;
@@ -49,17 +49,17 @@
         // -webkit-transition: .2s;
         transition: .2s;
         border: none;
-        border: 1px solid c.$noir;
+        border: 1px solid c.$black;
         &:hover {
-            color: c.$blanc;
-            background: c.$noir;
+            color: c.$white;
+            background: c.$black;
         }
     }
     &--accent {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
-        background: c.$noir;
-        color: c.$blanc;
+        border: 1px solid c.$white;
+        color: c.$white;
+        background: c.$black;
+        color: c.$white;
     }
     &--squared {
         background: transparent;
@@ -82,17 +82,17 @@
         
     }
     &--arrow {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
-        background: c.$noir;
+        border: 1px solid c.$white;
+        color: c.$white;
+        background: c.$black;
     }
 
     &--dark {
-        background: c.$gris;
-        color: c.$blanc;
+        background: c.$grey;
+        color: c.$white;
         &:hover {
-            background: c.$gris;
-            color: c.$noir;
+            background: c.$grey;
+            color: c.$black;
         }
     }
 }
@@ -120,7 +120,7 @@
         right: 0;
         bottom: 0;
         background-color: transparent;
-        border: 1px solid c.$noir;
+        border: 1px solid c.$black;
         -webkit-transition: .2s;
         transition: .2s;
 
@@ -131,7 +131,7 @@
             width: 28px;
             left: 4px;
             bottom: 4px;
-            background-color: c.$noir;
+            background-color: c.$black;
             -webkit-transition: .4s;
             transition: .4s;
         }
@@ -158,7 +158,7 @@
             -webkit-transform: translateX(28px);
             -ms-transform: translateX(28px);
             transform: translateX(28px);
-            background-color: c.$blanc;
+            background-color: c.$white;
         }
     }
 }
@@ -185,7 +185,7 @@
         right: 0;
         bottom: 0;
         background-color: transparent;
-        border: 1px solid c.$noir;
+        border: 1px solid c.$black;
         -webkit-transition: .2s;
         transition: .2s; // disable
 
@@ -196,7 +196,7 @@
             width: 14px;
             left: 4px;
             bottom: 4px;
-            background-color: c.$noir;
+            background-color: c.$black;
             -webkit-transition: .4s;
             transition: .4s;
         }
@@ -223,7 +223,7 @@
             -webkit-transform: translateX(16px);
             -ms-transform: translateX(16px);
             transform: translateX(16px);
-            background-color: c.$blanc;
+            background-color: c.$white;
         }
     }
 }
@@ -245,14 +245,14 @@ input[type="submit"] {
     filter: none;
 
     &:hover {
-        background: c.$noir;
-        color: c.$blanc;
+        background: c.$black;
+        color: c.$white;
     }
 
     &.primary {
-        border: 1px solid c.$blanc;
-        color: c.$blanc;
-        background: c.$noir;
+        border: 1px solid c.$white;
+        color: c.$white;
+        background: c.$black;
     }
 
 }
