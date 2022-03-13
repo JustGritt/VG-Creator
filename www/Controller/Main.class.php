@@ -11,6 +11,11 @@ class Main {
         $view = new View("front_website");
     }
 
+    public function template()
+    {
+        $view = new View("front_template");
+    }
+
 
 
 

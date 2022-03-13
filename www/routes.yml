@@ -2,6 +2,10 @@
   controller: main
   action: home 
 
+/template:
+  controller: main
+  action: template
+
 /login:
   controller: user
   action: login
