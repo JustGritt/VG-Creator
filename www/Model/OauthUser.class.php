@@ -2,8 +2,10 @@
 namespace App\Model;
 
 use App\Core\Sql;
+use App\Core\SqlPDO;
 
-class OauthUser extends Sql
+
+class OauthUser extends SqlPDO
 {
     protected $id = null;
     protected $firstname = null;
@@ -11,10 +13,16 @@ class OauthUser extends Sql
     protected $email;
     protected $oauth_id = null;
     protected $oauth_provider = null;
+    protected $pdo = null;
+    protected $table;
  
-    public function __construct()
-    {
-        parent::__construct();
+    public function __construct(){
+        
+        $this->pdo = SqlPDO::connect();
+        $calledClassExploded = explode("\\",get_called_class());
+        $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
+        
+        //parent::__construct();
     }
 
     public function getId(): ?int
@@ -105,5 +113,13 @@ class OauthUser extends Sql
         $this->oauth_provider = (trim($oauth_provider));
     }
   
+    public function isUserExist($email)
+    {
+      $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+      $sql->execute(array($email));
+      $result = $sql->fetch();
+      
+      return !!$sql->rowCount();
+    }
 
 }

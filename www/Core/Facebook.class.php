@@ -58,7 +58,7 @@ class Facebook
         return $data;
 
     }
-
+    c
     public function GetAccessTokenfb($client_id, $redirect_uri, $client_secret, $token) {	
         $url = "https://graph.facebook.com/v13.0/oauth/access_token?";		
     

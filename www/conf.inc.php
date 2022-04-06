@@ -19,6 +19,7 @@ define("SMTP_PWD", "ESGI2021");
 //define("SMTP_PWD", "364a064d-be01-4096-97fd-1591c1132128");
 
 
-//Google aouth
+//Google aouth 
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
-define("GOOGLE_SECRET" , "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");
+define("GOOGLE_SECRET" , "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");
+
