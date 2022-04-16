@@ -2,19 +2,24 @@
 namespace App\Model;
 
 use App\Core\Sql;
+use App\Core\SqlPDO;
 
-class PasswordRecovery extends Sql
-{
-    private $pdo;
+
+class PasswordRecovery extends SqlPDO {
+   
     protected $id = null;
     protected $email;
     protected $token = null;
     protected $token_expiry = null;
     protected $selector = null;
+    protected $pdo = null;
+    protected $table;
 
     public function __construct()
     {
-        parent::__construct();
+        $this->pdo = SqlPDO::connect();
+        $calledClassExploded = explode("\\",get_called_class());
+        $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
 
     public function getId(): ?int
@@ -77,6 +82,29 @@ class PasswordRecovery extends Sql
         ];
     }
 
+
+    public function recovery_password($selector, $email, $token, $token_recovery)
+    {
+        $sql = "INSERT INTO ".$this->table." (selector, email, token, token_expiry) VALUES (?,?,?,?)";
+        $insert= $this->pdo->prepare($sql);
+        $insert->execute(array($selector, $email, $token, $token_recovery));
+        
+    }
+  
+    public function isExpiryResetToken($selector, $currentDate)
+    {
+        $result = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE selector = ? AND token_expiry >= ? ");
+        $result->execute(array($selector, $currentDate));
+        $userexist = $result->fetch();
+        
+        if($result->rowCount() > 0){
+            return $userexist;
+        }else{
+            return false;
+        }
+        
+  
+    }
   
 
 }
