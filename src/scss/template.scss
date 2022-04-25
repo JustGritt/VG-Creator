@@ -2,6 +2,7 @@
  ========== */
 
 @use './partials/buttons';
+@use './nav.scss';
 
 @use './mixins/global' as g;
 @use './mixins/fonts' as f;
@@ -11,13 +12,144 @@
  ========== */
 
 body {
-    background: c.$black;
-    
+    background: c.$black-abs;
     main {
         
         section#home {
-            
             background-image: linear-gradient(to top, #000000, #140004, #200106, #280104, #310000);
+
+            .hero-container {
+                margin: 0;
+                height: 100%;
+                flex-direction: row;
+                @media screen and (max-width: 768px) {
+                    flex-direction: none;
+                }
+                    
+                
+                .left-side {
+                    width: 75vw;
+                    max-width: 800px;
+                    height: 100%;
+                    margin: 60px;
+                    .hero-cta {
+                        display: flex;
+                        margin: 0;
+                        width: 100%;
+                        @media screen and (max-width: 400px) { display: none; }
+                        .button { 
+                            padding: 15px 20px; 
+                            margin-top: 25px;
+                            margin: 25px 12px;
+                            display: inline-flex;
+                            font-size: clamp(12px, 2vw, 16px);
+                            &:nth-child(1) { margin-left: 0; }
+                            & > svg { margin-right: 10px; }
+                        }
+                    }
+                }
+                .right-side {
+                    height: 100%;
+                    display: flex;
+                    margin-right: 60px;
+                    @media screen and (max-width: 1200px) {
+                        display: none;
+                    }
+                    picture {
+                        width: 100%;
+                        height: 100%;
+                        min-width: 35vw;
+                        iframe {
+                            width: 100%;
+                            height: 50%;
+                        }
+                    }
+                }
+            }
+            
+        }
+
+        section#article {
+            width: 100vw;
+            background: #000;
+            color: c.$white;
+
+            .article-showcase {
+                column-count: 2;
+                column-gap: 0em;
+                margin: 0em;
+                padding: 0;
+                column-gap: 0em;
+                @media only screen and (max-width: 1024px) { column-count: 2; }
+                @media only screen and (max-width: 768px) { column-count: 1; }
+                .article-card {
+                    position: relative;
+                    display: inline-block;
+                    width: 100%;
+                    img{ max-width:100%; }
+                    span.label {
+                        position: absolute;
+                        margin: 50px;
+                        display: block;
+                        border-radius: 4px;
+                        padding: 10px 30px;
+                        font-size: 16px;
+                        color: black;
+                        text-transform: uppercase;
+                        background: white;
+                        transition: all .2s ease-in-out;
+                        user-select: none;
+                        border: 1px transparent solid;
+                    }
+                    &:hover span.label {
+                        background: rgba(255,255,255,.5);
+                        border: 1px solid white;
+                        color: white;
+                    }
+                }
+            }
+            
+            .article-carousel {
+                text-align: center;
+                h2 {
+                    margin: 100px auto;
+                    font-weight: bold;
+                }
+                
+                .carousel {
+                    width: 100%;
+                    position: relative;
+                    &::before, &::after {
+                        position: absolute;
+                        top: 50%;
+                        font-size: 32px;
+                    }
+                    &::before { content: "<"; left: 50px; }
+                    &::after { content: ">"; right: 50px; }
+                    .carousel-item {
+                        display: inline-block;
+                        width: 20%;
+                        margin: 0 10px;
+                        img {
+                            width: 100%;
+                            object-fit: contain;
+                        }
+                    }
+                }
+                
+            }
+            &::after {
+                content: "";
+                width: 100%;
+                height: calc(10vh + 100px);
+                background: #000;
+                position: relative;
+                top: calc(15vh - 100px);
+                left: 0;
+                display: block;
+                transform: skew(0deg, -3deg);
+                z-index: 0;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 /* IMPORTS
  ========== */
 
+@use './mixins/global' as g;
 @use './mixins/colors' as c;
 
 /* CLASSES MAIN
@@ -15,15 +16,17 @@ body footer {
             position: absolute;
             top: 50px;
             left: 50px;
+            @media only screen and (max-width: g.$tablet) {
+                display: none;
+            }
             svg {
-
                 width: 80px;
                 height: auto;
             }
         }
         &-list  {
-            padding: 105px 0;
-            
+            padding-top: 50px;
+            padding-bottom: 25px;
             ul {
                 list-style: none;
                 margin: 0;
@@ -31,9 +34,8 @@ body footer {
                     width: 100%;
                     text-align: center;
                 }
-                li {
+                li { 
                     margin: 20px;
-                    
                     a {
                         font-weight: 500;
                         font-size: clamp(12px, 4vw, 22px);
@@ -41,10 +43,7 @@ body footer {
                         color: c.$black;
                         text-decoration: none;
                         text-transform: uppercase;
-
-                        &::after {
-                            background: c.$black;
-                        }
+                        &::after { background: c.$black; }
                     }
                 }
             }
@@ -61,6 +60,9 @@ body footer {
             background: inherit;
             justify-content: space-between;
             align-items: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
 
             p {
                 color: c.$black;
@@ -73,17 +75,14 @@ body footer {
             }
 
             .social-media {
-
                 margin-right: 38px;
-
+                text-align: center;
                 i {
                     color: #000;
                     margin: 0 10px;
                     font-size: 24px;
                     transition: transform .2s ease-in-out;
-                    &:hover {
-                        transform: scale(1.2);                   
-                     }
+                    &:hover { transform: scale(1.2); }
                 }
             }
 

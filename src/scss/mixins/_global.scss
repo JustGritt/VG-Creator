@@ -8,9 +8,9 @@
 /* VARIABLES GLOBALES
 ======================= */
 
-$breakpoint-big : 960 !default;
-$breakpoint-medium : 767 !default;
-$breakpoint-small : 640 !default;
+$desktop : 1200px !default;
+$tablet : 768px !default;
+$mobile : 480px !default;
 
 /* RESET
 ======================= */
@@ -117,6 +117,10 @@ body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+
+    *--dark {
+        background: c.$black;
     }
 
     a.link {

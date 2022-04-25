@@ -9,30 +9,23 @@
 /* DEFAULT BUTTON
  ========== */
 
-.button {
-    color: c.$white;
-    padding: 6px 16px;
+button, a.button, .button--primary, .button--secondary, .button--secondary--accent {
+    padding: 8px 16px;
     border-radius: 25px;
     width: auto;
     text-decoration: none;
     -webkit-transition: .2s;
     transition: .2s;
     border: none;
-    &:hover {
-        background: c.$black;
-        color: c.$white;
-    }
+}
+
+a.button {
+    color: c.$white;
+    &:hover { background: c.$black; color: c.$white; }
 
     &--primary {
         background: c.$black;
         color: c.$white;
-        padding: 6px 16px;
-        border-radius: 25px;
-        width: auto;
-        text-decoration: none;
-        -webkit-transition: .2s;
-        transition: .2s;
-        border: none;
         &:hover {
             background: transparent;
             color: c.$black;
@@ -42,19 +35,18 @@
     &--secondary {
         color: c.$black;
         background: transparent;
-        padding: 6px 16px;
-        border-radius: 25px;
-        width: auto;
-        text-decoration: none;
-        // -webkit-transition: .2s;
-        transition: .2s;
         border: none;
         border: 1px solid c.$black;
         &:hover {
             color: c.$white;
             background: c.$black;
         }
+        &--accent {
+            color: c.$white;
+            background: c.$black;
+        }
     }
+
     &--accent {
         border: 1px solid c.$white;
         color: c.$white;
@@ -63,23 +55,24 @@
     }
     &--squared {
         background: transparent;
-        border-radius: 60px;
         border: 1px solid #1538B5;
         transition: all 0.2s ease-in-out; // disable
         color: #1538B5;
         border-radius: 5px;
         width: 100%;
         display: block;
-        height: 46px;
-        max-width: 260px;
-        padding: 11px 16px;
-        max-width: 279px;
         font-weight: bold;
         filter: none;
         text-align: center;
-        text-decoration: none;
         margin: 10px 0;
-        
+        &--icon {
+            margin-right: 10px;
+            padding: 11px 16px;
+            border-radius: 2px;
+            background: c.$red;
+            color: c.$white;
+            display: inline;
+        }
     }
     &--arrow {
         border: 1px solid c.$white;
@@ -212,7 +205,7 @@
 
     input {
         &:checked+.slider {
-            background-color: #2196F3;
+            background-color: c.$black;
         }
 
         &:focus+.slider {

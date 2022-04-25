@@ -17,9 +17,7 @@
 
 
             <a class='button--squared ' href="<?= $login_url ?>">GOOGLE CONNEXION</a>
-     
 
-   
             <a class='button--squared' name='facebook' href="<?= $login_url_facebook ?>">FACEBOOK CONNEXION</a>
             
         
