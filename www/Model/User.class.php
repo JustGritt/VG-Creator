@@ -1,7 +1,7 @@
 <?php
 namespace App\Model;
 
-//use App\Core\Sql;
+use App\Core\Sql;
 use App\Core\SqlPDO;
 
 
@@ -16,14 +16,10 @@ class User extends SqlPDO {
     protected $id_role = null;
     protected $token = null;
     protected $pdo = null;
-    protected $table;
-    
 
     public function __construct(){
         
         $this->pdo = SqlPDO::connect();
-        $calledClassExploded = explode("\\",get_called_class());
-        $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
     /**
      * @return null|int
@@ -309,6 +305,7 @@ class User extends SqlPDO {
 
     public function getUserByEmail($email) {
         $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+        
         $sql->execute(array($email));
         $result = $sql->fetch();
         return $result;
@@ -321,7 +318,6 @@ class User extends SqlPDO {
         
         return !!$sql->rowCount();
     }
-    
     public function connexion($getEmail , $getPdw) {
         $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE email = ?");
         $user->execute(array($getEmail));

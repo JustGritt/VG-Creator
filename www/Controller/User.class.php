@@ -111,7 +111,7 @@ class User {
             $_SESSION['id'] = $user_info['id'];
             $_SESSION['email'] = $user_info['email'];
             $_SESSION['code'] = $access_token;
-            $_SESSION['lastname'] = $user_info['family_name'];copi
+            $_SESSION['lastname'] = $user_info['family_name'];
             $_SESSION['firstname'] = $user_info['given_name'];
            
             if (!$oauth_user->isUserExist($user_info['email'])) {
@@ -138,17 +138,19 @@ class User {
         $view = new View("register");
         $view->assign("user", $user);
     
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        //$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST)) {
              
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
             
+            /*
             if ($user->isUserExist($_POST['email'])) {
                 echo 'Vous avez deja un compte';
                 header("Refresh: 5; ".DOMAIN."/login ");
                 return;
             } 
-
+            */
+           
             $user->setFirstname($_POST['firstname']);
             $user->setLastname($_POST['lastname']);
             $user->setEmail($_POST['email']);
@@ -156,8 +158,10 @@ class User {
             $user->generateToken();
             $user->setIdRole(2);
             $user->setStatus(0);
-            $verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
-            
+            $user->save();   
+            //$verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
+            var_dump($user);
+            /*
             if (!$verifyPassword) {
                 echo 'Mot de passe different..';
                 header("Location: http://localhost/register" );
@@ -167,7 +171,7 @@ class User {
             $user->save();   
             $id = $user->getIdFromEmail($user->getEmail());
             $_SESSION['id'] = $id;
-
+            */
             $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
             $template_var = array(
                 "{{product_url}}" => "".DOMAIN."/",

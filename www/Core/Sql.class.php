@@ -11,12 +11,6 @@ abstract class Sql
     public static $instance = array();
     public static $_servers = array();
 
-    /** @var string Database user (eg. root) */
-    protected $user;
-
-    /** @var string Database password (eg. can be empty !) */
-    protected $password;
-
     /** @var string Database name */
     protected $database;
 
@@ -97,11 +91,8 @@ abstract class Sql
 
         return $class;
     }
-    protected function __construct($server, $user, $password, $database, $connect = true)
+    protected function __construct($database, $connect = true)
     {
-      $this->server = $server;
-        $this->user = $user;
-        $this->password = $password;
         $this->database = $database;
       if ($connect) {
         $this->connect();
@@ -142,6 +133,5 @@ abstract class Sql
     {
         return $this->_servers;
     }
-    
     
 }
