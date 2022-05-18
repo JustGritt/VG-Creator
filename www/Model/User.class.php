@@ -16,11 +16,14 @@ class User extends SqlPDO {
     protected $id_role = null;
     protected $token = null;
     protected $pdo = null;
+    protected $table;
 
     public function __construct(){
         
         $this->pdo = SqlPDO::connect();
-    }
+        $calledClassExploded = explode("\\",get_called_class());
+        $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
+    }   
     /**
      * @return null|int
      */
@@ -303,16 +306,17 @@ class User extends SqlPDO {
         return $result['id'];
     }
 
-    public function getUserByEmail($email) {
-        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+    public function getUserByEmail($test) {
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `email` = ?");
         
         $sql->execute(array($email));
+        
         $result = $sql->fetch();
         return $result;
     }
 
     public function isUserExist($email) {
-        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+        $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE email = ? ");
         $sql->execute(array($email));
         $result = $sql->fetch();
         
