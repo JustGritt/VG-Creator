@@ -4,16 +4,16 @@ namespace App\Controller;
 session_start();
 
 use App\Core\CleanWords;
-//use App\Core\Sql as sql;
-use App\Core\SqlPDO as test;
+use App\Core\Sql; 
+//use App\Core\SqlPDO;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 use App\Core\Mail;
 
-class Admin
+class Admin 
 {   
-    protected $pdo = null;
+    protected $pdo;
     public function dashboard()
     {       
         
@@ -21,15 +21,20 @@ class Admin
             header("Location: ".DOMAIN."/login");   
         }
         
-        
         echo "Ceci est un beau dashboard";
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-        //var_dump($_SESSION);
-    
+        /*
+        $user->setIdRole($_SESSION['id_role']);
+        $obj = $user->getUserById($_SESSION['id']);
+        echo '<pre>';
+        var_dump($_SESSION);
+        echo '</pre>';
+        */
 
         $view = new View("dashboard", "back");
         $view->assign("user", $user);
+        
         
         //var_dump($_POST);
         if(!empty($_POST))
@@ -39,13 +44,19 @@ class Admin
         }
     
         $view = new View("product", "back");
-        $this->pdo = test::connect();
-        var_dump($pdo);
-        $sql = 'SELECT * FROM  esgi_user';
-        
-        //var_dump(sql::getInstance()->execute($sql));
+        $sql = "SELECT * FROM esi_user";
+        var_dump(Sql::getInstance(true));
         //$view->assign("firstname", $user->getFirstname());
        
+    }
+
+
+    public function client() {
+        echo "Ceci est un beau client";
+        $view = new View("front_website", "back");
+        $view->assign("user", $user);
+        
+
     }
 
 }

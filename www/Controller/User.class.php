@@ -85,6 +85,8 @@ class User {
             $_SESSION['session_token'] = substr(bin2hex(random_bytes(64)), 0, 128);
             $_SESSION['firstname']  = $userverify['firstname'];
             $_SESSION['id'] = $userverify['id'];
+            $_SESSION['id_role'] = $userverify['id_role'];
+            $view->assign("role", $user->setIdRole(2));
             echo "Bienvenue"; 
             header("Location: ".DOMAIN."/dashboard" );
             
@@ -109,9 +111,10 @@ class User {
             }
            
             $_SESSION['id'] = $user_info['id'];
+            $_SESSION['id_role'] = $user_info['id_role'];
             $_SESSION['email'] = $user_info['email'];
             $_SESSION['code'] = $access_token;
-            $_SESSION['lastname'] = $user_info['family_name'];copi
+            $_SESSION['lastname'] = $user_info['family_name'];
             $_SESSION['firstname'] = $user_info['given_name'];
            
             if (!$oauth_user->isUserExist($user_info['email'])) {
@@ -122,7 +125,7 @@ class User {
                 $oauth_user->setOauth_provider('google_api');
                 $oauth_user->save();     
             }
-           
+            $view->assign("user", $user);
             echo "Bienvenue"; 
             header("Location: ".DOMAIN."/dashboard");
             
@@ -142,13 +145,13 @@ class User {
         if (!empty($_POST)) {
              
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
-            
+        
             if ($user->isUserExist($_POST['email'])) {
                 echo 'Vous avez deja un compte';
                 header("Refresh: 5; ".DOMAIN."/login ");
                 return;
             } 
-
+            
             $user->setFirstname($_POST['firstname']);
             $user->setLastname($_POST['lastname']);
             $user->setEmail($_POST['email']);
@@ -156,6 +159,7 @@ class User {
             $user->generateToken();
             $user->setIdRole(2);
             $user->setStatus(0);
+            
             $verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
             
             if (!$verifyPassword) {
@@ -167,7 +171,7 @@ class User {
             $user->save();   
             $id = $user->getIdFromEmail($user->getEmail());
             $_SESSION['id'] = $id;
-
+            
             $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
             $template_var = array(
                 "{{product_url}}" => "".DOMAIN."/",

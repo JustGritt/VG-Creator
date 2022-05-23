@@ -52,13 +52,10 @@ class Facebook
         if($http_code != 200){
             echo 'Error : Failed to validate access token';
             return false;
-        }
-          
-        
+        }  
         return $data;
-
     }
-    c
+    
     public function GetAccessTokenfb($client_id, $redirect_uri, $client_secret, $token) {	
         $url = "https://graph.facebook.com/v13.0/oauth/access_token?";		
     
