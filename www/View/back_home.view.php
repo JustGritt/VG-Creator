@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="other-cards-info-dasboard">
+                <section class="other-cards-info-dasboard">
                     <div class="first-part-other-cards-info">
                         <div>
                             <div class="left-part-card">
@@ -65,7 +65,7 @@
                                     <h4>Édition</h4>
                                     <h5>Gestionnaire de blog</h5>
                                 </div>
-                                <h6>5666</h6>
+                          
                             </div>
                             <div class="right-part-card">
                                 <img src="../dist/assets/icons/star.png" />
@@ -85,19 +85,53 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
+        </section>
 
-            <div class="card-publications-dasboard">
-                <div>
-                  
-                </div>
+        <section class="card-publications-dasboard">
+            <div>
+                <h4>Dernières publications</h4>
+                <h5>Vos publications récentes</h5>
             </div>
+            <div class="all-articles-publications-dasboard">
+                <article>
+                    <header>
+                        <span>+243 likes</span>
+                        <img src="https://images.unsplash.com/photo-1646762223107-aa30c58c48a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" />
+                    </header>
+                    <h4>Comment etre le plus beaux chez soi</h4>
+                </article>
+
+                <article>
+                    <header>
+                        <span>+243 likes</span>
+                        <img src="https://images.unsplash.com/photo-1646762223107-aa30c58c48a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" />
+                    </header>
+                    <h4>Comment etre le plus beaux chez soi</h4>
+                </article>
+
+                <article>
+                    <header>
+                        <span>+243 likes</span>
+                        <img src="https://images.unsplash.com/photo-1646762223107-aa30c58c48a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" />
+                    </header>
+                    <h4>Comment etre le plus beaux chez soi</h4>
+                </article>
+                <article>
+                    <header>
+                        <span>+243 likes</span>
+                        <img src="https://images.unsplash.com/photo-1646762223107-aa30c58c48a2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" />
+                    </header>
+                    <h4>Comment etre le plus beaux chez soi</h4>
+                </article>
+            
+            </div>
+        </section>
 
 
 
 
-            <!-- <div class="card-info-dasboard-right">
+        <!-- <div class="card-info-dasboard-right">
 
             </div> -->
 

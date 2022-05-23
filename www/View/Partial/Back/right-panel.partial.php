@@ -2,9 +2,7 @@
     <header>
         <img src="../../dist/assets/logo.svg" />
     </header>
-    <?php
-
-    use App\Utils\DynamicSvg; ?>
+    <?php use App\Utils\DynamicSvg; ?>
 
     <nav class="right-panel-menu">
         <ul>
