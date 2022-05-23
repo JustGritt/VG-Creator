@@ -11,12 +11,6 @@ abstract class Sql
     public static $instance = array();
     public static $_servers = array();
 
-    /** @var string Database user (eg. root) */
-    protected $user;
-
-    /** @var string Database password (eg. can be empty !) */
-    protected $password;
-
     /** @var string Database name */
     protected $database;
 
@@ -72,12 +66,14 @@ abstract class Sql
         }
         $test = require '/var/www/html/Core/SqlPDO.class.php' ;
         if (!isset(self::$instance[$id_server])) {
-            $class = (string)$test; 
-            self::$instance[$id_server] = new $class(
-              self::$_servers[$id_server]['server'],
-              self::$_servers[$id_server]['user'],
-              self::$_servers[$id_server]['password'],
-              self::$_servers[$id_server]['database']
+            $class = self::getClass(); 
+            var_dump($class);
+            self::$instance[$id_server] = new $test(
+            
+              self::$_servers[$id_server][DBHOST],
+              self::$_servers[$id_server][DBUSER],
+              self::$_servers[$id_server][DBPWD],
+              self::$_servers[$id_server][DBNAME]
             );
         }
 
@@ -85,6 +81,7 @@ abstract class Sql
     }
     
     abstract public function connect();
+    // abstract protected function _query($sql);
 
     public static function getClass()
     {
@@ -97,11 +94,8 @@ abstract class Sql
 
         return $class;
     }
-    protected function __construct($server, $user, $password, $database, $connect = true)
+    protected function __construct($database, $connect = true)
     {
-      $this->server = $server;
-        $this->user = $user;
-        $this->password = $password;
         $this->database = $database;
       if ($connect) {
         $this->connect();
@@ -142,6 +136,5 @@ abstract class Sql
     {
         return $this->_servers;
     }
-    
     
 }

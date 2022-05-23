@@ -111,7 +111,7 @@ class User {
             $_SESSION['id'] = $user_info['id'];
             $_SESSION['email'] = $user_info['email'];
             $_SESSION['code'] = $access_token;
-            $_SESSION['lastname'] = $user_info['family_name'];copi
+            $_SESSION['lastname'] = $user_info['family_name'];
             $_SESSION['firstname'] = $user_info['given_name'];
            
             if (!$oauth_user->isUserExist($user_info['email'])) {
