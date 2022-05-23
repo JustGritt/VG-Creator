@@ -1,0 +1,89 @@
+/* IMPORTS
+ ========== */
+
+@use './partials/inputs.scss';
+@use './partials/buttons.scss';
+
+@use './mixins/global'as g;
+@use './mixins/colors'as c;
+
+/* CLASSES MAIN
+  ========== */
+
+body main {
+
+    display: block;
+    width: 100%;
+    height: 100vh;
+
+    section#login {
+        height: 100vh;
+        width: 100vw;
+    
+        .hero-container {
+            margin: 150px 60px 0 60px;
+            flex-direction: column;
+            align-items: flex-start;
+    
+            @media only screen and (max-width: 768px) {
+                text-align: center;
+                margin: 150px 15px;
+            }
+    
+        }
+    }
+
+    .wrapper {
+
+        flex-direction: column;
+        color: c.$black;
+        // background: rgba(255, 255, 255, 0.71);
+        // box-shadow: 0px 4px 4px rgba(159, 159, 159, 0.25);
+        backdrop-filter: blur(4px);
+
+        width: 75vw;
+        min-width: 420px;
+        max-width: 768px;
+        border-radius: 31px;
+
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            margin-top: 70px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+            input {
+                margin: 0;
+                &:nth-child(1) { margin-top: 25px; }
+                &[type="submit"] {
+                    margin-top: 75px;
+                }
+            }
+            + a.link {
+                position: relative;
+                top: -100px;
+                margin-left: 10%;
+                align-self: flex-start;
+            }
+
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: em(1px, 6px);
+            line-height: 52px;
+            margin-top: 80px;
+        }
+
+        .inputForm {
+            width: 100%;
+        }
+    }
+}

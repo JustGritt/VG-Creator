@@ -8,14 +8,14 @@ class Main {
 
     public function home()
     {
-        echo "Page d'accueil";
-    }
-
-
-    public function front()
-    {
         $view = new View("front_website");
     }
+
+    public function template()
+    {
+        $view = new View("front_template");
+    }
+
 
 
 

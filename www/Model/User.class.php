@@ -1,35 +1,58 @@
 <?php
 namespace App\Model;
 
-use App\Core\Sql;
+//use App\Core\Sql;
+use App\Core\SqlPDO;
 
-class User extends Sql
-{
+
+class User extends SqlPDO {
+
     protected $id = null;
     protected $firstname = null;
     protected $lastname = null;
     protected $email;
     protected $password;
     protected $status = 0;
+    protected $id_role = null;
     protected $token = null;
+    protected $pdo = null;
+    protected $table;
+    
 
-    public function __construct()
-    {
-
-        parent::__construct();
+    public function __construct(){
+        
+        $this->pdo = SqlPDO::connect();
+        $calledClassExploded = explode("\\",get_called_class());
+        $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
+    }
+    /**
+     * @return null|int
+     */
+    public function getId(): ?int{
+        return $this->id;
     }
 
     /**
      * @return null|int
      */
-    public function getId(): ?int
-    {
-        return $this->id;
+    public function setId($id): ?int{
+        return $this->id = $id;
     }
 
     /**
-     * @return null|string
+     * @return null|int
      */
+    public function getIdRole(): ?int{
+        return $this->id_role;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function setIdRole($id_role): ?int{
+        return $this->id_role = $id_role;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -64,7 +87,7 @@ class User extends Sql
      */
     public function getEmail(): string
     {
-        return $this->email;
+        return  $this->email;
     }
 
     /**
@@ -205,33 +228,112 @@ class User extends Sql
                     "placeholder"=>"Votre mot de passe ...",
                     "required"=>true,
                     "class"=>"inputForm",
-                    "id"=>"pwdForm"
+                    "id"=>"pwdForm",
+                    "error"=>"Mot de passe incorrect"
                 ]
             ]
         ];
     }
 
-    public function setRegisterForm()
+    public function getLogoutForm(): array
     {
-        $firstname = $this->setFirstname($_POST['firstname']);
-        $lastname = $this->setLastname($_POST['lastname']);
-        $email = $this->setEmail($_POST['email']);
-        
-        
-        $password = $this->setPassword($_POST['password']);
-        $initialPassword = password_verify($_POST['password'], $this->getPassword());
-        $verifyPassword = password_verify($_POST['passwordConfirm'], $this->getPassword());
-        
-        // Check password 
-        if( $initialPassword === $verifyPassword) 
-        {
-            return 'Mot de passe correct';
-        } else {
-            return 'Mot de passe invalide';
-        }
-        
-        $status = 0;
-        $token = $this->generateToken();
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"logout",
+                "submit"=>"Deconnexion"
+            ],
+            'inputs'=>[
+                "deco"=>[
+                    "type"=>"button",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"deconnexion",
+                ]
+            ]
+        ];
     }
+
+    public function getPasswordResetForm(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Se connecter"
+            ],
+            'inputs'=>[
+                "email"=>[
+                    "type"=>"email",
+                    "placeholder"=>"Votre email ...",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+            ]
+        ];
+    }
+
+    public function updateStatus($getId){
+        $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = 1 WHERE id = ?");
+        $updateStatus->execute(array($getId));
+    }
+      
+    public function confirmUser($getId , $getToken){
+        
+        $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE id = ? AND token = ? ");
+        $user->execute(array($getId ,$getToken));
+        $userexist = $user->fetch();
+        
+        if ($user->rowCount() > 0) {
+            if($userexist["status"] == "0") {
+            $this->updateStatus($getId);
+            }else{
+            echo 'Votre email est deja enregistre'."<br>". '';
+            $_SESSION['token'] = $getToken;
+            }
+
+        }else{
+            echo 'Erreur: utilisateur inconnu en bdd'."<br>". '';
+        }
+    
+    }
+  
+    public function getIdFromEmail($email) {
+        $id = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+        $id->execute(array($email));
+        $result = $id->fetch();
+        return $result['id'];
+    }
+
+    public function getUserByEmail($email) {
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+        $sql->execute(array($email));
+        $result = $sql->fetch();
+        return $result;
+    }
+
+    public function isUserExist($email) {
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
+        $sql->execute(array($email));
+        $result = $sql->fetch();
+        
+        return !!$sql->rowCount();
+    }
+    
+    public function connexion($getEmail , $getPdw) {
+        $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE email = ?");
+        $user->execute(array($getEmail));
+        $userexist = $user->fetch();
+        if ($user->rowCount() !== 1) {
+            return null;
+        }
+
+        return $userexist;
+    }
+
+
+    
 
 }

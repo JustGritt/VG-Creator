@@ -1,14 +1,18 @@
 /:
   controller: main
-  action: home
+  action: home 
 
-/front_website:
+/template:
   controller: main
-  action: front
+  action: template
 
 /login:
   controller: user
   action: login
+
+/login-fb:
+  controller: user
+  action: loginwithfb
 
 /logout:
   controller: user
@@ -19,9 +23,16 @@
   action: register
 
 /forget:
-  controller: user
+  controller: passwordrecovery
   action: pwdforget
 
+/confirmation:
+  controller: confirmation
+  action: confirmation  
+
+/reset-new-password:
+  controller: confirmation
+  action: confirmationPwd
 
 /dashboard:
   controller: admin
@@ -29,3 +40,8 @@
   security:
     - admin
     - user
+
+/payment:
+  controller: payment
+  action: payment
+
