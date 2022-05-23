@@ -22,7 +22,7 @@
             </ul>
             <div class="flex right-items">
                 <label class="switch">
-                    <input type="checkbox">
+                    <input type="checkbox" checked>
                     <span class="slider round"></span>
                 </label>
                 <a href="/register" class="button--secondary">S'inscrire</a>
@@ -75,6 +75,8 @@
         </div>
     </footer>
     
-    
+    <!-- <script src="../dist/css/main.css"></script> -->
+    <script src="/dist/js/dark-mode.js"></script>
+    <script src="/dist/js/global.js"></script>
 </body>
 </html>

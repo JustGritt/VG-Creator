@@ -90,9 +90,6 @@ a.button {
     }
 }
 
-
-/* TOGGLE BUTTON 
- ========== *
 .switch {
     position: relative;
     display: inline-block;
@@ -161,8 +158,8 @@ a.button {
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 22px;
+    width: 50px;
+    height: 30px;
 
     input {
         opacity: 0;
@@ -181,41 +178,30 @@ a.button {
         border: 1px solid c.$black;
         -webkit-transition: .2s;
         transition: .2s; // disable
-
         &::before {
             content: "";
             position: absolute;
-            height: 14px;
-            width: 14px;
-            left: 4px;
-            bottom: 4px;
+            height: 18px;
+            width: 18px;
+            left: 6px;
+            bottom: 6px;
             background-color: c.$black;
             -webkit-transition: .4s;
             transition: .4s;
         }
-
         &.round {
             border-radius: 34px;
-
-            &:before {
-                border-radius: 50%;
-            }
+            &:before {border-radius: 50%;}
         }
     }
 
     input {
-        &:checked+.slider {
-            background-color: c.$black;
-        }
-
-        &:focus+.slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-
+        &:checked+.slider { background-color: c.$black; }
+        &:focus+.slider { box-shadow: 0 0 1px #2196F3; }
         &:checked+.slider:before {
-            -webkit-transform: translateX(16px);
-            -ms-transform: translateX(16px);
-            transform: translateX(16px);
+            -webkit-transform: translateX(18px);
+            -ms-transform: translateX(18px);
+            transform: translateX(18px);
             background-color: c.$white;
         }
     }

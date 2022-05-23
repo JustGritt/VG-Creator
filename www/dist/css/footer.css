@@ -136,9 +136,6 @@ body .center-transform {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-body * --dark {
-  background: #333333;
-}
 body a.link {
   text-decoration: none;
   color: #1538B5;
@@ -169,6 +166,8 @@ body .section {
   overflow-x: hidden;
 }
 
+/* IM BATMAN
+======================= */
 /* IMPORTS
  ========== */
 /* CLASSES MAIN

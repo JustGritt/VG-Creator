@@ -3,30 +3,54 @@
 
 @use './partials/buttons';
 
-@use './mixins/global' as g;
-@use './mixins/fonts' as f;
-@use './mixins/colors' as c;
+@use './mixins/global'as g;
+@use './mixins/fonts'as f;
+@use './mixins/colors'as c;
+
+/* DARK MODE VARIABLES
+ ========== */
+
+:root {
+    --color-page-background: #{c.$white};
+    --color-text: #{c.$black};
+
+}
+
+.dark {
+    --color-page-background: #{c.$black};
+    --color-text: #{c.$white};
+    
+}
+
+
 
 /* CLASSES MAIN
  ========== */
 
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     z-index: 10;
-    position: relative;
-    background: c.$white;
+    background: var(--color-page-background);
     font-weight: bold;
-    @media only screen and (max-width: g.$tablet) { 
-        height: 0;
+    transition: all .2s ease-in-out;
+
+    @media only screen and (max-width: g.$tablet) {
+        background: transparent
     }
-    
+
     .desktop-navigation {
         justify-content: space-around;
         width: 100%;
         height: 70px;
+
         ul {
             list-style: none;
         }
-        @media only screen and (max-width: 768px) { 
+
+        @media only screen and (max-width: g.$tablet) {
             display: none;
         }
 
@@ -35,24 +59,28 @@ header {
             text-decoration: none;
             padding: 6px 12px;
             font-size: clamp(12px, 5vw, 16px);
-            @media only screen and (max-width: 1200px) {
+            transition: all .2s ease-in-out;
+
+            @media only screen and (max-width: g.$desktop) {
                 text-align: center;
             }
-            &::after { background: c.$red; }
-            &:hover { transition: all .2s ease-in-out; color: c.$red; }
+
+            &::after {
+                background: c.$red;
+            }
         }
 
         .left-items {
             margin-left: 60px;
             margin-right: auto;
-    
             text-decoration: none;
             color: #333;
             font-weight: bolder;
+
             @media only screen and (max-width: 1200px) {
                 margin-left: 15px;
             }
-    
+
             .logo {
                 width: 80px;
                 height: auto;
@@ -62,17 +90,24 @@ header {
         .right-items {
             margin-left: auto;
             margin-right: 8px;
-            
-            a { margin: 0 8px; }
-            .switch { margin-right: 10px; }
+
+            a {
+                margin: 0 8px;
+            }
+
+            .switch {
+                margin-right: 10px;
+            }
         }
     }
 
     .mobile-navigation {
         display: none;
-        @media only screen and (max-width: g.$tablet) { 
+
+        @media only screen and (max-width: g.$tablet) {
             display: block;
         }
+
         ul {
             position: absolute;
             top: 0;
@@ -84,13 +119,23 @@ header {
             opacity: 0;
             width: 100%;
             transform: translateY(25%);
-            
+
             li {
                 padding: 10px 20px;
                 margin: 50px 0;
                 width: 100%;
                 text-align: center;
                 font-size: clamp(1rem, 5vw, 8rem);
+
+                a {
+                    color: c.$black;
+
+                    &::after {
+                        height: 4px;
+                        background: c.$black;
+                    }
+
+                }
             }
         }
 
@@ -106,7 +151,7 @@ header {
             transform-origin: center;
             -webkit-transition: .5s ease-in-out;
             transition: .5s ease-in-out;
-            
+
             &::after,
             &::before {
                 content: "";
@@ -119,24 +164,36 @@ header {
                 background: c.$black;
             }
 
-            &::before { top: -10px; }
-            &::after { bottom: -10px; }
+            &::before {
+                top: -10px;
+            }
+
+            &::after {
+                bottom: -10px;
+            }
         }
 
-        input { 
-            display: none; 
-            &:checked + .menu {
+        input {
+            display: none;
+
+            &:checked+.menu {
                 box-shadow: 0 0 0 100vw c.$white, 0 0 0 100vh c.$white;
                 border-radius: 0;
-                + ul { opacity: 1; }
+
+                +ul {
+                    opacity: 1;
+                }
+
                 .hamburger {
                     -webkit-transform: rotate(45deg);
                     transform: rotate(45deg);
+
                     &::before {
                         top: 0;
                         -webkit-transform: rotate(90deg);
                         transform: rotate(90deg);
                     }
+
                     &::after {
                         bottom: 0;
                         -webkit-transform: rotate(90deg);
@@ -160,8 +217,10 @@ header {
             box-shadow: 0 0 0 0 c.$white, 0 0 0 0 c.$white;
             cursor: pointer;
             display: none;
-            @media screen and (max-width: g.$tablet) { display: block; }
+
+            @media screen and (max-width: g.$tablet) {
+                display: block;
+            }
         }
     }
 }
-

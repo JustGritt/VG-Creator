@@ -72,7 +72,7 @@ a.button--squared--icon {
   margin-right: 10px;
   padding: 11px 16px;
   border-radius: 2px;
-  background: #F44848;
+  background: #ED4C67;
   color: #f2f2f2;
   display: inline;
 }
@@ -90,78 +90,11 @@ a.button--dark:hover {
   color: #333333;
 }
 
-/* TOGGLE BUTTON 
- ========== *
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 69px;
-    height: 37px;
-
-    input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: transparent;
-        border: 1px solid c.$black;
-        -webkit-transition: .2s;
-        transition: .2s;
-
-        &::before {
-            content: "";
-            position: absolute;
-            height: 28px;
-            width: 28px;
-            left: 4px;
-            bottom: 4px;
-            background-color: c.$black;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        &.round {
-            border-radius: 34px;
-
-            &:before {
-                border-radius: 50%;
-            }
-        }
-    }
-
-    input {
-        &:checked+.slider {
-            background-color: #2196F3;
-        }
-
-        &:focus+.slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-
-        &:checked+.slider:before {
-            -webkit-transform: translateX(28px);
-            -ms-transform: translateX(28px);
-            transform: translateX(28px);
-            background-color: c.$white;
-        }
-    }
-}
-
-/* TOGGLE BUTTON 
- ========== */
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 22px;
+  width: 69px;
+  height: 37px;
 }
 .switch input {
   opacity: 0;
@@ -183,10 +116,65 @@ a.button--dark:hover {
 .switch .slider::before {
   content: "";
   position: absolute;
-  height: 14px;
-  width: 14px;
+  height: 28px;
+  width: 28px;
   left: 4px;
   bottom: 4px;
+  background-color: #333333;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+.switch .slider.round {
+  border-radius: 34px;
+}
+.switch .slider.round:before {
+  border-radius: 50%;
+}
+.switch input:checked + .slider {
+  background-color: #2196F3;
+}
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+.switch input:checked + .slider:before {
+  -webkit-transform: translateX(28px);
+  -ms-transform: translateX(28px);
+  transform: translateX(28px);
+  background-color: #f2f2f2;
+}
+
+/* TOGGLE BUTTON 
+ ========== */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  border: 1px solid #333333;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+.switch .slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 6px;
+  bottom: 6px;
   background-color: #333333;
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -204,9 +192,9 @@ a.button--dark:hover {
   box-shadow: 0 0 1px #2196F3;
 }
 .switch input:checked + .slider:before {
-  -webkit-transform: translateX(16px);
-  -ms-transform: translateX(16px);
-  transform: translateX(16px);
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
   background-color: #f2f2f2;
 }
 
@@ -368,9 +356,6 @@ body .center-transform {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-body * --dark {
-  background: #333333;
-}
 body a.link {
   text-decoration: none;
   color: #1538B5;
@@ -401,19 +386,37 @@ body .section {
   overflow-x: hidden;
 }
 
+/* IM BATMAN
+======================= */
 /* IMPORTS
  ========== */
+/* DARK MODE VARIABLES
+ ========== */
+:root {
+  --color-page-background: #f2f2f2;
+  --color-text: #333333;
+}
+
+.dark {
+  --color-page-background: #333333;
+  --color-text: #f2f2f2;
+}
+
 /* CLASSES MAIN
  ========== */
 header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 10;
-  position: relative;
-  background: #f2f2f2;
+  background: var(--color-page-background);
   font-weight: bold;
+  transition: all 0.2s ease-in-out;
 }
 @media only screen and (max-width: 768px) {
   header {
-    height: 0;
+    background: transparent;
   }
 }
 header .desktop-navigation {
@@ -434,6 +437,7 @@ header .desktop-navigation .link {
   text-decoration: none;
   padding: 6px 12px;
   font-size: clamp(12px, 5vw, 16px);
+  transition: all 0.2s ease-in-out;
 }
 @media only screen and (max-width: 1200px) {
   header .desktop-navigation .link {
@@ -441,11 +445,7 @@ header .desktop-navigation .link {
   }
 }
 header .desktop-navigation .link::after {
-  background: #F44848;
-}
-header .desktop-navigation .link:hover {
-  transition: all 0.2s ease-in-out;
-  color: #F44848;
+  background: #ED4C67;
 }
 header .desktop-navigation .left-items {
   margin-left: 60px;
@@ -499,6 +499,13 @@ header .mobile-navigation ul li {
   width: 100%;
   text-align: center;
   font-size: clamp(1rem, 5vw, 8rem);
+}
+header .mobile-navigation ul li a {
+  color: #333333;
+}
+header .mobile-navigation ul li a::after {
+  height: 4px;
+  background: #333333;
 }
 header .mobile-navigation .hamburger {
   position: absolute;

@@ -119,10 +119,6 @@ body {
         transform: translate(-50%, -50%);
     }
 
-    *--dark {
-        background: c.$black;
-    }
-
     a.link {
         text-decoration: none;
         color: c.$link;
@@ -156,4 +152,16 @@ body {
         overflow-x: hidden;
     }
 
+}
+
+/* IM BATMAN
+======================= */
+.dark {
+    $text-color : c.$black !default;
+    $link-color : c.$black !default;
+    $border-color : c.$black !default;
+    $pseudo-color : c.$black !default;
+    $shadow-color : c.$white !default;
+    $link-hover-color : c.$black !default;
+    $background-color : c.$white !default;
 }

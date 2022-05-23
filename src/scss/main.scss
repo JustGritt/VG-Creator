@@ -29,10 +29,54 @@ body {
       width: 100vw;
       background: transparent;
 
-      .hero-container {
-        margin: 150px 60px 0 60px;
+      .hero-content {
+        z-index: 10;
+        width: 100vw;
+        height: 75vh;
         flex-direction: column;
         align-items: flex-start;
+        margin-left: 60px;
+      }
+
+      .hero-container {
+        position: absolute;
+        top: 0;
+        padding: 0px;
+        margin: 0px;
+        width: 100vw;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        perspective: 1px;
+        -webkit-perspective: 1px;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        div.parallax {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          transform-style: preserve-3d;
+          -webkit-transform-style: preserve-3d;
+          &::after {
+            background-image: url("https://i.ibb.co/tMsQmkV/Image.png");
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 35%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            z-index: -1;
+            content: "";
+            transform: translateZ(-1px) scale(0.5);
+            -webkit-transform: translateZ(-1px) scale(2);
+            @media screen and (max-width: g.$tablet) {
+              display: none;
+            }
+          }
+        }
+
         @media only screen and (max-width: 768px) {
           text-align: center;
           margin: 150px 15px;

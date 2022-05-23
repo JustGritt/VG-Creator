@@ -28,7 +28,9 @@
             </div>
             <div class="right-side">
                 <picture class="flex">
-                    <iframe src="https://www.youtube.com/embed/5qap5aO4i9A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div style="height: 0; padding-bottom: calc(56.25%); position:relative; width: 100%;">
+                    <iframe allow="autoplay; gyroscope;" allowfullscreen height="100%" referrerpolicy="strict-origin" src="https://www.kapwing.com/e/62889a2475c0cc005290e709?autoplay=true&mute=1" style="border:0; height:100%; left:0; overflow:hidden; position:absolute; top:0; width:100%" title="Video player" width="100%"></iframe>
+                </div>
                 </picture>
             </div>
         </div>
