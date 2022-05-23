@@ -306,7 +306,7 @@ class User extends SqlPDO {
         return $result['id'];
     }
 
-    public function getUserByEmail($test) {
+    public function getUserByEmail($email) {
         $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `email` = ?");
         
         $sql->execute(array($email));
@@ -315,6 +315,13 @@ class User extends SqlPDO {
         return $result;
     }
 
+    public function getUserById($id) {
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `id` = ?");
+        $sql->execute(array($id));
+        //$result = $sql->setFetchMode($this->pdo::FETCH_CLASS, User::class);
+        $result = $sql->fetchObject(User::class);
+        return $result;
+    }
     public function isUserExist($email) {
         $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE email = ? ");
         $sql->execute(array($email));

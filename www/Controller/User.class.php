@@ -85,6 +85,8 @@ class User {
             $_SESSION['session_token'] = substr(bin2hex(random_bytes(64)), 0, 128);
             $_SESSION['firstname']  = $userverify['firstname'];
             $_SESSION['id'] = $userverify['id'];
+            $_SESSION['id_role'] = $userverify['id_role'];
+            $view->assign("role", $user->setIdRole(2));
             echo "Bienvenue"; 
             header("Location: ".DOMAIN."/dashboard" );
             
@@ -109,6 +111,7 @@ class User {
             }
            
             $_SESSION['id'] = $user_info['id'];
+            $_SESSION['id_role'] = $user_info['id_role'];
             $_SESSION['email'] = $user_info['email'];
             $_SESSION['code'] = $access_token;
             $_SESSION['lastname'] = $user_info['family_name'];
@@ -122,7 +125,7 @@ class User {
                 $oauth_user->setOauth_provider('google_api');
                 $oauth_user->save();     
             }
-           
+            $view->assign("user", $user);
             echo "Bienvenue"; 
             header("Location: ".DOMAIN."/dashboard");
             

@@ -37,6 +37,9 @@
     - admin
     - user
 
+/client_website:
+  controller: admin
+  action: client
 /payment:
   controller: payment
   action: payment
