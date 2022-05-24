@@ -45,7 +45,7 @@ class Admin
     
         $view = new View("product", "back");
         $sql = "SELECT * FROM esi_user";
-        var_dump(Sql::getInstance(true));
+        var_dump(Sql::getInstance());
         //$view->assign("firstname", $user->getFirstname());
        
     }
