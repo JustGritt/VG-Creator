@@ -6,9 +6,9 @@
 @use './partials/inputs';
 
 @use './mixins/options';
-@use './mixins/global' as g;
-@use './mixins/fonts' as f;
-@use './mixins/colors' as c;
+@use './mixins/global'as g;
+@use './mixins/fonts'as f;
+@use './mixins/colors'as c;
 
 /* CLASSES MAIN
   ========== */
@@ -22,7 +22,9 @@ body {
 
   main {
 
-    section { background: #fff; }
+    section {
+      background: var(--color-background);
+    }
 
     section#home {
       height: 75vh;
@@ -38,61 +40,6 @@ body {
         margin-left: 60px;
       }
 
-      .hero-container {
-        position: absolute;
-        top: 0;
-        padding: 0px;
-        margin: 0px;
-        width: 100vw;
-        height: 100vh;
-        overflow-x: hidden;
-        overflow-y: auto;
-        perspective: 1px;
-        -webkit-perspective: 1px;
-        transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        div.parallax {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          transform-style: preserve-3d;
-          -webkit-transform-style: preserve-3d;
-          &::after {
-            background-image: url("https://i.ibb.co/tMsQmkV/Image.png");
-            background-repeat: no-repeat;
-            background-position: right;
-            background-size: 35%;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            right: 0px;
-            bottom: 0px;
-            z-index: -1;
-            content: "";
-            transform: translateZ(-1px) scale(0.5);
-            -webkit-transform: translateZ(-1px) scale(2);
-            @media screen and (max-width: g.$tablet) {
-              display: none;
-            }
-          }
-        }
-
-        @media only screen and (max-width: 768px) {
-          text-align: center;
-          margin: 150px 15px;
-        }
-        
-        h1, h2 { 
-          margin: 25px 0;
-          width: 100%;
-          z-index: 1;
-          @media only screen and (max-width: 768px) {
-            text-align: center;
-            margin: 10px 0;
-          }
-        }
-      }
-
       .hero-input {
 
         position: relative;
@@ -101,59 +48,76 @@ body {
         max-width: 450px;
         min-width: 100px;
         z-index: 1;
-        @media only screen and (max-width: 768px) {
-
-          margin: 0 auto;
-        }
 
         input {
-          
+
           &[type="email"] {
-            background: rgba(12,14,29, .1);
+            background: rgba(12, 14, 29, .1);
             box-shadow: 0px 0px 5px 1px rgba(185, 185, 185, .1);
             color: #FDFDFD;
             height: 60px;
             width: 100%;
             border-radius: 100px;
             font-family: f.$primary;
+
             @media only screen and (max-width: 768px) {
               margin: 50px 0;
               width: 100%;
             }
 
-            &::placeholder{ color: inherit; }
-            & + input[type="submit"] {
+            &::placeholder {
+              color: inherit;
+            }
+
+            &+input[type="submit"] {
               position: absolute;
               top: calc(50% - 12px);
               left: calc(100% - 75px - 6px);
-              transform: translate(-50%,-50%);
-              background: rgba(12,14,29, .6);
-              color: c.$white;
+              transform: translate(-50%, -50%);
+              background: rgba(12, 14, 29, .6);
+              color: var(--color-white);
               justify-content: center;
               width: 100%;
               height: 48px;
               max-width: 150px;
+
               @media only screen and (max-width: 768px) {
                 max-width: fit-content;
-                left: calc(100%  - 55px);
+                left: calc(100% - 60px);
               }
-              
+
             }
           }
         }
       }
 
+      .scrolling-container {
+        position: absolute;
+        top: -15vh;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        perspective: 1px;
+        -webkit-perspective: 1px;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        z-index: 0;
+
+      }
 
       img.hero-img {
         position: absolute;
         top: 40vh;
         right: 0;
         width: 560px;
-        transition: width .2s ease-in-out;
+
         @media only screen and (max-width: 1200px) {
           top: 55vh;
           width: 360px;
         }
+
         @media only screen and (max-width: 768px) {
           display: none;
         }
@@ -162,14 +126,15 @@ body {
 
     section#templates {
       width: 100vw;
-      background: #fff;
-      color: c.$black;
+      background: var(--color-background);
+      color: var(--color-text);
 
-      h3, p {
+      h3,
+      p {
         margin: 0 60px;
         text-align: center;
       }
-      
+
       h3 {
         padding-top: 150px;
       }
@@ -182,12 +147,15 @@ body {
           justify-content: center;
           align-items: center;
           flex-wrap: wrap;
+
           @media only screen and (max-width: 768px) {
             flex-direction: column;
           }
         }
+
         &-card {
           margin: 75px 20px;
+
           picture img {
             border-radius: 15px;
             width: 100%;
@@ -199,13 +167,13 @@ body {
             object-fit: cover;
           }
         }
-      } 
+      }
 
     }
 
     section#faq {
-      background: #EFF3FE;
-      color: c.$black;
+      background: var(--color-background-alt);
+      color: var(--color-text);
       display: block;
 
       .faq-wrapper {
@@ -213,16 +181,19 @@ body {
         margin: 0 auto;
         padding-top: 100px;
         padding-bottom: 200px;
+        transition: none;
 
-        .faq-container{
+        .faq-container {
           width: 100%;
-          & input[type=radio]{
-              display: none;
+
+          & input[type=radio] {
+            display: none;
           }
+
           & label {
-            color: c.$black;
+            color: var(--color-text);
             font-size: 18px;
-            border-bottom: 1px solid c.$black;
+            border-bottom: 1px solid var(--color-border);
 
             position: relative;
             cursor: pointer;
@@ -231,9 +202,9 @@ body {
             line-height: 47px;
             padding: 0 25px 0 10px;
             margin: 50px 0 0 0;
-            
-            
-            &::after{
+
+
+            &::after {
               content: "";
               display: block;
               position: absolute;
@@ -241,39 +212,42 @@ body {
               top: 20px;
               opacity: 0;
               -moz-transition: all .7s ease-in-out;
-              -ms-transition:all .7s ease-in-out;
+              -ms-transition: all .7s ease-in-out;
               -o-transition: all .7s ease-in-out;
               -webkit-transition: all .7s ease-in-out;
               transition: opacity .7s ease-in-out;
             }
           }
-          .content{
-              max-height: 0;
-              height: 0;
-              overflow: hidden;
-              -moz-transition: height,max-height 1.5s ease-in;
-              -o-transition: height,max-height 1.5s ease-in;
-              -webkit-transition: height,max-height 1.5s ease-in;
-              transition: height,max-height 1.5s ease-in;
-              & .inner{
-                font-size: 1.2rem;
-                color: c.$black;
-                background: inherit;
-                line-height: 1.5;
-                padding: 20px 10px;
+
+          .content {
+            max-height: 0;
+            height: 0;
+            overflow: hidden;
+            -moz-transition: height, max-height 1.5s ease-in;
+            -o-transition: height, max-height 1.5s ease-in;
+            -webkit-transition: height, max-height 1.5s ease-in;
+            transition: height, max-height 1.5s ease-in;
+
+            & .inner {
+              font-size: 1.2rem;
+              color: var(--color-text);
+              background: inherit;
+              line-height: 1.5;
+              padding: 20px 10px;
             }
           }
-          input[type=radio]:checked + label::after {
+
+          input[type=radio]:checked+label::after {
             width: 8px;
             height: 8px;
-            background: c.$black;
+            background: var(--color-pseudo);
             border-radius: 100%;
             transform: translateY(0%);
 
             opacity: 1;
           }
-    
-          input[type=radio]:checked + label + .content {
+
+          input[type=radio]:checked+label+.content {
             max-height: 2000px;
             height: auto;
           }

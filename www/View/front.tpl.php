@@ -22,7 +22,7 @@
             </ul>
             <div class="flex right-items">
                 <label class="switch">
-                    <input type="checkbox" checked>
+                    <input type="checkbox">
                     <span class="slider round"></span>
                 </label>
                 <a href="/register" class="button--secondary">S'inscrire</a>

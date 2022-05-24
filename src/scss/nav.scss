@@ -7,23 +7,6 @@
 @use './mixins/fonts'as f;
 @use './mixins/colors'as c;
 
-/* DARK MODE VARIABLES
- ========== */
-
-:root {
-    --color-page-background: #{c.$white};
-    --color-text: #{c.$black};
-
-}
-
-.dark {
-    --color-page-background: #{c.$black};
-    --color-text: #{c.$white};
-    
-}
-
-
-
 /* CLASSES MAIN
  ========== */
 
@@ -33,9 +16,8 @@ header {
     left: 0;
     width: 100%;
     z-index: 10;
-    background: var(--color-page-background);
+    background: var(--color-background);
     font-weight: bold;
-    transition: all .2s ease-in-out;
 
     @media only screen and (max-width: g.$tablet) {
         background: transparent
@@ -55,7 +37,7 @@ header {
         }
 
         .link {
-            color: c.$black;
+            color: var(--color-text);
             text-decoration: none;
             padding: 6px 12px;
             font-size: clamp(12px, 5vw, 16px);
@@ -66,7 +48,7 @@ header {
             }
 
             &::after {
-                background: c.$red;
+                background: var(--color-nav-link);
             }
         }
 
@@ -128,11 +110,11 @@ header {
                 font-size: clamp(1rem, 5vw, 8rem);
 
                 a {
-                    color: c.$black;
+                    color: var(--color-text);
 
                     &::after {
                         height: 4px;
-                        background: c.$black;
+                        background: var(--color-pseudo);
                     }
 
                 }
@@ -145,7 +127,7 @@ header {
             left: 50px;
             width: 30px;
             height: 2px;
-            background: c.$black;
+            background: var(--color-pseudo);
             display: block;
             -webkit-transform-origin: center;
             transform-origin: center;
@@ -161,7 +143,7 @@ header {
                 display: block;
                 width: 100%;
                 height: 100%;
-                background: c.$black;
+                background: var(--color-pseudo);
             }
 
             &::before {
@@ -177,7 +159,7 @@ header {
             display: none;
 
             &:checked+.menu {
-                box-shadow: 0 0 0 100vw c.$white, 0 0 0 100vh c.$white;
+                box-shadow: 0 0 0 100vw var(--color-shadow), 0 0 0 100vh var(--color-shadow);
                 border-radius: 0;
 
                 +ul {
@@ -210,11 +192,11 @@ header {
             z-index: 10;
             width: 200px;
             height: 200px;
-            background: c.$white;
+            background: var(--color-background);
             border-radius: 50% 50% 50% 50%;
             -webkit-transition: .5s ease-in-out;
             transition: .5s ease-in-out;
-            box-shadow: 0 0 0 0 c.$white, 0 0 0 0 c.$white;
+            box-shadow: 0 0 0 0 var(--color-shadow), 0 0 0 0 var(--color-shadow);
             cursor: pointer;
             display: none;
 

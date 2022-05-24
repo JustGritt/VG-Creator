@@ -3,6 +3,52 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap");
 /* COLORS VARIABLES  
 ======================= */
+/* DARK MODE VARIABLES
+ ========== */
+:root {
+  --color-white: #f2f2f2;
+  --color-black: #333333;
+  --color-background: #f2f2f2;
+  --color-background-alt: #EFF3FE;
+  --color-border: #333333;
+  --color-text: #333333;
+  --color-pseudo: #333333;
+  --color-link: #1538B5;
+  --color-shadow: #f2f2f2;
+  --color-nav-link: #ED4C67;
+  --color-button-background: #333333;
+  --color-button-text: #f2f2f2;
+  --color-button-hover-background: #f2f2f2;
+  --color-button-hover-text: #333333;
+  --color-button-link: #82ccdd;
+  --color-footer-background: #f2f2f2;
+  --color-border-invert: #f2f2f2;
+  --color-hover-text: #f2f2f2;
+  --color-hover-background: #333333;
+}
+
+.dark {
+  --color-white: #f2f2f2;
+  --color-black: #333333;
+  --color-background: #333333;
+  --color-background-alt: #404040;
+  --color-border: #f2f2f2;
+  --color-text: #f2f2f2;
+  --color-pseudo: #f2f2f2;
+  --color-link: #1538B5;
+  --color-shadow: #333333;
+  --color-nav-link: #ED4C67;
+  --color-button-background: #f2f2f2;
+  --color-button-text: #333333;
+  --color-button-hover-background: #333333;
+  --color-button-hover-text: #f2f2f2;
+  --color-button-link: #82ccdd;
+  --color-footer-background: #333333;
+  --color-border-invert: #333333;
+  --color-hover-text: #333333;
+  --color-hover-background: #f2f2f2;
+}
+
 /* CLASSES 
 ======================= */
 /* CLASSES 
@@ -46,6 +92,7 @@ html {
   scroll-behavior: smooth;
   margin: 0;
   padding: 0;
+  transition: none;
 }
 
 *, *:before, *:after {
@@ -100,7 +147,7 @@ img, iframe {
 ======================= */
 body {
   width: 100vw;
-  background: #f2f2f2;
+  background: var(--color-background);
   font-family: "Lato", sans-serif;
   overflow-x: hidden;
   line-height: 1.5;
@@ -173,7 +220,7 @@ body .section {
 /* CLASSES MAIN
  ========== */
 body footer {
-  background: #F2F2F2;
+  background: var(--color-footer-background);
   height: 380px;
   position: relative;
 }
@@ -212,12 +259,12 @@ body footer .footer-list ul li a {
   font-weight: 500;
   font-size: clamp(12px, 4vw, 22px);
   line-height: 26px;
-  color: #333333;
+  color: var(--color-text);
   text-decoration: none;
   text-transform: uppercase;
 }
 body footer .footer-list ul li a::after {
-  background: #333333;
+  background: var(--color-pseudo);
 }
 body footer .footer-list-container {
   width: 100%;
@@ -234,9 +281,10 @@ body footer .footer-credits {
   position: absolute;
   bottom: 0;
   width: 100%;
+  transition: none;
 }
 body footer .footer-credits p {
-  color: #333333;
+  color: var(--color-text);
   font-weight: 500;
   font-size: 12px;
   line-height: 14px;
@@ -249,10 +297,9 @@ body footer .footer-credits .social-media {
   text-align: center;
 }
 body footer .footer-credits .social-media i {
-  color: #000;
+  color: var(--color-text);
   margin: 0 10px;
   font-size: 24px;
-  transition: transform 0.2s ease-in-out;
 }
 body footer .footer-credits .social-media i:hover {
   transform: scale(1.2);

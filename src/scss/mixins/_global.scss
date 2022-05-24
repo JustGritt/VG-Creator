@@ -20,12 +20,14 @@ html {
     scroll-behavior: smooth;
     margin: 0;
     padding: 0;
+    transition: none;
 }
 
 *, *:before, *:after {
     box-sizing: inherit;
     -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased
+    -moz-font-smoothing: antialiased;
+    // transition: all 0.2s ease-in-out;
 }
 
 ::-webkit-scrollbar {
@@ -77,7 +79,7 @@ img, iframe {
 body {
 
     width: 100vw;
-    background: c.$white;
+    background: var(--color-background);
     font-family: f.$primary;
     overflow-x: hidden;
     line-height: f.$line-height;

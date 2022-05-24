@@ -1,60 +1,73 @@
 /* IMPORTS
  ========== */
 
-@use './mixins/global' as g;
-@use './mixins/colors' as c;
+@use './mixins/global'as g;
+@use './mixins/colors'as c;
 
 /* CLASSES MAIN
  ========== */
 
 body footer {
-    background: #F2F2F2;
+    background: var(--color-footer-background);
     height: 380px;
     position: relative;
+
     .footer {
         &-logo {
             position: absolute;
             top: 50px;
             left: 50px;
+
             @media only screen and (max-width: g.$tablet) {
                 display: none;
             }
+
             svg {
                 width: 80px;
                 height: auto;
             }
         }
-        &-list  {
+
+        &-list {
             padding-top: 50px;
             padding-bottom: 25px;
+
             ul {
                 list-style: none;
                 margin: 0;
+
                 @media only screen and (max-width: 1200px) {
                     width: 100%;
                     text-align: center;
                 }
-                li { 
+
+                li {
                     margin: 20px;
+
                     a {
                         font-weight: 500;
                         font-size: clamp(12px, 4vw, 22px);
                         line-height: 26px;
-                        color: c.$black;
+                        color: var(--color-text);
                         text-decoration: none;
                         text-transform: uppercase;
-                        &::after { background: c.$black; }
+
+                        &::after {
+                            background: var(--color-pseudo);
+                        }
                     }
                 }
             }
+
             &-container {
                 width: 100%;
-                justify-content:space-around;
+                justify-content: space-around;
                 align-items: flex-start;
                 flex-wrap: wrap;
                 text-align: left;
             }
         }
+
         &-credits {
             display: flex;
             background: inherit;
@@ -63,9 +76,10 @@ body footer {
             position: absolute;
             bottom: 0;
             width: 100%;
+            transition: none;
 
             p {
-                color: c.$black;
+                color: var(--color-text);
                 font-weight: 500;
                 font-size: 12px;
                 line-height: 14px;
@@ -77,17 +91,18 @@ body footer {
             .social-media {
                 margin-right: 38px;
                 text-align: center;
+
                 i {
-                    color: #000;
+                    color: var(--color-text);
                     margin: 0 10px;
                     font-size: 24px;
-                    transition: transform .2s ease-in-out;
-                    &:hover { transform: scale(1.2); }
+
+                    &:hover {
+                        transform: scale(1.2);
+                    }
                 }
             }
 
-        
         }
     }
 }
-
