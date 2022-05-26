@@ -1,5 +1,5 @@
 <main>
-    <section id="home">
+    <!-- <section id="home">
 
         <div class="hero-container flex">
             <h1 class="title">Faites de vos idées une réalité</h1>
@@ -12,6 +12,25 @@
         </div>
 
         <img class="hero-img" src="https://i.ibb.co/tMsQmkV/Image.png" alt="Image" border="0">
+    </section> -->
+    
+    <section id="home">
+
+        <div class="hero-content flex">
+
+            <h1 class="title">Faites de vos idées une réalité</h1>
+            <h2 class="sub-title">Simplifiez vous la vie et optez pour un site web de qualité</h2>
+            <div class="hero-input">
+                <input type="email" name="mail" id="mail" placeholder="Saisir votre adresse mail">
+                <input type="submit" value="S'inscrire" class="button">
+            </div>
+        </div>  
+
+        <div class="scrolling-container">
+            <picture>
+                <img class="hero-img" src="https://i.ibb.co/tMsQmkV/Image.png" alt="Image" border="0">
+            </picture>  
+        </div>
     </section>
 
     <section id="templates">
@@ -25,15 +44,15 @@
             </div>
             <div class="template-card">
                 <picture>
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Template 1">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Template 2">
                 </picture>
             </div><div class="template-card">
                 <picture>
-                    <img src="https://images.unsplash.com/photo-1606814540563-5c02d62fd409?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1212&q=80" alt="Template 1">
+                    <img src="https://images.unsplash.com/photo-1606814540563-5c02d62fd409?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1212&q=80" alt="Template 3">
                 </picture>
             </div><div class="template-card">
                 <picture>
-                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" alt="Template 1">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80" alt="Template 4">
                 </picture>
             </div>
         </div>

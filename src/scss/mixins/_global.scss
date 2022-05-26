@@ -20,12 +20,14 @@ html {
     scroll-behavior: smooth;
     margin: 0;
     padding: 0;
+    transition: none;
 }
 
 *, *:before, *:after {
     box-sizing: inherit;
     -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased
+    -moz-font-smoothing: antialiased;
+    // transition: all 0.2s ease-in-out;
 }
 
 ::-webkit-scrollbar {
@@ -77,7 +79,7 @@ img, iframe {
 body {
 
     width: 100vw;
-    background: c.$white;
+    background: var(--color-background);
     font-family: f.$primary;
     overflow-x: hidden;
     line-height: f.$line-height;
@@ -119,10 +121,6 @@ body {
         transform: translate(-50%, -50%);
     }
 
-    *--dark {
-        background: c.$black;
-    }
-
     a.link {
         text-decoration: none;
         color: c.$link;
@@ -156,4 +154,16 @@ body {
         overflow-x: hidden;
     }
 
+}
+
+/* IM BATMAN
+======================= */
+.dark {
+    $text-color : c.$black !default;
+    $link-color : c.$black !default;
+    $border-color : c.$black !default;
+    $pseudo-color : c.$black !default;
+    $shadow-color : c.$white !default;
+    $link-hover-color : c.$black !default;
+    $background-color : c.$white !default;
 }

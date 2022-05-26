@@ -20,7 +20,7 @@ class Confirmation {
       echo "une erreur sait produite...";
       header("Refresh: 3; ".DOMAIN."/" );   
     }
-   
+    
     $getId = $_GET['id'];
     $getToken = $_GET['token'];
     $user->confirmUser($getId, $getToken);

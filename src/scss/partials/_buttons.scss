@@ -3,9 +3,6 @@
 
 @use '../mixins/colors' as c;
 
-/* CLASSES MAIN
-========== */
-
 /* DEFAULT BUTTON
  ========== */
 
@@ -20,44 +17,43 @@ button, a.button, .button--primary, .button--secondary, .button--secondary--acce
 }
 
 a.button {
-    color: c.$white;
-    &:hover { background: c.$black; color: c.$white; }
+    color: var(--color-hover-text);
+    &:hover { background: var(--color-button-background); color: var(--color-hover-text); }
 
     &--primary {
-        background: c.$black;
-        color: c.$white;
+        background: var(--color-button-background);
+        color: var(--color-hover-text);
         &:hover {
             background: transparent;
-            color: c.$black;
-            border: 1px solid c.$black;
+            color: var(--color-button-hover-text);
+            border: 1px solid var(--color-border);
         }
     }
     &--secondary {
-        color: c.$black;
+        color: var(--color-text);
         background: transparent;
         border: none;
-        border: 1px solid c.$black;
+        border: 1px solid var(--color-border);
         &:hover {
-            color: c.$white;
-            background: c.$black;
+            color: var(--color-hover-text);
+            background: var(--color-hover-background);
         }
         &--accent {
-            color: c.$white;
-            background: c.$black;
+            color: var(--color-background);
+            background: var(--color-text);
         }
     }
-
     &--accent {
-        border: 1px solid c.$white;
-        color: c.$white;
-        background: c.$black;
-        color: c.$white;
+        border: 1px solid var(--color-border-invert);
+        color: var(--color-hover-text);
+        background: var(--color-button-background);
+        color: var(--color-button-text);
     }
     &--squared {
         background: transparent;
-        border: 1px solid #1538B5;
+        border: 1px solid var(--color-button-link);
         transition: all 0.2s ease-in-out; // disable
-        color: #1538B5;
+        color: var(--color-button-link);
         border-radius: 5px;
         width: 100%;
         display: block;
@@ -90,9 +86,6 @@ a.button {
     }
 }
 
-
-/* TOGGLE BUTTON 
- ========== *
 .switch {
     position: relative;
     display: inline-block;
@@ -113,9 +106,7 @@ a.button {
         right: 0;
         bottom: 0;
         background-color: transparent;
-        border: 1px solid c.$black;
-        -webkit-transition: .2s;
-        transition: .2s;
+        border: 1px solid var(--color-border);
 
         &::before {
             content: "";
@@ -140,18 +131,15 @@ a.button {
 
     input {
         &:checked+.slider {
-            background-color: #2196F3;
-        }
-
-        &:focus+.slider {
-            box-shadow: 0 0 1px #2196F3;
+            background-color: transparent;
+            border: 1px solid var(--color-border);
         }
 
         &:checked+.slider:before {
             -webkit-transform: translateX(28px);
             -ms-transform: translateX(28px);
             transform: translateX(28px);
-            background-color: c.$white;
+            background-color: var(--color-background);
         }
     }
 }
@@ -161,8 +149,8 @@ a.button {
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 22px;
+    width: 50px;
+    height: 30px;
 
     input {
         opacity: 0;
@@ -178,46 +166,31 @@ a.button {
         right: 0;
         bottom: 0;
         background-color: transparent;
-        border: 1px solid c.$black;
+        border: 1px solid var(--color-border);
         -webkit-transition: .2s;
         transition: .2s; // disable
-
         &::before {
             content: "";
             position: absolute;
-            height: 14px;
-            width: 14px;
-            left: 4px;
-            bottom: 4px;
-            background-color: c.$black;
+            height: 18px;
+            width: 18px;
+            left: 6px;
+            bottom: 6px;
+            background-color: var(--color-pseudo);
             -webkit-transition: .4s;
             transition: .4s;
         }
-
         &.round {
             border-radius: 34px;
-
-            &:before {
-                border-radius: 50%;
-            }
+            &:before {border-radius: 50%;}
         }
     }
 
-    input {
-        &:checked+.slider {
-            background-color: c.$black;
-        }
-
-        &:focus+.slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-
-        &:checked+.slider:before {
-            -webkit-transform: translateX(16px);
-            -ms-transform: translateX(16px);
-            transform: translateX(16px);
-            background-color: c.$white;
-        }
+    input:checked+.slider:before {
+        -webkit-transform: translateX(18px);
+        -ms-transform: translateX(18px);
+        transform: translateX(18px);
+        background-color: var(--color-white);
     }
 }
 
@@ -227,9 +200,9 @@ a.button {
 input[type="submit"] {
     background: transparent;
     border-radius: 60px;
-    border: 1px solid c.$link;
+    border: 1px solid var(--color-link);
     transition: all .2s ease-in-out; // disable
-    color:  c.$link;
+    color:  var(--color-link);
     border-radius: 100px;
     width: 100%;
     height: 46px;
@@ -243,7 +216,7 @@ input[type="submit"] {
     }
 
     &.primary {
-        border: 1px solid c.$white;
+        border: 1px solid var(--color-border);
         color: c.$white;
         background: c.$black;
     }

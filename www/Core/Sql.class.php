@@ -7,8 +7,7 @@ abstract class Sql
     protected $pdo;
     protected $table;
     protected $link;
-    protected $server;
-    public static $instance = array();
+    public static $instance = null;
     public static $_servers = array();
 
     /** @var string Database name */
@@ -33,20 +32,23 @@ abstract class Sql
 
     }
     */
-    
 
-    /*
-    public static function getInstance(){
-      $class = get_called_class(); // or get_class(new static());
-      if(!isset(self::$instance[$class])){
-          self::$instance[$class] = new static(); // create and instance of child class which extends Singleton super class
-          echo "new ". $class . PHP_EOL; // remove this line after testing
-          return  self::$instance[$class]; // remove this line after testing
-      }
-      echo "old ". $class . PHP_EOL; // remove this line after testing
-      return static::$instance[$class];
+    public static function getInstance()
+    {  
+        if(is_null(self::$instance))
+        {
+            try{
+                self::$instance = new \PDO( DBDRIVER.":host=".DBHOST.";port=".DBPORT.";dbname=".DBNAME
+                    ,DBUSER, DBPWD , [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING]);
+            }catch (\Exception $e){
+                die("Erreur SQL : ".$e->getMessage());
+            }
+        }
+        
+        return self::$instance;
     }
-    */
+    
+    /*
     public static function getInstance($master = true)
     {
         static $id = 0;
@@ -79,29 +81,35 @@ abstract class Sql
 
         return self::$instance[$id_server];
     }
+    */
     
+    /*
     abstract public function connect();
-    // abstract protected function _query($sql);
-
+    abstract protected function _query($sql);
+    */
     public static function getClass()
     {
         $class = 'MySQL';
         if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
-            $class = 'SqlPDO';
+            $class = 'MySqlBuilder';
         } elseif (extension_loaded('mysqli')) {
             $class = 'DbMySQLi';
         }
 
         return $class;
     }
+
+    
     protected function __construct($database, $connect = true)
     {
+       
         $this->database = $database;
       if ($connect) {
         $this->connect();
+        //$this->getInstance();
       }
     }
-
+    
     public function save()
     {
         $columns = get_object_vars($this);
@@ -126,7 +134,7 @@ abstract class Sql
         return $queryPrepared->execute( $columns );
 
     }
-    
+
     public function getLink()
     {
         return $this->link;
@@ -136,5 +144,7 @@ abstract class Sql
     {
         return $this->_servers;
     }
+
+
     
 }

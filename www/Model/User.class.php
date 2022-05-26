@@ -1,11 +1,11 @@
 <?php
 namespace App\Model;
 
-//use App\Core\Sql;
+use App\Core\Sql;
 use App\Core\SqlPDO;
 
 
-class User extends SqlPDO {
+class User extends Sql{
 
     protected $id = null;
     protected $firstname = null;
@@ -17,14 +17,14 @@ class User extends SqlPDO {
     protected $token = null;
     protected $pdo = null;
     protected $table;
-    
 
     public function __construct(){
         
-        $this->pdo = SqlPDO::connect();
+        $this->pdo = Sql::getInstance();
+        //$this->pdo = SqlPDO::connect();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
-    }
+    }   
     /**
      * @return null|int
      */
@@ -299,24 +299,31 @@ class User extends SqlPDO {
         }
     
     }
-  
+   
     public function getIdFromEmail($email) {
         $id = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
-        $id->execute(array($email));
+        $id->execute(array(addslashes($email)));
         $result = $id->fetch();
         return $result['id'];
     }
 
     public function getUserByEmail($email) {
-        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
-        $sql->execute(array($email));
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `email` = ?"); 
+        $sql->execute(array(addslashes($email)));
         $result = $sql->fetch();
         return $result;
     }
 
+    public function getUserById($id) {
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `id` = ?");
+        $sql->execute(array($id));
+        //$result = $sql->setFetchMode($this->pdo::FETCH_CLASS, User::class);
+        $result = $sql->fetchObject(User::class);
+        return $result;
+    }
     public function isUserExist($email) {
-        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
-        $sql->execute(array($email));
+        $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE email = ? ");
+        $sql->execute(array(addslashes($email)));
         $result = $sql->fetch();
         
         return !!$sql->rowCount();
