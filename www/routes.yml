@@ -47,4 +47,3 @@
 /payment:
   controller: payment
   action: payment
-
