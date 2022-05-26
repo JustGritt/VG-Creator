@@ -5,7 +5,7 @@ use App\Core\Sql;
 use App\Core\SqlPDO;
 
 
-class User extends SqlPDO {
+class User extends Sql{
 
     protected $id = null;
     protected $firstname = null;
@@ -20,7 +20,8 @@ class User extends SqlPDO {
 
     public function __construct(){
         
-        $this->pdo = SqlPDO::connect();
+        $this->pdo = Sql::getInstance();
+        //$this->pdo = SqlPDO::connect();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }   
@@ -29,6 +30,13 @@ class User extends SqlPDO {
      */
     public function getId(): ?int{
         return $this->id;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function setId($id): ?int{
+        return $this->id = $id;
     }
 
     /**
