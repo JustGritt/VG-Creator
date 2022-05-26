@@ -26,9 +26,18 @@ class Admin
         $user->setFirstname($_SESSION['firstname']);
         //var_dump($_SESSION);
 
+        $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
 
-        $view = new View("back_home", "back");
-        $view->assign("user", $user);
+        if (count($explode_url) == 2) {
+            $view = new View("back_home", "back");
+            // $view->assign("user", $user);
+        } else if (count($explode_url) > 2 && $explode_url[2] == "settings") {
+            $view = new View("settings", "back");
+            $view->assign("user", $user);
+        }
+
+        // $view = new View("back_home", "back");
+        // $view->assign("user", $user);
 
         //var_dump($_POST);
         if (!empty($_POST)) {

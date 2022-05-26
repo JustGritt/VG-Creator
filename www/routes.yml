@@ -48,6 +48,13 @@
     - admin
     - user
 
+/dashboard/settings:
+  controller: admin
+  action: dashboard
+  security:
+    - admin
+    - user
+
 /payment:
   controller: payment
   action: payment
