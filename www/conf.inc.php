@@ -17,6 +17,12 @@ define("SMTP_PWD", "ESGI2021");
 //Postmark email marketing api
 //define("SMTP_USERNAME", "364a064d-be01-4096-97fd-1591c1132128" );
 //define("SMTP_PWD", "364a064d-be01-4096-97fd-1591c1132128");
+if (extension_loaded('pdo_mysql')) {
+    define("BUILDER" , 'App\Core\MySqlBuilder');
+}
+if (extension_loaded('postgres')) {
+    define("BUILDER" , 'App\Core\PostgreSqlBuilder');
+}
 
 
 //Google aouth 
