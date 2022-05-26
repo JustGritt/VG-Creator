@@ -303,19 +303,17 @@ class User extends SqlPDO {
         }
     
     }
-  
+   
     public function getIdFromEmail($email) {
         $id = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
-        $id->execute(array($email));
+        $id->execute(array(addslashes($email)));
         $result = $id->fetch();
         return $result['id'];
     }
 
     public function getUserByEmail($email) {
-        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `email` = ?");
-        
-        $sql->execute(array($email));
-        
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `email` = ?"); 
+        $sql->execute(array(addslashes($email)));
         $result = $sql->fetch();
         return $result;
     }
@@ -329,11 +327,12 @@ class User extends SqlPDO {
     }
     public function isUserExist($email) {
         $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE email = ? ");
-        $sql->execute(array($email));
+        $sql->execute(array(addslashes($email)));
         $result = $sql->fetch();
         
         return !!$sql->rowCount();
     }
+    
     public function connexion($getEmail , $getPdw) {
         $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE email = ?");
         $user->execute(array($getEmail));
