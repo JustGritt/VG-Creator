@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Core;
+//use App\Core\SqlPDO;
 
 class SqlPDO extends Sql
 {
@@ -31,6 +32,10 @@ class SqlPDO extends Sql
 
         return $this->link;
     }
-   
+    
+    protected function _query($sql)
+    {
+        return $this->link->query($sql);
+    }
 
 }  
