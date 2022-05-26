@@ -23,37 +23,13 @@ class User {
         $facebooklogin = new Facebook();
         $token =  (string)$_GET['code'];
         $user_info = $facebooklogin->login($token);
-        
-        if($user_info)
-        {
-            $oauth_user = new OauthUser();
-            $_SESSION['id'] = $user_info['id'];
-            $_SESSION['email'] = $user_info['email'];
-            $_SESSION['code'] = $token;
-            $user_name =  explode(" " , $user_info['name']);
-            $_SESSION['lastname'] = $user_name[1];
-            $_SESSION['firstname'] = $user_name[0];
-            if(!$oauth_user->isUserExist($user_info['email'])){
-                $oauth_user->setFirstname($user_name[0]);
-                $oauth_user->setLastname($user_name[1]);
-                $oauth_user->setEmail($user_info['email']);
-                $oauth_user->setOauth_id( $user_info['id']);
-                $oauth_user->setOauth_provider('facebook_api');
-                $oauth_user->save();     
-            }
-            echo "Bienvenue"; 
-            header("Location: http://localhost/dashboard"); 
-        
-            //echo 'Bienvenue' .$user_info['id'] . ' ' .$user_info['name'] . '' .$user_info['email'];
-            // var_dump($_SESSION);
-        }else{
-            echo "OOps sorry something went wrong with google";
-            //unset($_SESSION['id']);
-            //unset($_SESSION['code']);
-            //unset($_SESSION['email']);
-            //var_dump(isset($_SESSION['id']));
-            // var_dump($_SESSION);
-            header("Refresh: 5; http://localhost/login "); 
+       
+        if (!$user_info) {
+            echo "OOps sorry something went wrong with facebook";
+            unset($_SESSION['id']);
+            unset($_SESSION['code']);
+            unset($_SESSION['email']);
+            header("Refresh: 5; ".DOMAIN."/login "); 
         }
 
         $oauth_user = new OauthUser();
@@ -116,7 +92,7 @@ class User {
             
         }
         if (!empty($_GET)) {
-            
+           
             $oauth_user = new OauthUser();
             $redirect_uri = DOMAIN."/login";
             $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
@@ -133,14 +109,14 @@ class User {
                 var_dump($_SESSION);
                 header("Refresh: 5; ".DOMAIN."/login "); 
             }
-            
+           
             $_SESSION['id'] = $user_info['id'];
             $_SESSION['id_role'] = $user_info['id_role'];
             $_SESSION['email'] = $user_info['email'];
             $_SESSION['code'] = $access_token;
             $_SESSION['lastname'] = $user_info['family_name'];
             $_SESSION['firstname'] = $user_info['given_name'];
-            
+           
             if (!$oauth_user->isUserExist($user_info['email'])) {
                 $oauth_user->setFirstname($user_info['given_name']);
                 $oauth_user->setLastname($user_info['family_name']);
@@ -167,7 +143,7 @@ class User {
     
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST)) {
-            
+             
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
         
             if ($user->isUserExist($_POST['email'])) {
@@ -235,7 +211,7 @@ class User {
             header("Refresh: 5; ".DOMAIN."/");
             return;        
         }
-        
+       
     }
 
     public function logout():void {
@@ -294,7 +270,7 @@ class User {
 
     public function revokeToken($token){
         $url = 'https://oauth2.googleapis.com/revoke?token='. $token;	
-
+        		
         $ch = curl_init();		
         curl_setopt($ch, CURLOPT_URL, $url);		
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);		
