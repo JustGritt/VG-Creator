@@ -2,6 +2,56 @@
 ======================= */
 /* DASHBOARD PALETTE  
 ======================= */
+/* DARK MODE VARIABLES
+ ========== */
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-background: #ffffff;
+  --color-background-alt: #EFF3FE;
+  --color-border: #000000;
+  --color-text: #000000;
+  --color-pseudo: #000000;
+  --color-link: #1538B5;
+  --color-shadow: #ffffff;
+  --color-nav-link: #ED4C67;
+  --color-button-background: #000000;
+  --color-button-text: #ffffff;
+  --color-button-hover-background: #ffffff;
+  --color-button-hover-text: #000000;
+  --color-button-link: #82ccdd;
+  --color-footer-background: #ffffff;
+  --color-border-invert: #ffffff;
+  --color-hover-text: #ffffff;
+  --color-hover-background: #000000;
+}
+
+.dark {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-background: #000000;
+  --color-background-alt: #CBCBCB;
+  --color-border: #ffffff;
+  --color-text: #ffffff;
+  --color-pseudo: #ffffff;
+  --color-link: #1538B5;
+  --color-shadow: #000000;
+  --color-nav-link: #ED4C67;
+  --color-button-background: #ffffff;
+  --color-button-text: #000000;
+  --color-button-hover-background: #000000;
+  --color-button-hover-text: #ffffff;
+  --color-button-link: #82ccdd;
+  --color-footer-background: #000000;
+  --color-border-invert: #000000;
+  --color-hover-text: #000000;
+  --color-hover-background: #ffffff;
+}
+
+header {
+  position: relative;
+}
+
 .right-panel-dasboard {
   max-width: 300px;
   min-width: 300px;

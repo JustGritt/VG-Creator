@@ -104,7 +104,7 @@ class Admin
         unset($_FILES['fileToUpload']);
         
         
-        $view2 = new View("product", "back");
+        // $view2 = new View("product", "back");
        
     
         
