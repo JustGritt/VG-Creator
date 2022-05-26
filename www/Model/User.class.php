@@ -53,6 +53,11 @@ class User extends SqlPDO {
         return $this->id_role = $id_role;
     }
 
+    public function setId($id): ?int
+    {
+        return $this->id = $id;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
