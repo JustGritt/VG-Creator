@@ -1,6 +1,4 @@
-<main>
-    <div class="body-container-dashboard">
-        <?php include "View/Partial/Back/right-panel.partial.php" ?>
+
 
         <section class="left-panel-dasboard">
             <div class="search-bar">
@@ -135,9 +133,8 @@
 
             </div> -->
 
-        </section>
-    </div>
-</main>
+
+
 
 <script>
     // const Chart = document.getElementById("myChart");

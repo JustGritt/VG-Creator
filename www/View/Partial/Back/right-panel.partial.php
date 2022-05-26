@@ -2,19 +2,30 @@
     <header>
         <img src="../../dist/assets/logo.svg" />
     </header>
-    <?php use App\Utils\DynamicSvg; ?>
+    <?php
+
+    use App\Utils\DynamicSvg; ?>
 
     <nav class="right-panel-menu">
         <ul>
-            <li><a href="#"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
-            <li><a href="#"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Abonnements</span> </a></li>
-            <li><a href="#"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
-            <li><a href="#"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Historique</span> </a></li>
+            <?php
+            if (!function_exists('str_contains')) {
+                function str_contains(string $haystack, string $needle): bool
+                {
+                    return '' === $needle || false !== strpos($haystack, $needle);
+                }
+            }
+            ?>
+
+            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
+            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "subscribe" ? "active" : "") : null ?>><a href="/dashboard/subscribe"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Abonnements</span> </a></li>
+            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "settings" ? "active" : "") : null ?>><a href="/dashboard/settings"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
+            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "history" ? "active" : "") : null ?>><a href="/dashboard/history"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Historique</span> </a></li>
         </ul>
     </nav>
 
     <div class="right-panel-menu-bottom">
-        <img src="https://images.unsplash.com/photo-1645908698645-3513721e2ac7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"/>
+        <img src="https://images.unsplash.com/photo-1645908698645-3513721e2ac7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" />
         <p>Arthur Besson</p>
     </div>
 </section>

@@ -41,6 +41,13 @@
     - admin
     - user
 
+/dashboard/subscribe:
+  controller: admin
+  action: dashboard
+  security:
+    - admin
+    - user
+
 /payment:
   controller: payment
   action: payment

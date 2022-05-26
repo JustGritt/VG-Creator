@@ -44,7 +44,12 @@ h6 {
             margin-left     : 10px;
             width           : 100%;
             border          : 0;
+            height: unset !important;
             background-color: transparent;
+            filter: unset;
+            &:focus{
+                box-shadow: unset;
+            }
         }
     }
 }
@@ -265,6 +270,7 @@ h6 {
                 & span {
                     position        : absolute;
                     background-color: c.$light-blue;
+                    color: rgba(43, 51, 83, 1);
                     font-family     : Roboto;
                     font-style      : normal;
                     right           : 0;
@@ -302,11 +308,6 @@ h6 {
         margin-bottom: 52px;
     }
 
-    .right-panel-dasboard {
-        position: absolute;
-        left: -2000px;
-    }
-
     .left-panel-dasboard{
         display: flex;
         flex-direction: column;
@@ -333,10 +334,32 @@ h6 {
      
 }
 
+@media screen and (max-width: 1068px) {
+    .card-publications-dasboard > .all-articles-publications-dasboard{
+        
+        & article {
+            width: 100% !important;
+            & header{
+                height: 200px;
+            }
+            
+        }
+    }
+}
+
 
 @media screen and (max-width: 768px) {
-    .card-publications-dasboard > .all-articles-publications-dasboard{
-        grid-template-columns: repeat(2, 1fr);  
+    .all-card-info-dasboard{
+        & .card-publications-dasboard > .all-articles-publications-dasboard{
+            grid-template-columns: repeat(2, 1fr); 
+            
+            & article {
+                width: 100% !important;
+            }
+        } 
+        & .other-cards-info-dasboard > .first-part-other-cards-info > div {
+          max-width: 100%;
+         } 
     }
 }
 
@@ -346,5 +369,7 @@ h6 {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+
+       
     }
 }

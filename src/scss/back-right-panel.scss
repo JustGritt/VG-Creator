@@ -4,20 +4,18 @@ $img-icon   :22px;
 $profil-icon:72px;
 
 .right-panel-dasboard {
-    max-width         : 300px;
-    min-width         : 300px;
-    height            : 100vh;
-    border-radius     : 0;
-    background        : c.$light-blue;
-    // box-shadow     : 0 0 10px rgba(0, 0, 0, .1);
-    padding           : 20px;
-    position          : relative;
-    z-index           : 1;
-    display           : flex;
-    flex-direction    : column;
-
-    overflow  : hidden;
-    transition: all .4s ease-in-out;
+    max-width: 300px;
+    min-width: 300px;
+    height: 100vh;
+    border-radius: 0;
+    background: #E6E9F4;
+    padding: 20px 0;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    left: 0;
 
     & header {
         display         : flex;
@@ -31,10 +29,9 @@ $profil-icon:72px;
     & header img {
         width: 95px;
     }
-}
-
-.right-panel-dasboard nav {
-    margin-top: 23px;
+    nav {
+        margin-top: 23px;
+    }
 }
 
 .right-panel-menu-bottom {
@@ -65,16 +62,32 @@ $profil-icon:72px;
 }
 
 .right-panel-menu ul li {
-    padding: 10px;
-    margin : 2px 0;
+    // padding: 10px 20px;
+    margin : 6px 0px;
     display: flex;
-    width  : 100%;
-
     cursor: pointer;
+    position: relative;
+    &.active::before{
+        content: "";
+        height: 100%;
+        background: c.$main-blue;
+        width: 5px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0px;
+        border-radius: 0px;
+        transition: all 0.35s;
+    }
 
-    &:hover {
+    a{
+        padding: 10px 20px;
+        width: 100%;
+    }
+
+    &:hover, &.active {
         background   : rgba(255, 255, 255, 0.685);
-        border-radius: 12px;
+        border-radius: 2px;
     }
 
     & img {
@@ -86,7 +99,7 @@ $profil-icon:72px;
         align-items    : center;
         display        : flex;
         text-decoration: none;
-        pointer-events : none;
+        // pointer-events : none;
     }
 
     & span {
@@ -105,4 +118,12 @@ body::before {
     margin-bottom: 0!important;
     border-bottom: 0!important;
     content: ""!important;
+}
+
+@media screen and (max-width: 1068px) {
+    .right-panel-dasboard {
+        position: absolute;
+        left: -2000px;
+        transition: .5s left cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    }
 }

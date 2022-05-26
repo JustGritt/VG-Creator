@@ -16,9 +16,12 @@
 
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
-    <?php include "View/" . $this->view . ".view.php"; ?>
-
+    <main>
+        <div class="body-container-dashboard">
+            <?php include "View/Partial/Back/right-panel.partial.php" ?>
+            <?php include "View/" . $this->view . ".view.php"; ?>
+        </div>
+    </main>
 </body>
 
 </html>
