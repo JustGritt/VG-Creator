@@ -22,5 +22,6 @@ interface QueryBuilder
     */
     public function getQuery();
     public function insert($table, $columns = ' ',  $values) : QueryBuilder;
+    public function delete($table) : QueryBuilder;
     //public function leftJoin($table, $condition);
 }
