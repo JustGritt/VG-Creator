@@ -6,7 +6,7 @@
                 <input placeholder="Rechercher des stats" />
             </div>
             <div class="user-info-dashboard">
-                <h1>Hello Arthur</h1>
+                <h1>Hello <?php echo $user->getFirstname()?></h1>
                 <h2>Bienvenue !</h2>
             </div>
 

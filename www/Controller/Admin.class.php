@@ -17,99 +17,48 @@ use App\Core\QueryBuilder;
 class Admin
 {
     protected $pdo = null;
+
     public function dashboard()
     {
-
         if (empty($_SESSION['id']) && empty($_SESSION['token'])) {
             header("Location: " . DOMAIN . "/login");
         }
 
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-        //var_dump($_SESSION);
 
-        $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
-
-        if (count($explode_url) == 2) {
-            $view = new View("back_home", "back");
-            // $view->assign("user", $user);
-        } else if (count($explode_url) > 2 && $explode_url[2] == "settings") {
-            $view = new View("settings", "back");
-            $view->assign("user", $user);
-        }
-
-        // $view = new View("back_home", "back");
-        // $view->assign("user", $user);
-
-        //var_dump($_POST);
-        if (!empty($_POST)) {
-            //var_dump($_POST);
-            $user->logout();
-        } 
-     
-        $sql = Sql::getInstance()->prepare("SELECT * FROM esgi_user");
-        $sql->execute();
-        $result = $sql->fetchAll();
-        
-        $request = new MySqlBuilder();
-        $sql2 = $request
-            ->select('esgi_user', ['id', 'firstname', 'lastname', 'email', 'status', 'id_role'])
-            ->where('id', $_SESSION['id'])
-            ->limit(0, 1)
-            ->getQuery();
-        
-        //var_dump(Sql::getInstance()->query($sql)->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User'));
-        
-        $poo = (new MySqlBuilder())
-            ->select('esgi_user', ['*'] )
-            ->where('id', $_SESSION['id'])
-            ->limit(0, 1)
-            ->getQuery();
-        $result2 = Sql::getInstance()
-            ->query($poo)
-            ->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User');
-
-        //var_dump($result2);
-        
-       
-        $class = BUILDER;
-        $queryBuilder = new $class();
-        
-        $lol = $this->test($queryBuilder, $_SESSION['id']);
-        $kok = Sql::getInstance()->query($lol)->fetchAll();
-        //var_dump($kok);
-
-        //var_dump( $this->sendUploadedFileToDB($queryBuilder, $fileName, $id_user, $id_site));
-        
-        //var_dump($_POST);
         if(!empty($_POST['submit']))
         {
             if(!empty($_FILES)) {
                 $this->uploadFile();
-                unset($_POST['submit']);
             }
         }
-        
-        /*
-        $query = $queryBuilder
-            ->insert('esgi_file', '',[$fileName, $id_user, $id_site])
-            ->getQuery();
 
-        var_dump($query)
-        */
-        $view->assign("result", $result);
-        
-
-        unset($_FILES['file']);
-        unset($_FILES['fileToUpload']);
-        
-        
-        // $view2 = new View("product", "back");
-       
-    
+        $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
+        $page = end($explode_url);
+        switch ($page) {
+            case "settings":
+                $view = $this->setSettingsView();
+                $view->assign("user", $user);
+                break;
+            case "subscribe":
+                $view = new View("dashboard", "back");
+                $view->assign("user", $user);
+                break;
+            default:
+                $view = new View("back_home", "back");
+                $view->assign("user", $user);
+                break;
+        };
         
     }
 
+    public function setSettingsView(){
+        $view = new View('settings', 'back');
+        $result = $this->getUserOfSite();
+        $view->assign("result", $result);
+        return $view;
+    }
 
     public function test(QueryBuilder $queryBuilder , $id){
         $query = $queryBuilder
@@ -127,6 +76,28 @@ class Admin
             ->insert('esgi_file', ['name', 'id_user', 'id_site'], [$fileName, $id_user, $id_site])
             ->getQuery();
         return Sql::getInstance()->query($query) ? true : false;
+    }
+
+    public function updateUser($colmuns, $values, $builder = BUILDER) {
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->update('esgi_user', $colmuns, $values)
+            ->getQuery();
+        $result = Sql::getInstance()
+             ->query($sql);
+        return $result;        
+    }
+
+    public function deleteUserById($id , $builder = BUILDER) {
+    
+        $queryBuilder = new $builder();
+        $sql = $queryBuilder
+            ->delete('esgi_user')
+            ->where('id', $id)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($sql);
+        return $result;    
     }
 
     public function uploadFile() {
@@ -162,14 +133,64 @@ class Admin
     }
 
 
-    public function coucou(){
-        echo "coucou";
+    public function getUserOfSite(){
+        $poo = (new MySqlBuilder())
+            ->select('esgi_user', ['*'] )
+            //->where('id', $_SESSION['id'])  Uncomment this line to get only the user of the current site
+            ->limit(0, 10)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($poo)
+            //->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User');
+            ->fetchAll();
+        return $result;
     }
 
     public function client() {
-        echo "Ceci";
-        $view = new View("front_website", "back");
-        $view->assign("user", $user);
+        $view = new View('front_template', 'front');
+       
+    }
 
+    public function SAUV() {
+        $request = new MySqlBuilder();
+        $sql2 = $request
+            ->select('esgi_user', ['id', 'firstname', 'lastname', 'email', 'status', 'id_role'])
+            ->where('id', $_SESSION['id'])
+            ->limit(0, 1)
+            ->getQuery();
+        
+        //var_dump(Sql::getInstance()->query($sql)->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User'));
+        
+      
+       
+        $class = BUILDER;
+        $queryBuilder = new $class();
+        
+        $lol = $this->test($queryBuilder, $_SESSION['id']);
+        $kok = Sql::getInstance()->query($lol)->fetchAll();
+        //var_dump($kok);
+
+        //var_dump( $this->sendUploadedFileToDB($queryBuilder, $fileName, $id_user, $id_site));
+        
+        //var_dump($_POST);
+        if(!empty($_POST['submit']))
+        {
+            if(!empty($_FILES)) {
+                $this->uploadFile();
+                unset($_POST['submit']);
+            }
+        }
+        
+        /*
+        $query = $queryBuilder
+            ->insert('esgi_file', '',[$fileName, $id_user, $id_site])
+            ->getQuery();
+
+        var_dump($query)
+        */
+    }
+
+    public function coucou() {
+       var_dump($_POST);
     }
 }

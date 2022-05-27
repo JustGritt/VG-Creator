@@ -3,6 +3,8 @@ namespace App\Model;
 
 use App\Core\Sql;
 use App\Core\SqlPDO;
+use App\Core\MySqlBuilder;
+use App\Core\QueryBuilder;
 
 
 class User extends Sql{
@@ -24,7 +26,8 @@ class User extends Sql{
         //$this->pdo = SqlPDO::connect();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
-    }   
+    }
+    
     /**
      * @return null|int
      */
@@ -340,6 +343,7 @@ class User extends Sql{
         return $userexist;
     }
 
+   
 
     
 

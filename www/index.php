@@ -2,6 +2,10 @@
 
 namespace App;
 
+
+use App\Core\Router;
+use App\Core\Route;
+
 require "conf.inc.php";
 
 function myAutoloader($class)
@@ -18,7 +22,32 @@ function myAutoloader($class)
 spl_autoload_register("App\myAutoloader");
 
 //Réussir à récupérer l'URI
+$url = $_SERVER['REQUEST_URI'];
+$router = new Router($url);
 
+$router->get('/', 'main@home');
+$router->get('/template', 'main@template');
+$router->get('/login', 'user@login');
+$router->post('/login', 'user@login');
+$router->get('/login-fb', 'user@loginwithfb');
+$router->get('/logout', 'user@logout');
+$router->post('/logout', 'user@logout');
+$router->get('/register', 'user@register');
+$router->post('/register', 'user@register');
+$router->get('/forget', 'passwordrecovery@pwdforget');
+$router->post('/confirmation', 'confirmation@confirmation');
+$router->post('reset-new-password', 'confirmation@confirmationPwd');
+$router->get('/dashboard', 'admin@dashboard');
+$router->get('/dashboard/subscribe', 'admin@dashboard');
+$router->get('/dashboard/settings', 'admin@dashboard');
+$router->get('/client_website', 'admin@client');
+$router->get('/payment', 'payment@payment');
+$router->get('/blog/:id', 'Blog@show'); //TEST PRUPOSE ONLY 
+$router->run();
+
+
+
+/*
 $uri = $_SERVER["REQUEST_URI"];
 
 $routeFile = "routes.yml";
@@ -30,11 +59,14 @@ $routes = yaml_parse_file($routeFile);
 $global_uri = strtok($uri, '?');
 
 if (empty($routes[$global_uri]) ||  empty($routes[$global_uri]["controller"])  ||  empty($routes[$global_uri]["action"])) {
-    die("Erreur 404");
+    var_dump($global_uri);
+    //die("Erreur 404");
 }
+
 
 $controller = ucfirst(strtolower($routes[$global_uri]["controller"]));
 $action = strtolower($routes[$global_uri]["action"]);
+*/
 
 
 /*
@@ -54,7 +86,7 @@ $action = strtolower($routes[$uri]["action"]);
  *
  */
 
-
+/*
 $controllerFile = "Controller/".$controller.".class.php";
 if(!file_exists($controllerFile)){
     die("Le controller ".$controllerFile." n'existe pas");
@@ -75,3 +107,4 @@ if( !method_exists($objectController, $action)){
 }
 // $action = login ou logout ou register ou home
 $objectController->$action();
+*/
