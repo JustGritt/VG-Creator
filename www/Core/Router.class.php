@@ -7,6 +7,7 @@ class Router {
     private $url;
     private $routes = [];
     private $namedRoutes = [];
+    private $groupPattern = '';
 
     public function __construct($url){
         $this->url = $url;
@@ -23,6 +24,9 @@ class Router {
     }
 
     private function add($path, $callable, $name, $method){
+        if(!empty($this->groupPattern)){
+            $path = trim($this->groupPattern) . ltrim($path);
+        }
         $route = new Route($path, $callable);
         $this->routes[$method][] = $route;
         if(is_string($callable) && $name === null){
@@ -34,6 +38,11 @@ class Router {
         return $route;
     }
 
+    public function group($groupPattern, \Closure $routes){
+        $this->groupPattern = $groupPattern;
+        $routes($this);
+        unset($this->groupPattern);
+    }
     public function run(){
         if(!isset($this->routes[$_SERVER['REQUEST_METHOD']])){
 
@@ -53,6 +62,9 @@ class Router {
         }
         return $this->namedRoutes[$name]->getUrl($params);
     }
+
+
+
 
 
 

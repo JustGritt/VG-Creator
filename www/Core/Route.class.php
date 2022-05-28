@@ -31,6 +31,7 @@ class Route {
         return true;
     }
 
+
     private function paramMatch($match){
         if(isset($this->params[$match[1]])){
             return '(' . $this->params[$match[1]] . ')';
@@ -55,6 +56,14 @@ class Route {
             $path = str_replace(":$k", $v, $path);
         }
         return $path;
+    }
+
+    public function isAuthenticated($callable): Route
+    {
+        if (empty($_SESSION['id']) && empty($_SESSION['token'])) {
+            header("Location: " . DOMAIN . "/login");
+        }
+        return $callable;
     }
 
 }
