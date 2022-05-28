@@ -83,7 +83,7 @@ class PasswordRecovery {
 
 
                 //Send a special link with a expiry 
-                $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;
+                $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&git token='.$recovery_token;
                 $body =  "<a href=".$toanchor.">Click here</a>";
     
                 //$subject = "Mot de passe oublié ?";

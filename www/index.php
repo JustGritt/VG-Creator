@@ -3,14 +3,13 @@
 namespace App;
 
 
+use App\Core\AuthMidlleware;
 use App\Core\Router;
 use App\Core\Route;
-
 require "conf.inc.php";
 
 function myAutoloader($class)
 {
-
     // $class => CleanWords();
     $class = str_replace("App\\","",$class);
     $class = str_replace("\\", "/",$class);
@@ -25,35 +24,44 @@ spl_autoload_register("App\myAutoloader");
 
 $router = new Router($_GET['url'] ?? "");
 
-$router->get('/', 'main@home');
+$router->group('/', function($router) {
+    $router->get('/', 'main@home');
+    $router->get('/login', 'user@login');
+    $router->post('/login', 'user@login');
+    $router->get('/login-google', 'user@loginwithGoogle');
+    $router->get('/login-fb', 'user@loginwithfb');
+    $router->get('/logout', 'user@logout');
+    $router->post('/logout', 'user@logout');
+    $router->get('/register', 'user@register');
+    $router->post('/register', 'user@register');
+    $router->get('/forget', 'passwordrecovery@pwdforget');
+    $router->post('/forget', 'passwordrecovery@pwdforget');
+    $router->get('/confirmation', 'confirmation@confirmation');
+    $router->post('/confirmation', 'confirmation@confirmation');
+    $router->post('/reset-new-password', 'confirmation@confirmationPwd');
+});
+
 $router->get('/template', 'main@template');
-//$router->get('/login', 'user@loginshow');
-
-$router->get('/login', 'user@login');
-$router->post('/login', 'user@login');
-$router->get('/login-google', 'user@loginwithGoogle');
-$router->get('/login-fb', 'user@loginwithfb');
-$router->get('/logout', 'user@logout');
-$router->post('/logout', 'user@logout');
-$router->get('/register', 'user@register');
-$router->post('/register', 'user@register');
-$router->get('/forget', 'passwordrecovery@pwdforget');
-$router->post('/forget', 'passwordrecovery@pwdforget');
-$router->get('/confirmation', 'confirmation@confirmation');
-
-$router->post('/confirmation', 'confirmation@confirmation');
-$router->post('reset-new-password', 'confirmation@confirmationPwd');
-$router->get('/dashboard', 'admin@dashboard');
-$router->get('/dashboard/subscribe', 'admin@dashboard');
-$router->post('/dashboard/subscribe', 'admin@dashboard');
-$router->get('/dashboard/settings', 'admin@dashboard');
 $router->get('/client_website', 'admin@client');
+
+$router->group('/dashboard', function($router) {
+    $router->get('/', 'admin@dashboard');
+    $router->get('/subscribe', 'admin@dashboard');
+    $router->post('/subscribe', 'admin@dashboard');
+    $router->get('/settings', 'admin@dashboard');
+    $router->get('/settings/profile', 'admin@dashboard');
+    $router->get('/history', 'admin@dashboard');
+    $router->get('/articles', 'admin@getAllArticles');
+    $router->get('/articles/:id', 'admin@setEditorView')
+        ->with('id', '[0-9]+');
+});
+
 $router->get('/payment', 'payment@payment');
-$router->get('/blog/:id/', 'Blog@show')
-    ->with('id' ,'[0-9]+');
+
+$router->get('/blog/:id/', 'Blog@show')->with('id' ,'[0-9]+');
 $router->get('/blog/:id/:article', 'Blog@show')
     ->with('id', '[0-9]+')
-    ->with('article', '([a-z\-0-9]+)');; //TEST PRUPOSE ONLY
+    ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
 $router->run();
 

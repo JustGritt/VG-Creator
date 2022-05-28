@@ -13,10 +13,10 @@ use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Core\MySqlBuilder;
 use App\Core\QueryBuilder;
+use Cassandra\Cluster\Builder;
 
 class Admin
 {
-    protected $pdo = null;
 
     public function dashboard()
     {
@@ -56,6 +56,28 @@ class Admin
         $result = $this->getUserOfSite();
         $view->assign("result", $result);
         return $view;
+    }
+
+    public function setEditorView()
+    {
+        $view = new View('editor', 'back');
+        $result = $this->getUserOfSite();
+        $view->assign("result", $result);
+    }
+
+    public function getAllArticles()
+    {
+        $view = new View('articles', 'back');
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_articles', ['*'])
+            ->limit(0, 10)
+            ->getQuery();
+        $result =Sql::getInstance()
+            ->query($query)
+            ->fetchAll();
+        $view->assign("result", $result);
     }
 
     public function test(QueryBuilder $queryBuilder , $id){
@@ -130,7 +152,6 @@ class Admin
         }
     }
 
-
     public function getUserOfSite(){
         $poo = (new MySqlBuilder())
             ->select('esgi_user', ['*'] )
@@ -201,7 +222,4 @@ class Admin
         */
     }
 
-    public function coucou() {
-       var_dump($_POST);
-    }
 }
