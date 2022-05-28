@@ -39,18 +39,16 @@ class Admin
         switch ($page) {
             case "settings":
                 $view = $this->setSettingsView();
-                $view->assign("user", $user);
                 break;
             case "subscribe":
                 $view = new View("dashboard", "back");
-                $view->assign("user", $user);
                 break;
             default:
                 $view = new View("back_home", "back");
-                $view->assign("user", $user);
                 break;
-        };
-        
+        }
+        $view->assign("user", $user);
+
     }
 
     public function setSettingsView(){
@@ -66,7 +64,7 @@ class Admin
             ->where('id', $id)
             ->limit(0, 1)
             ->getQuery();
-       
+
         return $query;
     }
 
@@ -75,7 +73,7 @@ class Admin
         $query = $queryBuilder
             ->insert('esgi_file', ['name', 'id_user', 'id_site'], [$fileName, $id_user, $id_site])
             ->getQuery();
-        return Sql::getInstance()->query($query) ? true : false;
+        return (bool)Sql::getInstance()->query($query);
     }
 
     public function updateUser($colmuns, $values, $builder = BUILDER) {
@@ -84,8 +82,8 @@ class Admin
             ->update('esgi_user', $colmuns, $values)
             ->getQuery();
         $result = Sql::getInstance()
-             ->query($sql);
-        return $result;        
+             ->query($query);
+        return $result;
     }
 
     public function deleteUserById($id , $builder = BUILDER) {
@@ -147,8 +145,21 @@ class Admin
     }
 
     public function client() {
-        $view = new View('front_template', 'front');
-       
+        $view = new View('front_template', 'front');  
+    }
+
+    public function articles($builder = BUILDER){
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_user', ['*'])
+            ->limit(0, 10)
+            ->getQuery();
+        $result = Sql::getInstance()
+                ->query($query)
+                ->fetchAll();
+
+        $view = new View('succes', 'back');
+        $view->assign('result', $result);
     }
 
     public function SAUV() {

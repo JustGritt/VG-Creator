@@ -1,51 +1,60 @@
-<?php 
+<?php
 
 namespace App\Core;
 
-
 class Route {
 
-    public $path;
-    public $action;
-    public $matches;
+    private $path;
+    private $callable;
+    private $matches = [];
+    private $params = [];
 
-    public function __construct($path, $action) {
+    public function __construct($path, $callable){
         $this->path = trim($path, '/');
-        $this->action = $action;
+        $this->callable = $callable;
     }
 
-      
-    public function match($url) {
-        $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
-        $pathToMatch = "#^$path$#";
-        if (preg_match($pathToMatch, $url, $matches)) {
-            $this->matches = $matches;
-            return true; 
-        }else{
+    public function with($param, $regex){
+        $this->params[$param] = str_replace('(', '(?:', $regex);
+        return $this;
+    }
+
+    public function match($url){
+        $url = trim($url, '/');
+        $path = preg_replace_callback('#:([\w]+)#', [$this, 'paramMatch'], $this->path);
+        $regex = "#^$path$#i";
+        if(!preg_match($regex, $url, $matches)){
             return false;
         }
+        array_shift($matches);
+        $this->matches = $matches;
+        return true;
     }
 
-    public function call() {
-        $params = explode('@', $this->action);
-        $controller = $params[0];
-
-        $controllerFile = "Controller/".$controller.".class.php";
-        if(!file_exists($controllerFile)){
-            die("Le controller ".$controllerFile." n'existe pas");
+    private function paramMatch($match){
+        if(isset($this->params[$match[1]])){
+            return '(' . $this->params[$match[1]] . ')';
         }
-
-        $controller_sanitaze = "App\\Controller\\".ucfirst(strtolower($controller));
-        $controller = new $controller_sanitaze();
-       
-
-        $method = $params[1];
-        if( !method_exists($controller, $method)){
-            die("L'action ".$method." n'existe pas");
-        }
-    
-        return isset($this->matches[1]) ? $controller->$method($this->matches[1]) : $controller->$method(); 
+        return '([^/]+)';
     }
 
-   
+    public function call(){
+        if(is_string($this->callable)){
+            $params = explode('@', $this->callable);
+            $controller = "App\\Controller\\".ucfirst(strtolower($params[0]));
+            $controller = new $controller();
+            return call_user_func_array([$controller, $params[1]], $this->matches);
+        } else {
+            return call_user_func_array($this->callable, $this->matches);
+        }
+    }
+
+    public function getUrl($params){
+        $path = $this->path;
+        foreach($params as $k => $v){
+            $path = str_replace(":$k", $v, $path);
+        }
+        return $path;
+    }
+
 }

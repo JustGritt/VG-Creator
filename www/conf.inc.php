@@ -24,8 +24,8 @@ if (extension_loaded('postgres')) {
     define("BUILDER" , 'App\Core\PostgreSqlBuilder');
 }
 
-
-//Google aouth 
+//Google aouth
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
 define("GOOGLE_SECRET" , "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");
+
 

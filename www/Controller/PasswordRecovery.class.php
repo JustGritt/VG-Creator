@@ -51,7 +51,7 @@ class PasswordRecovery {
             $password_recovery->recovery_password($selector, $email, $recovery_token, $recovery_token_expiry);
 
             //Send a special link with a expiry 
-            $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;       
+            $toanchor = 'http://localhost/reset-new-password/selector='.$selector.'/token='.$recovery_token;       
             
             $template_file = "/var/www/html/Templates/password_recovery_email.php";
             $template_var = array(
@@ -81,12 +81,13 @@ class PasswordRecovery {
                 //Insert into db the information 
                 $password_recovery->recovery_password($selector, $email, $recovery_token, $recovery_token_expiry);
 
+
                 //Send a special link with a expiry 
-                $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;       
+                $toanchor = 'http://localhost/reset-new-password/selector='.$selector.'/token='.$recovery_token;       
                 $body =  "<a href=".$toanchor.">Click here</a>";
     
-                $subject = "Mot de passe oublié ?";
-                $mail->sendMail($email , $body, $subject);
+                //$subject = "Mot de passe oublié ?";
+                //$mail->sendMail($email , $body, $subject);
                 
             }
             
@@ -97,7 +98,6 @@ class PasswordRecovery {
                     
                 }
             }
-
             $mail = new Mail();
             $subject = "Mot de passe oublié ?";
             $mail->sendMail($email , $body, $subject);

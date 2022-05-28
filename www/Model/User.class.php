@@ -288,19 +288,9 @@ class User extends Sql{
         $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE id = ? AND token = ? ");
         $user->execute(array($getId ,$getToken));
         $userexist = $user->fetch();
+       
         
-        if ($user->rowCount() > 0) {
-            if($userexist["status"] == "0") {
-            $this->updateStatus($getId);
-            }else{
-            echo 'Votre email est deja enregistre'."<br>". '';
-            $_SESSION['token'] = $getToken;
-            }
-
-        }else{
-            echo 'Erreur: utilisateur inconnu en bdd'."<br>". '';
-        }
-    
+        return $userexist;
     }
    
     public function getIdFromEmail($email) {
@@ -342,6 +332,24 @@ class User extends Sql{
 
         return $userexist;
     }
+
+    public function getCountUser($id){
+        $builder = new MySqlBuilder();
+        $sql = $builder
+            ->select('esgi_user' , ['COUNT(*)'])
+            ->where('id',$id)
+            ->getQuery();
+       
+        $result = $this->pdo->query($sql)->fetch();
+        /*
+        $sql = $this->pdo->prepare("SELECT COUNT(id) FROM ".$this->table." WHERE id = ?");
+        $sql->execute(array($id));
+        $result = $sql->fetch();*/
+        return $result['COUNT(*)'];
+        //return $result;
+    }
+
+    
 
    
 

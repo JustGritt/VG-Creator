@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Core\View;
+
 class Blog {
 
     public function show($id)
     {
-        echo 'je suis le blog avec l\'id ' . $id;
+        $view = new View("editor" , 'back');
     }
 
 }
