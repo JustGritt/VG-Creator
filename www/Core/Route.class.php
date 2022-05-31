@@ -58,12 +58,5 @@ class Route {
         return $path;
     }
 
-    public function isAuthenticated($callable): Route
-    {
-        if (empty($_SESSION['id']) && empty($_SESSION['token'])) {
-            header("Location: " . DOMAIN . "/login");
-        }
-        return $callable;
-    }
 
 }

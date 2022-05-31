@@ -5,6 +5,7 @@ use App\Core\Sql;
 use App\Core\SqlPDO;
 use App\Core\MySqlBuilder;
 use App\Core\QueryBuilder;
+use App\Core\Security;
 
 
 class User extends Sql{
@@ -205,6 +206,12 @@ class User extends Sql{
                     "confirm"=>"password",
                     "error"=>"Votre mot de passe de confirmation ne correspond pas",
                 ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
             ]
         ];
     }
@@ -233,6 +240,12 @@ class User extends Sql{
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
                     "error"=>"Mot de passe incorrect"
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
                 ]
             ]
         ];
@@ -274,6 +287,12 @@ class User extends Sql{
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
                 ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
             ]
         ];
     }

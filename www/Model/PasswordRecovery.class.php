@@ -1,11 +1,12 @@
 <?php
 namespace App\Model;
 
+use App\Core\Security;
 use App\Core\Sql;
 use App\Core\SqlPDO;
 
 
-class PasswordRecovery extends SqlPDO {
+class PasswordRecovery extends Sql {
    
     protected $id = null;
     protected $email;
@@ -17,7 +18,7 @@ class PasswordRecovery extends SqlPDO {
 
     public function __construct()
     {
-        $this->pdo = SqlPDO::connect();
+        $this->pdo = Sql::getInstance();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
@@ -78,6 +79,12 @@ class PasswordRecovery extends SqlPDO {
                     "confirm"=>"password",
                     "error"=>"Votre mot de passe de confirmation ne correspond pas",
                 ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
             ]
         ];
     }
@@ -91,20 +98,18 @@ class PasswordRecovery extends SqlPDO {
         
     }
   
-    public function isExpiryResetToken($selector, $currentDate)
+    public function isExpiryResetToken($selector, $currentDate): bool
     {
         $result = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE selector = ? AND token_expiry >= ? ");
         $result->execute(array($selector, $currentDate));
-        $userexist = $result->fetch();
-        
-        if($result->rowCount() > 0){
-            return $userexist;
-        }else{
-            return false;
-        }
-        
-  
+        return $result->rowCount() > 0;
     }
-  
+
+    public function getUserBySelector($selector)
+    {
+        $result = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE selector = ?");
+        $result->execute(array($selector));
+        return $result->fetch();
+    }
 
 }

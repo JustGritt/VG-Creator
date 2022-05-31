@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Controller;
+//session_start();
 
 use App\Core\CleanWords;
+use App\Core\Security;
 use App\Core\Sql;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 use App\Model\PasswordRecovery;
+
 
 class Confirmation {
 
@@ -24,6 +27,18 @@ class Confirmation {
         $getId = $_GET['id'];
         $getToken = $_GET['token'];
         $user->confirmUser($getId, $getToken);
+
+        $pseudo = './UserSites/@'.$_SESSION['pseudo'];
+        if (!file_exists($pseudo)) {
+            mkdir($pseudo, 0777, true);
+            //create the file
+            $file = fopen($pseudo.'/conf.inc.php', 'a+');
+            fwrite($file, '<?php'."\n");
+            fwrite($file, "\n");
+            fwrite($file, 'define("AUTHOR", '.$_SESSION['id'].');'."\n");
+            fclose($file);
+        }
+
 
         echo 'Your account has been validated! ' ."<br>";
         echo 'You will be redirect to the login page in few secondes ' ."<br>";
@@ -47,17 +62,19 @@ class Confirmation {
         $user_recovery->setToken($token);
         $user_recovery->setSelector($selector);
         $currentDate = date("U");
-        $userinfo = $user_recovery->isExpiryResetToken($selector, $currentDate);
+        $is_expiry_token = $user_recovery->isExpiryResetToken($selector, $currentDate);
+
+        $userinfo = $user_recovery->getUserBySelector($selector);
         $email = $userinfo['email'];
         $id = $userinfo['id'];
 
-        if (!$user_recovery->isExpiryResetToken($selector, $currentDate)) {
+        if (!$is_expiry_token) {
             echo "Sorry. The link is no longer valid , you will be redirected soon...";
             header("Refresh: 3; ".DOMAIN."/forget" );
         }
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        if (!empty($_POST)) {
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             //Check if the to password are the same
             $status_valid = 1;
             $user_update = $user->getUserByEmail($email);
@@ -67,6 +84,7 @@ class Confirmation {
             $user->setEmail($email);
             $user->setStatus($status_valid);
             $user->setPassword($_POST['password']);
+            $user->setIdRole($user_update['id_role']);
             $user->generateToken();
 
             if (!$user->save()) {
@@ -79,6 +97,7 @@ class Confirmation {
             $user_recovery->setEmail($email);
             $user_recovery->setTokenExpiry(0);
             $user_recovery->save();
+
             echo 'You password has been reset!' ."<br>";
             echo 'You will be redirect to the login page soon..';
             header("Refresh: 3; ".DOMAIN."/login" );

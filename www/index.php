@@ -3,10 +3,11 @@
 namespace App;
 
 
-use App\Core\AuthMidlleware;
 use App\Core\Router;
 use App\Core\Route;
+use App\Core\Security;
 require "conf.inc.php";
+session_start();
 
 function myAutoloader($class)
 {
@@ -21,14 +22,13 @@ function myAutoloader($class)
 spl_autoload_register("App\myAutoloader");
 
 //Réussir à récupérer l'URI
-
 $router = new Router($_GET['url'] ?? "");
 
 $router->group('/', function($router) {
     $router->get('/', 'main@home');
     $router->get('/login', 'user@login');
     $router->post('/login', 'user@login');
-    $router->get('/login-google', 'user@loginwithGoogle');
+    //$router->get('/login-google', 'user@loginwithGoogle');
     $router->get('/login-fb', 'user@loginwithfb');
     $router->get('/logout', 'user@logout');
     $router->post('/logout', 'user@logout');
@@ -38,30 +38,55 @@ $router->group('/', function($router) {
     $router->post('/forget', 'passwordrecovery@pwdforget');
     $router->get('/confirmation', 'confirmation@confirmation');
     $router->post('/confirmation', 'confirmation@confirmation');
+    $router->get('/reset-new-password', 'confirmation@confirmationPwd');
     $router->post('/reset-new-password', 'confirmation@confirmationPwd');
 });
 
-$router->get('/template', 'main@template');
+//$router->get('/template', 'main@template');
 $router->get('/client_website', 'admin@client');
 
 $router->group('/dashboard', function($router) {
-    $router->get('/', 'admin@dashboard');
-    $router->get('/subscribe', 'admin@dashboard');
-    $router->post('/subscribe', 'admin@dashboard');
-    $router->get('/settings', 'admin@dashboard');
-    $router->get('/settings/profile', 'admin@dashboard');
-    $router->get('/history', 'admin@dashboard');
-    $router->get('/articles', 'admin@getAllArticles');
-    $router->get('/articles/:id', 'admin@setEditorView')
-        ->with('id', '[0-9]+');
+    if (Security::isAdmin()) {
+        $router->get('/', 'admin@dashboard');
+        $router->get('/subscribe', 'admin@dashboard');
+        $router->post('/subscribe', 'admin@dashboard');
+        $router->get('/settings', 'admin@dashboard');
+        $router->get('/settings/profile', 'admin@dashboard');
+        $router->get('/history', 'admin@dashboard');
+        $router->get('/articles', 'admin@getAllArticles');
+        $router->get('/articles/:id', 'admin@setEditorView')
+            ->with('id', '[0-9]+');
+    }
+    if (Security::isEditor()) {
+        $router->get('/', 'admin@dashboard');
+        $router->get('/settings', 'admin@dashboard');
+        $router->get('/settings/profile', 'admin@dashboard');
+        $router->get('/articles', 'admin@getAllArticles');
+        $router->get('/articles/:id', 'admin@setEditorView')
+            ->with('id', '[0-9]+');
+    }
+    if (Security::isModerator()) {
+        $router->get('/', 'admin@dashboard');
+        $router->get('/settings', 'admin@dashboard');
+        $router->get('/settings/profile', 'admin@dashboard');
+        $router->get('/comments', 'user@getAllArticles');
+        $router->get('/comments/:id', 'user@setEditorView')
+            ->with('id', '[0-9]+');
+    }
 });
 
 $router->get('/payment', 'payment@payment');
-
+$router->get('/test', 'admin@test');
+$router->post('/test', 'admin@test');
+$router->get('/test2', 'admin@client');
 $router->get('/blog/:id/', 'Blog@show')->with('id' ,'[0-9]+');
 $router->get('/blog/:id/:article', 'Blog@show')
     ->with('id', '[0-9]+')
     ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
+
+$router->get('/@:author/:slug', 'main@initContent')
+    ->with('author', '([a-z\-0-9]+)')
+    ->with('slug',  '([A-Za-z]+)');//TEST PRUPOSE ONLY
 
 $router->run();
 

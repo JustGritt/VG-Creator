@@ -2,25 +2,25 @@
 
 namespace App\Controller;
 
-session_start();
-
 use App\Core\CleanWords;
-use App\Core\Sql; 
-//use App\Core\SqlPDO;
+use App\Core\Security;
+use App\Core\Sql;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Core\MySqlBuilder;
 use App\Core\QueryBuilder;
-use Cassandra\Cluster\Builder;
 
+
+//session_start();
 class Admin
 {
 
     public function dashboard()
     {
-        if (empty($_SESSION['id']) && empty($_SESSION['token'])) {
+        var_dump($_SESSION);
+        if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
 
@@ -80,7 +80,7 @@ class Admin
         $view->assign("result", $result);
     }
 
-    public function test(QueryBuilder $queryBuilder , $id){
+    public function selectAllUserOfBlog(QueryBuilder $queryBuilder , $id){
         $query = $queryBuilder
             ->select('esgi_user', ['*'])
             ->where('id', $id)
@@ -181,6 +181,13 @@ class Admin
 
         $view = new View('succes', 'back');
         $view->assign('result', $result);
+    }
+
+    public function test(){
+        $user = new User();
+        $view = new View('test', 'back');
+        //$view->assign('user', $user);
+
     }
 
     public function SAUV() {

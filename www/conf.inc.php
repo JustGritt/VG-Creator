@@ -28,4 +28,9 @@ if (extension_loaded('postgres')) {
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
 define("GOOGLE_SECRET" , "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");
 
-
+//LES ROLES DE L'APPLICATION
+define("IS_ADMIN" , '1');
+define("IS_MEMBER" , '2');
+define("IS_GUEST" , '3');
+define("IS_EDITOR" , '4');
+define("IS_MODERATOR" , '5');
