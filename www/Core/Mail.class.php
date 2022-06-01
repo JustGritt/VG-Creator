@@ -48,23 +48,28 @@ class Mail
       $mail->Password = '7e313959bb4777';
       */
 
-      $mail->CharSet = 'utf-8';
-      $mail->isHTML(true);
-      $mail->Subject = $subject;
-      $mail->setFrom('do-not-reply@vgcreator.fr');
-      $mail->setFromName = 'VG-CREATOR';
-      $mail->addCustomHeader($to);
-      $mail->Body = $body; //"http://localhost/register/confirmationmail.php?id=".$_SESSION['id']."&cles=".$cles;
-      $mail->addAddress($to);
+      $this->setCommumConfig($mail, $to, $subject);
       $mail->Send();
       $mail->smtpClose();
       echo "Message have been send";
 
     }catch(Exception $e) {
+      
       echo "Message could not be sent.";
     }
 
 
+  }
+  
+  private function setCommunConfig(&$mail, $to, $subject) {
+    $mail->CharSet = 'utf-8';
+    $mail->isHTML(true);
+    $mail->Subject = $subject;
+    $mail->setFrom('do-not-reply@vgcreator.fr');
+    $mail->setFromName = 'VG-CREATOR';
+    $mail->addCustomHeader($to);
+    $mail->Body = $body; //"http://localhost/register/confirmationmail.php?id=".$_SESSION['id']."&cles=".$cles;
+    $mail->addAddress($to);
   }
 
 }
