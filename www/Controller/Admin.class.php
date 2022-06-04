@@ -49,8 +49,8 @@ class Admin
                 Handler::setDirectoryForUser($_POST['pseudo']);
 
                 $_SESSION['pseudo'] = $_POST['pseudo'];
-                $_SESSION['NOT-SET'] = [];
-                header("Location: " . DOMAIN . "/dashboard");
+                unset($_SESSION['NOT-SET']);
+                header('Refresh: 3; '.DOMAIN.'/dashboard');
                 return;
             }
         }
