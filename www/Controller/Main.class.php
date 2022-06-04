@@ -26,9 +26,8 @@ class Main {
         if (is_dir("./UserSites/".$author)){
             echo "Author exists";
             $path = "./UserSites/".$author."/".$site_title."/";
-            var_dump(is_dir($path));
             if (is_dir($path) && $site_title != ""){
-                echo "Site exists";
+                echo " Site exists";
                 $view = new View("index", 'client', $path);
                 /*
                 $view->assign("site_title", $site_title);
@@ -36,10 +35,11 @@ class Main {
                 $view->assign("path", $path);
                 */
             } else {
-                echo "Site does not exist";
+                echo " Site does not exist";
             }
 
         }
+        header('HTTP/1.1 404 Not Found');
         /*
         $find_author = $this->findAuthorByName($author);
         if (!isset($find_author)) {

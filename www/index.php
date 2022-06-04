@@ -50,9 +50,9 @@ $router->group('/dashboard', function($router) {
     $router->get('/', 'admin@dashboard');
     $router->post('/', 'admin@dashboard');
     if (Security::isVGdmin()){
-        $router->get('/clients', 'admin@getClientsOfSite');
-        $router->post('/clients', 'admin@getClientsOfSite');
-        $router->get('/sites', 'admin@getsite');
+        $router->get('/clients', 'admin@setClientOfSite');
+        $router->post('/clients', 'admin@setClientOfSite');
+        $router->get('/sites', 'admin@getAllSite');
         $router->post('/sites', 'admin@getsite');
     }
     $router->get('/subscribe', 'admin@dashboard');

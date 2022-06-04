@@ -414,8 +414,6 @@ class User extends Sql{
         return !$sql->rowCount();
     }
 
-
-
     public function getRoleOfUser($id , $id_site = 1) {
        $sql=
         "SELECT urole.id_role_site, s.name, rs.name as role, s.id_site
@@ -429,20 +427,28 @@ class User extends Sql{
        return $request->fetchAll();
 
     }
-    public function getCountUser($id){
-        $builder = new MySqlBuilder();
-        $sql = $builder
-            ->select('esgi_user' , ['COUNT(*)'])
-            ->where('id',$id)
-            ->getQuery();
-       
-        $result = $this->pdo->query($sql)->fetch();
-        /*
-        $sql = $this->pdo->prepare("SELECT COUNT(id) FROM ".$this->table." WHERE id = ?");
-        $sql->execute(array($id));
-        $result = $sql->fetch();*/
-        return $result['COUNT(*)'];
-        //return $result;
+
+    public function getCountUser($id_site){
+        $sql =
+            "SELECT count(1) FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+            WHERE rs.id_site = ?";
+
+        if ($_SESSION['VGCREATOR'] == 1 && $_SESSION['id_site'] == 1) {
+            $request = Sql::getInstance()->prepare($sql);
+            $request->execute(array($_SESSION['id_site']));
+            $result = $request->fetchAll();
+            return $result[0]['count(1)'];
+        }
+        if (isset($_SESSION['id_site']) && $_SESSION['id_site'] != 1) {
+            $request = Sql::getInstance()->prepare($sql);
+            $request->execute(array($_SESSION['id_site']));
+            $result = $request->fetchAll();
+            return $result[0]['count(1)'];
+        }
+
+        return 0;
     }
 
 

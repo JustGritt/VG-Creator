@@ -12,15 +12,13 @@ use App\Core\Mail;
 use App\Core\MySqlBuilder;
 use App\Core\QueryBuilder;
 use App\Core\Handler;
-use Cassandra\Cluster\Builder;
 
-
-//session_start();
 class Admin
 {
 
     public function dashboard()
     {
+        var_dump($_SESSION);
 
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
@@ -98,7 +96,11 @@ class Admin
     }
     public function setSettingsView(){
         $view = new View('settings', 'back');
-        $result = $this->getUserOfSite();
+        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER) && $_SESSION['id_site'] != 1) {
+            $result = $this->getUserOfSite($_SESSION['id_site']);
+        }
+        $result = 0;
+        echo 'Le champ apparait lorsque vous auriez un site enregistré';
         $view->assign("result", $result);
         return $view;
     }
@@ -197,32 +199,39 @@ class Admin
         }
     }
 
+
+    public function setClientOfSite()
+    {
+        $view = new View('settings', 'back');
+        $result = $this->getClientsOfSite();
+        $view->assign("result", $result);
+    }
+
     public function getClientsOfSite()
     {
         $id_site = $_SESSION['id_site'];
-        $view = new View('dashboard', 'back');
+
         $sql =
             "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name FROM `esgi_user` u
-        LEFT JOIN esgi_user_role ur on ur.id_user = u.id
-        LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role
-        LEFT Join esgi_site s on s.id_site = rs.id_site WHERE s.id_site = '.$id_site.'";
+        LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+        LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+        LEFT Join esgi_site s on s.id_site = rs.id_site WHERE s.id_site = ?";
 
-        $result = Sql::getInstance()
-            ->query($sql)
-            ->fetchAll();
-        return $result;
+        $request =  Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll();
     }
 
-    public function getUserOfSite(){
-        $poo = (new MySqlBuilder())
-            ->select('esgi_user', ['*'] )
-            ->where('id', $_SESSION['id_site'])
-            ->limit(0, 10)
-            ->getQuery();
-        $result = Sql::getInstance()
-            ->query($poo)
-            //->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User');
-            ->fetchAll();
+    public function getUserOfSite($id_site)
+    {
+        $sql =
+            "SELECT * FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
+
+        $result = Sql::getInstance()->query($sql)->fetchAll();
+        var_dump($result);
         return $result;
     }
 

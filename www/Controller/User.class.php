@@ -3,8 +3,8 @@ namespace App\Controller;
 //session_start();
 
 use App\Core\CleanWords;
+use App\Core\Handler;
 use App\Core\Sql;
-use App\Core\SqlPDO;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
@@ -57,13 +57,6 @@ class User {
         header("Location: ".DOMAIN."/dashboard");
 
     }
-    /*
-    public function loginshow(){
-        $user = new UserModel();
-        $view = new View("login");
-        $view->assign("user", $user);
-    }
-    */
 
     public function login()
     {
@@ -225,10 +218,10 @@ class User {
 
             $user->save();
             $id = $user->getIdFromEmail($user->getEmail());
-            $this->setMemberRole($id);
+            Handler::setMemberRole($id);
             $_SESSION['id'] = $id;
             $_SESSION['pseudo'] = $_POST['pseudo'];
-
+            $_SESSION['email'] = $_POST['email'];
 
             $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
 
@@ -283,14 +276,6 @@ class User {
         session_destroy();
         header("Location: ".DOMAIN."/login" );
     }
-
-    public function setMemberRole($id_user){
-        $request = "INSERT INTO `esgi_user_role` (`id_user`, `id_role_site`) VALUES (?, ?)";
-        $sql = Sql::getInstance()->prepare($request);
-        $sql->execute(array($id_user, VGCREATORMEMBER));
-    }
-
-
 
     public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code) {
         $url = 'https://www.googleapis.com/oauth2/v4/token';

@@ -19,7 +19,7 @@
             ?>
             <?php if (Security::isVGdmin()) : ?>
                 <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
-                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "clients" ? "active" : "") : null ?>><a href="/dashboard/client"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Clients</span> </a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "clients" ? "active" : "") : null ?>><a href="/dashboard/clients"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Clients</span> </a></li>
                 <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "sites" ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Sites</span> </a></li>
             <?php endif; ?>
             <?php if (Security::isMember()) : ?>

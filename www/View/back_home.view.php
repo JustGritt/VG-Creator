@@ -36,7 +36,7 @@
                                 <i class="fal fa-users"></i>
                             </div>
                             <h4>Utilisateurs</h4>
-                            <h5><?php echo ($user->getCountUser($_SESSION['id'])) ?></h5>
+                            <h5><?php echo ($user->getCountUser($_SESSION['id_site'])) ?></h5>
                             <h4>Par jour</h4>
                         </div>
                     </div>
