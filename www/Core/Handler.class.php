@@ -25,4 +25,11 @@ class Handler
             fclose($file);
         }
     }
+
+    public static function createUserSite($pseudo_site, $site_name){
+        if (!is_dir($site_name)){
+            mkdir($pseudo_site, 0777, true);
+            copy('./View/client.tpl.php', $pseudo_site);
+        }
+    }
 }

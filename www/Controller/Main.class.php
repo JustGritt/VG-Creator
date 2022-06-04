@@ -21,12 +21,24 @@ class Main {
         //$view = new View("front_template");
         $url_parse = explode("/", $_GET['url']);
         $author = $url_parse[0];
-        //$site_title = $url_parse[1];
-
+        $site_title = $url_parse[1] ?? "";
         // Check if the author exists in direcotry
         if (is_dir("./UserSites/".$author)){
-            if(file_exists('index.htm;'))
             echo "Author exists";
+            $path = "./UserSites/".$author."/".$site_title."/";
+            var_dump(is_dir($path));
+            if (is_dir($path) && $site_title != ""){
+                echo "Site exists";
+                $view = new View("index", 'client', $path);
+                /*
+                $view->assign("site_title", $site_title);
+                $view->assign("author", $author);
+                $view->assign("path", $path);
+                */
+            } else {
+                echo "Site does not exist";
+            }
+
         }
         /*
         $find_author = $this->findAuthorByName($author);

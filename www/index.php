@@ -77,7 +77,6 @@ $router->get('/blog/:id/:article', 'Blog@show')
     ->with('id', '[0-9]+')
     ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
-
 $router->get('/@:author', 'main@initContent')
     ->with('author', '([a-z\-0-9]+)');//TEST PRUPOSE ONLY
 

@@ -229,6 +229,7 @@ class User {
             $_SESSION['id'] = $id;
             $_SESSION['pseudo'] = $_POST['pseudo'];
 
+
             $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
 
             $template_var = array(
@@ -261,7 +262,7 @@ class User {
 
             $mail = new Mail();
             $subject = "Veuillez confirmée votre email";
-            //$mail->sendMail($_POST['email'] , $body, $subject);
+            $mail->sendMail($_POST['email'] , $body, $subject);
             echo 'Merci pour votre inscription, confirmez votre email';
 
             header("Refresh: 5; ".DOMAIN."/");
