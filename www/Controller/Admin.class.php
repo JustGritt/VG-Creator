@@ -11,6 +11,8 @@ use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Core\MySqlBuilder;
 use App\Core\QueryBuilder;
+use App\Core\Handler;
+use Cassandra\Cluster\Builder;
 
 
 //session_start();
@@ -19,9 +21,38 @@ class Admin
 
     public function dashboard()
     {
-        var_dump($_SESSION);
+
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+        if (isset($_SESSION['NOT-SET'])) {
+            $user = new UserModel();
+            $user->setFirstname($_SESSION['firstname']);
+            $user->setLastname($_SESSION['lastname']);
+            $user->setEmail($_SESSION['email']);
+            $user->generateToken();
+            $user->setStatus(1);
+            $user->setOauthId($_SESSION['oauth_id']);
+            $user->setOauthProvider($_SESSION['oauth_provider']);
+            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
+            $view2 = new View('register-step-2', 'back');
+            $view2->assign('user', $user);
+            if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+                if(!$user->is_unique_pseudo($_POST['pseudo'])){
+                    echo "Ce pseudo est déjà utilisé";
+                    header('Refresh: 3; '.DOMAIN.'/dashboard');
+                    return;
+                }
+                $user->setPseudo($_POST['pseudo']);
+                $user->save();
+                Handler::setMemberRole($user->getIdFromEmail($_SESSION['email']));
+                Handler::setDirectoryForUser($_POST['pseudo']);
+
+                $_SESSION['pseudo'] = $_POST['pseudo'];
+                $_SESSION['NOT-SET'] = [];
+                header("Location: " . DOMAIN . "/dashboard");
+                return;
+            }
         }
 
         $user = new UserModel();
@@ -42,15 +73,29 @@ class Admin
                 break;
             case "subscribe":
                 $view = new View("dashboard", "back");
+                $view->assign('user', $user);
                 break;
             default:
                 $view = new View("back_home", "back");
+                $view->assign('user', $user);
                 break;
         }
-        $view->assign("user", $user);
 
     }
 
+    public function setOauthUser($user){
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            if(!$user->is_unique_pseudo($_POST['pseudo'])){
+                echo "Ce pseudo est déjà utilisé";
+                header('Refresh: 3; '.DOMAIN.'/dashboard');
+                return;
+            }
+            $user->save();
+            Handler::setMemberRole($user->getId());
+            header("Location: " . DOMAIN . "/dashboard");
+            return;
+        }
+    }
     public function setSettingsView(){
         $view = new View('settings', 'back');
         $result = $this->getUserOfSite();
@@ -152,10 +197,26 @@ class Admin
         }
     }
 
+    public function getClientsOfSite()
+    {
+        $id_site = $_SESSION['id_site'];
+        $view = new View('dashboard', 'back');
+        $sql =
+            "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name FROM `esgi_user` u
+        LEFT JOIN esgi_user_role ur on ur.id_user = u.id
+        LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role
+        LEFT Join esgi_site s on s.id_site = rs.id_site WHERE s.id_site = '.$id_site.'";
+
+        $result = Sql::getInstance()
+            ->query($sql)
+            ->fetchAll();
+        return $result;
+    }
+
     public function getUserOfSite(){
         $poo = (new MySqlBuilder())
             ->select('esgi_user', ['*'] )
-            //->where('id', $_SESSION['id'])  Uncomment this line to get only the user of the current site
+            ->where('id', $_SESSION['id_site'])
             ->limit(0, 10)
             ->getQuery();
         $result = Sql::getInstance()

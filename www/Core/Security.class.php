@@ -30,15 +30,21 @@ class Security
 
     public static function isMember(): bool
     {
-        if (isset($_SESSION['id']) && $_SESSION['role'] == IS_MEMBER) {
+        if (isset($_SESSION['id']) && ($_SESSION['VGCREATOR'] == IS_MEMBER)) {
             return true;
         }
         return false;
     }
 
+    public static function isVGdmin(){
+        if (isset($_SESSION['id']) && ($_SESSION['VGCREATOR'] == IS_ADMIN)) {
+            return true;
+        }
+        return false;
+    }
     public static function isAdmin(): bool
     {
-        if (isset($_SESSION['id']) && $_SESSION['role'] ==  IS_ADMIN) {
+        if (isset($_SESSION['id']) && isset($_SESSION['role']) && ($_SESSION['role'] == IS_ADMIN)) {
             return true;
         }
         return false;
@@ -46,7 +52,7 @@ class Security
 
     public static function isGuest(): bool
     {
-        if (isset($_SESSION['id']) && $_SESSION['role'] ==  IS_GUEST) {
+        if (isset($_SESSION['id']) && isset($_SESSION['role']) && ($_SESSION['role'] ?? IS_GUEST)) {
             return true;
         }
         return false;
@@ -54,7 +60,7 @@ class Security
 
     public static function isModerator(): bool
     {
-        if (isset($_SESSION['id']) && $_SESSION['role'] ==  IS_MODERATOR) {
+        if (isset($_SESSION['id']) && isset($_SESSION['role']) &&  ($_SESSION['role'] ==  IS_MODERATOR)) {
             return true;
         }
         return false;
@@ -62,7 +68,7 @@ class Security
 
    public static function isEditor(): bool
    {
-       if (isset($_SESSION['id']) && $_SESSION['role'] ==  IS_EDITOR) {
+       if (isset($_SESSION['id']) && isset($_SESSION['role']) &&  ($_SESSION['role'] == IS_EDITOR)) {
            return true;
        }
        return false;

@@ -57,29 +57,30 @@ class User {
         header("Location: ".DOMAIN."/dashboard");
 
     }
+    /*
     public function loginshow(){
         $user = new UserModel();
         $view = new View("login");
         $view->assign("user", $user);
     }
-
+    */
 
     public function login()
     {
         $user = new UserModel();
+        $errors = array();
         $view = new View("login");
         $view->assign("user", $user);
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
-            var_dump( Security::checkCsrfToken($_POST['csrf_token']));
-            $result = Verificator::checkForm($user->getLoginForm(), $_POST);
+            unset($_SESSION['csrf_token']);
 
             $getPwd = $_POST['password'];
             $user->setEmail($_POST['email']);
             $user->setPassword($getPwd);
             $userverify = $user->connexion($user->getEmail(), $getPwd);
-            var_dump($userverify['password']);
+
             if (is_null($userverify)) {
                 echo 'Utilisateur non retouvé dans la bdd';
                 return;
@@ -93,18 +94,22 @@ class User {
                 echo "<strong class='alert'>mot de passe incorrect</strong>";
                 return;
             }
+            //Check if user role for URI
+            if ($_GET['url'] == 'login') {
+                $userRoleForVG = $user->getRoleOfUser($userverify['id'], VGCREATORID);
+                $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+                $_SESSION['id_site'] = $userRoleForVG[0]['id_site'];
+            }
 
             $_SESSION['email'] = $user->getEmail();
             $_SESSION['token'] = substr(bin2hex(random_bytes(64)), 0, 128);
             $_SESSION['firstname']  = $userverify['firstname'];
             $_SESSION['id'] = $userverify['id'];
-            $_SESSION['role'] = $userverify['id_role'];
+            $_SESSION['pseudo'] = $userverify['pseudo'];
 
-            unset($_SESSION['csrf_token']);
-            //$view->assign("role", $user->setIdRole(2));
+
             echo "Bienvenue";
             header("Location: ".DOMAIN."/dashboard" );
-
         }
 
         //Logins with Oauth
@@ -130,8 +135,6 @@ class User {
         //$view = new View("login");
         //$view->assign("user", $user);
 
-        var_dump($_GET);
-
         $oauth_user = new OauthUser();
         $redirect_uri = DOMAIN."/login";
         $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
@@ -139,7 +142,6 @@ class User {
         $access_token = $data['access_token'];
         $user_info = $this->GetUserProfileInfo($access_token);
 
-        var_dump($user_info);
         if (!$user_info['verified_email']) {
             echo "OOps sorry something went wrong with google";
             unset($_SESSION['id']);
@@ -149,27 +151,34 @@ class User {
             var_dump($_SESSION);
             header("Refresh: 5; ".DOMAIN."/login ");
         }
-
-        $id_role = $oauth_user->getIdRoleById($user_info['email']);
+        $id = $user->getIdFromEmail($user_info['email']);
 
         $_SESSION['id'] = $user_info['id'];
         $_SESSION['email'] = $user_info['email'];
-        $_SESSION['code'] = $access_token;
-        $_SESSION['lastname'] = $user_info['family_name'];
         $_SESSION['firstname'] = $user_info['given_name'];
-        $_SESSION['role'] = $id_role[0]['id_role'];
+        $_SESSION['lastname'] = $user_info['family_name'];
 
-        if (!$oauth_user->isUserExist($user_info['email'])) {
-            $oauth_user->setFirstname($user_info['given_name']);
-            $oauth_user->setLastname($user_info['family_name']);
-            $oauth_user->setEmail($user_info['email']);
-            $oauth_user->setOauth_id($user_info['id']);
-            $oauth_user->setRole(1);
-            $oauth_user->setOauth_provider('google_api');
-            $oauth_user->save();
+        //Check if user role for URI
+        if ($_GET['url'] == 'login') {
+            $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
+            $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+            $_SESSION['id_site'] = $userRoleForVG[0]['id_site'];
         }
 
+
+        if (!$user->getUserByEmail($user_info['email'])) {
+            $_SESSION['NOT-SET'] = 'NOT-SET';
+            $_SESSION['email'] = $user_info['email'];
+            $_SESSION['firstname'] = $user_info['given_name'];
+            $_SESSION['lastname'] = $user_info['family_name'];
+            $_SESSION['token'] = $user->generateToken();
+            $_SESSION['oauth_provider'] = 'google_api';
+            $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
+        }
         header("Location: ".DOMAIN."/dashboard");
+
+
 
     }
 
@@ -178,6 +187,7 @@ class User {
         $user = new UserModel();
         $view = new View("register");
         $view->assign("user", $user);
+        $errors = [];
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
@@ -194,23 +204,33 @@ class User {
             $user->setLastname($_POST['lastname']);
             $user->setEmail($_POST['email']);
             $user->setPassword($_POST['password']);
+            $user->setPseudo($_POST['pseudo']);
             $user->generateToken();
-            $user->setIdRole(1); // 1 = Admin, 2 = User
+            //$user->setIdRole(1); // 1 = Admin, 2 = User
             $user->setStatus(0);
 
             $verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
 
             if (!$verifyPassword) {
                 echo 'Mot de passe different..';
-                header("Location: http://localhost/register" );
+                header("Refresh: 5; ".DOMAIN."/register ");
+                return;
+            }
+
+            if (!$user->is_unique_pseudo($_POST['pseudo'])) {
+                echo 'Pseudo deja utilisé';
+                header("Refresh: 5; ".DOMAIN."/register ");
                 return;
             }
 
             $user->save();
             $id = $user->getIdFromEmail($user->getEmail());
+            $this->setMemberRole($id);
             $_SESSION['id'] = $id;
+            $_SESSION['pseudo'] = $_POST['pseudo'];
 
             $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
+
             $template_var = array(
                 "{{product_url}}" => "".DOMAIN."/",
                 "{{product_name}}" => "VG-CREATOR",
@@ -241,13 +261,13 @@ class User {
 
             $mail = new Mail();
             $subject = "Veuillez confirmée votre email";
-            $mail->sendMail($_POST['email'] , $body, $subject);
+            //$mail->sendMail($_POST['email'] , $body, $subject);
             echo 'Merci pour votre inscription, confirmez votre email';
-            unset($_SESSION['id']);
-            session_destroy();
+
             header("Refresh: 5; ".DOMAIN."/");
         }
 
+        $view->assign("errors", $errors);
     }
 
     public function logout():void {
@@ -262,6 +282,13 @@ class User {
         session_destroy();
         header("Location: ".DOMAIN."/login" );
     }
+
+    public function setMemberRole($id_user){
+        $request = "INSERT INTO `esgi_user_role` (`id_user`, `id_role_site`) VALUES (?, ?)";
+        $sql = Sql::getInstance()->prepare($request);
+        $sql->execute(array($id_user, VGCREATORMEMBER));
+    }
+
 
 
     public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code) {

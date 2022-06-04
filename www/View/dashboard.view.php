@@ -1,7 +1,7 @@
 <h1>Tableau de bord</h1>
 
 
-<h1> <?php echo $user->getIdRole() == 2 ? 'Admin' : 'Poulet'  ?> 'Role' </h1>
+<h1> <?php echo $_SESSION['VGCREATOR'] == 1 ? 'Admin' : 'Poulet'  ?> 'Role' </h1>
 
 <a class='button--squared' target='_blank' href="/client_website">TEST</a>
 

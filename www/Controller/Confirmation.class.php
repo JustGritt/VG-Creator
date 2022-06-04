@@ -4,6 +4,7 @@ namespace App\Controller;
 //session_start();
 
 use App\Core\CleanWords;
+use App\Core\Handler;
 use App\Core\Security;
 use App\Core\Sql;
 use App\Core\Verificator;
@@ -28,7 +29,9 @@ class Confirmation {
         $getToken = $_GET['token'];
         $user->confirmUser($getId, $getToken);
 
-        $pseudo = './UserSites/@'.$_SESSION['pseudo'];
+        Handler::setDirectoryForUser($_SESSION['pseudo']);
+        /*
+        $pseudo = './UserSites/'.$_SESSION['pseudo'];
         if (!file_exists($pseudo)) {
             mkdir($pseudo, 0777, true);
             //create the file
@@ -38,6 +41,7 @@ class Confirmation {
             fwrite($file, 'define("AUTHOR", '.$_SESSION['id'].');'."\n");
             fclose($file);
         }
+        */
 
 
         echo 'Your account has been validated! ' ."<br>";
