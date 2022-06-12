@@ -1,1 +1,0 @@
-<a class='button' href="https://accounts.google.com/o/oauth2/v2/auth?scope=" . urlencode("profile email") ."&access_type=online&response_type=code&redirect_uri=http://localhost/login&client_id=<?= GOOGLE_ID ?>">GOOGLE CONNEXION</a> 

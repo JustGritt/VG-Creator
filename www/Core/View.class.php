@@ -7,11 +7,13 @@ class View
     private $view;
     private $template;
     private $data=[];
+    private $path;
 
-    public function __construct($view, $template="front")
+    public function __construct($view, $template="front", $path="View/")
     {
         $this->setView($view);
         $this->setTemplate($template);
+        $this->path = $path;
     }
 
     public function setView($view):void
@@ -47,7 +49,7 @@ class View
     {
         //array("pseudo"=>"Prof") ---> $pseudo = "Prof";
         extract($this->data);
-        include "View/".$this->template.".tpl.php";
+        include $this->path.$this->template.".tpl.php";
     }
 
 }

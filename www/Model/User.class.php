@@ -3,6 +3,9 @@ namespace App\Model;
 
 use App\Core\Sql;
 use App\Core\SqlPDO;
+use App\Core\MySqlBuilder;
+use App\Core\QueryBuilder;
+use App\Core\Security;
 
 
 class User extends Sql{
@@ -13,8 +16,10 @@ class User extends Sql{
     protected $email;
     protected $password;
     protected $status = 0;
-    protected $id_role = null;
     protected $token = null;
+    protected $oauth_id = null;
+    protected $oauth_provider = null;
+    protected $pseudo;
     protected $pdo = null;
     protected $table;
 
@@ -24,7 +29,8 @@ class User extends Sql{
         //$this->pdo = SqlPDO::connect();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
-    }   
+    }
+    
     /**
      * @return null|int
      */
@@ -39,19 +45,6 @@ class User extends Sql{
         return $this->id = $id;
     }
 
-    /**
-     * @return null|int
-     */
-    public function getIdRole(): ?int{
-        return $this->id_role;
-    }
-
-    /**
-     * @return null|int
-     */
-    public function setIdRole($id_role): ?int{
-        return $this->id_role = $id_role;
-    }
 
     public function getFirstname(): ?string
     {
@@ -122,6 +115,16 @@ class User extends Sql{
         return $this->status;
     }
 
+    public function getPseudo(): string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): void
+    {
+        $this->pseudo = $pseudo;
+    }
+
     /**
      * @param int $status
      */
@@ -146,6 +149,25 @@ class User extends Sql{
         $this->token = substr(bin2hex(random_bytes(128)), 0, 255);
     }
 
+    public function getOauthId(): ?string
+    {
+        return $this->oauth_id;
+    }
+
+    public function setOauthId($oauth_id)
+    {
+        $this->oauth_id = $oauth_id;
+    }
+
+    public function getOauthProvider(): ?string
+    {
+        return $this->oauth_provider;
+    }
+
+    public function setOauthProvider($oauth_provider)
+    {
+        $this->oauth_provider = $oauth_provider;
+    }
 
     public function getRegisterForm(): array
     {
@@ -181,9 +203,17 @@ class User extends Sql{
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"emailForm",
-                    "error"=>"Email incorrect",
+                    "error"=>"Email incorrect"
+                ],
+                "pseudo"=>[
+                    "type"=>"text",
+                    "placeholder"=>"@Pseudo",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"pseudoForm",
+                    "error"=>"@Pseudo incorrect",
                     "unicity"=>"true",
-                    "errorUnicity"=>"Email déjà en bdd",
+                    "errorUnicity"=>"@Pseudo already in use",
                 ],
                 "password"=>[
                     "type"=>"password",
@@ -202,10 +232,45 @@ class User extends Sql{
                     "confirm"=>"password",
                     "error"=>"Votre mot de passe de confirmation ne correspond pas",
                 ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
             ]
         ];
     }
 
+    public function getRegisterFormStep2(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"S'inscrire",
+                "id"=>"formulaire"
+            ],
+            'inputs'=>[
+                "pseudo"=>[
+                    "type"=>"text",
+                    "placeholder"=>"@Pseudo",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"pseudoForm",
+                    "error"=>"@Pseudo incorrect",
+                    "unicity"=>"true",
+                    "errorUnicity"=>"@Pseudo already in use",
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ]
+        ];
+    }
     public function getLoginForm(): array
     {
         return [
@@ -230,6 +295,12 @@ class User extends Sql{
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
                     "error"=>"Mot de passe incorrect"
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
                 ]
             ]
         ];
@@ -271,6 +342,12 @@ class User extends Sql{
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
                 ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
             ]
         ];
     }
@@ -283,21 +360,11 @@ class User extends Sql{
     public function confirmUser($getId , $getToken){
         
         $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE id = ? AND token = ? ");
-        $user->execute(array($getId ,$getToken));
-        $userexist = $user->fetch();
-        
-        if ($user->rowCount() > 0) {
-            if($userexist["status"] == "0") {
+        if($user->execute(array($getId ,$getToken))) {
             $this->updateStatus($getId);
-            }else{
-            echo 'Votre email est deja enregistre'."<br>". '';
-            $_SESSION['token'] = $getToken;
-            }
-
-        }else{
-            echo 'Erreur: utilisateur inconnu en bdd'."<br>". '';
+            return true;
         }
-    
+        return false;
     }
    
     public function getIdFromEmail($email) {
@@ -340,6 +407,53 @@ class User extends Sql{
         return $userexist;
     }
 
+    public function is_unique_pseudo($pseudo)
+    {
+        $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE pseudo = ? ");
+        $sql->execute(array(addslashes($pseudo)));
+        return !$sql->rowCount();
+    }
+
+    public function getRoleOfUser($id , $id_site = 1) {
+       $sql=
+        "SELECT urole.id_role_site, s.name, rs.name as role, s.id_site
+        FROM esgi_user_role urole 
+        LEFT JOIN esgi_role_site rs ON urole.id_role_site = rs.id_role 
+        LEFT JOIN esgi_site s ON s.id_site = rs.id_site 
+        LEFT JOIN esgi_user u ON urole.id_user = u.id WHERE u.id = ? and s.id_site = ?";
+
+       $request =  $this->pdo->prepare($sql);
+       $request->execute(array($id, $id_site));
+       return $request->fetchAll();
+
+    }
+
+    public function getCountUser($id_site){
+        $sql =
+            "SELECT count(1) FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+            WHERE rs.id_site = ?";
+
+        if ($_SESSION['VGCREATOR'] == 1 && $_SESSION['id_site'] == 1) {
+            $request = Sql::getInstance()->prepare($sql);
+            $request->execute(array($_SESSION['id_site']));
+            $result = $request->fetchAll();
+            return $result[0]['count(1)'];
+        }
+        if (isset($_SESSION['id_site']) && $_SESSION['id_site'] != 1) {
+            $request = Sql::getInstance()->prepare($sql);
+            $request->execute(array($_SESSION['id_site']));
+            $result = $request->fetchAll();
+            return $result[0]['count(1)'];
+        }
+
+        return 0;
+    }
+
+
+
+   
 
     
 

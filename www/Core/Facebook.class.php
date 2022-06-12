@@ -20,7 +20,7 @@ class Facebook
         //$token =  (string)$_GET['code'];
         
         $user_token = $this->GetAccessTokenfb($client_id , $redirect_uri , $client_secret , $token);
-        
+
         //var_dump($user_info);
         $access_token = (string)$user_token['access_token'];
         

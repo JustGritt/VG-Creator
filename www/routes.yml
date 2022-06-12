@@ -58,6 +58,11 @@
 /client_website:
   controller: admin
   action: client
+
+/test/{id}: 
+  controller: admin
+  action: coucou
+
 /payment:
   controller: payment
   action: payment
