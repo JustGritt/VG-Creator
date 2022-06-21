@@ -249,7 +249,6 @@ class User {
             foreach(array_keys($template_var) as $key){
                 if (strlen($key) > 2 && trim($key) != "") {
                     $body = str_replace($key, $template_var[$key], $body);
-
                 }
             }
 

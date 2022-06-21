@@ -1,4 +1,4 @@
-s<form method="<?= $data["config"]["method"]??"POST" ?>"  action="<?= $data["config"]["action"]??"" ?>">
+<form method="<?= $data["config"]["method"]??"POST" ?>"  action="<?= $data["config"]["action"]??"" ?>">
 
     <?php foreach ($data["inputs"] as $name=>$input) :?>
 

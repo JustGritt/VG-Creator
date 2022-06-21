@@ -16,7 +16,7 @@ button, a.button, .button--primary, .button--secondary, .button--secondary--acce
     border: none;
 }
 
-a.button {
+a.button, button {
     color: var(--color-hover-text);
     &:hover { background: var(--color-button-background); color: var(--color-hover-text); }
 
@@ -60,6 +60,8 @@ a.button {
         font-weight: bold;
         filter: none;
         text-align: center;
+        max-width: 279px;
+        padding: 10px 0;
         margin: 10px 0;
         &--icon {
             margin-right: 10px;
@@ -68,6 +70,10 @@ a.button {
             background: c.$red;
             color: c.$white;
             display: inline;
+        }
+        &:hover {
+            background: var(--color-button-background);
+            color: var(--color-button-text);
         }
     }
     &--arrow {

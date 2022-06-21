@@ -356,7 +356,7 @@ class User extends Sql{
         $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = 1 WHERE id = ?");
         $updateStatus->execute(array($getId));
     }
-      
+    
     public function confirmUser($getId , $getToken){
         
         $user = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE id = ? AND token = ? ");
@@ -366,7 +366,7 @@ class User extends Sql{
         }
         return false;
     }
-   
+    
     public function getIdFromEmail($email) {
         $id = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE email = ?");
         $id->execute(array(addslashes($email)));
@@ -415,16 +415,16 @@ class User extends Sql{
     }
 
     public function getRoleOfUser($id , $id_site = 1) {
-       $sql=
+        $sql=
         "SELECT urole.id_role_site, s.name, rs.name as role, s.id_site
         FROM esgi_user_role urole 
         LEFT JOIN esgi_role_site rs ON urole.id_role_site = rs.id_role 
         LEFT JOIN esgi_site s ON s.id_site = rs.id_site 
         LEFT JOIN esgi_user u ON urole.id_user = u.id WHERE u.id = ? and s.id_site = ?";
 
-       $request =  $this->pdo->prepare($sql);
-       $request->execute(array($id, $id_site));
-       return $request->fetchAll();
+        $request =  $this->pdo->prepare($sql);
+        $request->execute(array($id, $id_site));
+        return $request->fetchAll();
 
     }
 
@@ -450,11 +450,5 @@ class User extends Sql{
 
         return 0;
     }
-
-
-
-   
-
-    
 
 }

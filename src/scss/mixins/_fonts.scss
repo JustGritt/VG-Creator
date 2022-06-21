@@ -43,6 +43,15 @@ h3, .h3, .title {
     font-weight: normal;
 }
 
+b {
+    font-weight: bold;
+    color: red;
+    + * {
+        font-weight: normal;
+        color: red;
+    }
+}
+
 // h4, .h4 {
 //     display: block;
 //     @include f-hr(20); // equiv 20px
