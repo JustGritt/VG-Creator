@@ -6,45 +6,47 @@
  ========== */
 :root {
   --color-white: #ffffff;
-  --color-black: #000000;
+  --color-black: #333333;
+  --color-accent: #82ccdd;
+  --color-danger: #ED4C67;
   --color-background: #ffffff;
   --color-background-alt: #EFF3FE;
-  --color-border: #000000;
-  --color-text: #000000;
-  --color-pseudo: #000000;
+  --color-border: #333333;
+  --color-text: #333333;
+  --color-pseudo: #333333;
   --color-link: #1538B5;
   --color-shadow: #ffffff;
   --color-nav-link: #ED4C67;
-  --color-button-background: #000000;
+  --color-button-background: #333333;
   --color-button-text: #ffffff;
   --color-button-hover-background: #ffffff;
-  --color-button-hover-text: #000000;
+  --color-button-hover-text: #333333;
   --color-button-link: #82ccdd;
   --color-footer-background: #ffffff;
   --color-border-invert: #ffffff;
   --color-hover-text: #ffffff;
-  --color-hover-background: #000000;
+  --color-hover-background: #333333;
 }
 
 .dark {
   --color-white: #ffffff;
-  --color-black: #000000;
-  --color-background: #000000;
+  --color-black: #333333;
+  --color-background: #333333;
   --color-background-alt: #CBCBCB;
   --color-border: #ffffff;
   --color-text: #ffffff;
   --color-pseudo: #ffffff;
   --color-link: #1538B5;
-  --color-shadow: #000000;
+  --color-shadow: #333333;
   --color-nav-link: #ED4C67;
   --color-button-background: #ffffff;
-  --color-button-text: #000000;
-  --color-button-hover-background: #000000;
+  --color-button-text: #333333;
+  --color-button-hover-background: #333333;
   --color-button-hover-text: #ffffff;
   --color-button-link: #82ccdd;
-  --color-footer-background: #000000;
-  --color-border-invert: #000000;
-  --color-hover-text: #000000;
+  --color-footer-background: #333333;
+  --color-border-invert: #333333;
+  --color-hover-text: #333333;
   --color-hover-background: #ffffff;
 }
 
@@ -149,7 +151,7 @@ h6 {
   font-size: 2.5em;
 }
 .all-card-info-dasboard .card-info-dasboard > div:nth-child(1) div > h4 {
-  color: #000000;
+  color: #333333;
   font-weight: 400;
   font-size: 1.1em;
 }

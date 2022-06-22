@@ -23,22 +23,22 @@ class Mail
      
       $mail->isSMTP();
       //$mail->SMTPDebug = 4; PREPROD ONLY VERBOSE DEBUG
-            
+      /*      
       $mail->Host = 'smtp.gmail.com';
       $mail->SMTPAuth = true;
       $mail->SMTPSecure = "tls";
       $mail->Ports = 587;
       $mail->Username = SMTP_USERNAME;
       $mail->Password = SMTP_PWD;
-      /*
+      */
       $mail->Host = 'smtp-broadcasts.postmarkapp.com';
       $mail->SMTPAuth = true;
       $mail->SMTPSecure = "tls";
       $mail->Ports = 587;
-      $mail->Username = SMTP_USERNAME;
-      $mail->Password = SMTP_PWD;
+      $mail->Username = 'cd8cfbdd-f767-47ca-ae1f-3145f2c9a218';
+      $mail->Password = 'cd8cfbdd-f767-47ca-ae1f-3145f2c9a218';
       
-      
+      /*
       // Usage of mail.trap.io to do some test
       $mail->isSMTP();
       $mail->Host = 'smtp.mailtrap.io';

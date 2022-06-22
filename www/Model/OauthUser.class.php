@@ -14,6 +14,7 @@ class OauthUser extends SqlPDO
     protected $oauth_id = null;
     protected $oauth_provider = null;
     protected $pdo = null;
+    protected $id_role = null;
     protected $table;
  
     public function __construct(){
@@ -80,6 +81,15 @@ class OauthUser extends SqlPDO
         $this->email = strtolower(trim($email));
     }
     
+    public function getOauthIdrole(): ?string
+    {
+        return $this->id_role;
+    }
+
+    public function setOauthIdrole(?string $id_role): void
+    {
+        $this->id_role = $id_role;
+    }
 
     /**
      * @return string
@@ -122,4 +132,16 @@ class OauthUser extends SqlPDO
       return !!$sql->rowCount();
     }
 
+    public function getIdRoleById($email)
+    {
+        $Builder = BUILDER;
+        $queryBuilder = new $Builder();
+        $query = $queryBuilder->select(''.$this->table.'' , ['id_role'])
+                     ->where('email', $email)
+                     ->getQuery();
+
+        $result = Sql::getInstance()->query($query)->fetchAll();
+        return $result;
+    }
+    
 }

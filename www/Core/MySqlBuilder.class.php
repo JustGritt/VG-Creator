@@ -58,10 +58,18 @@ class MysqlBuilder implements QueryBuilder
         
     }
     
+    public function delete($table) : QueryBuilder
+    {
+        $this->reset();
+        $this->query->base = "DELETE FROM " . $table;
+        return $this;
+    }
     /*
     $this->reset();
         $this->query->base = "INSERT INTO " . $table . " (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")";
         return $this;
      */  
+
+    
 
 }

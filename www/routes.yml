@@ -4,7 +4,7 @@
 
 /template:
   controller: main
-  action: template
+  action: home 
 
 /login:
   controller: user
@@ -58,6 +58,16 @@
 /client_website:
   controller: admin
   action: client
+
+/test/{id}: 
+  controller: admin
+  action: coucou
+
 /payment:
   controller: payment
   action: payment
+
+
+/comment:
+  controller: comment
+  action: comment

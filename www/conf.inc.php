@@ -24,8 +24,19 @@ if (extension_loaded('postgres')) {
     define("BUILDER" , 'App\Core\PostgreSqlBuilder');
 }
 
-
-//Google aouth 
+//Google aouth
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
 define("GOOGLE_SECRET" , "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");
 
+
+//ROLE VGCREATOR
+define("VGCREATORID" , "1");
+define("VGCREATORADMIN" , "1");
+define("VGCREATORMEMBER" , "2");
+
+//LES ROLES DE L'APPLICATION
+define("IS_ADMIN" , '1');
+define("IS_MEMBER" , '2');
+define("IS_GUEST" , '3');
+define("IS_EDITOR" , '4');
+define("IS_MODERATOR" , '5');

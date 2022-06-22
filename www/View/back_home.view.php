@@ -6,7 +6,7 @@
                 <input placeholder="Rechercher des stats" />
             </div>
             <div class="user-info-dashboard">
-                <h1>Hello Arthur</h1>
+                <h1>Hello <?php echo $user->getFirstname()?></h1>
                 <h2>Bienvenue !</h2>
             </div>
 
@@ -36,7 +36,7 @@
                                 <i class="fal fa-users"></i>
                             </div>
                             <h4>Utilisateurs</h4>
-                            <h5>5666</h5>
+                            <h5><?php echo ($user->getCountUser($_SESSION['id_site'])) ?></h5>
                             <h4>Par jour</h4>
                         </div>
                     </div>
@@ -62,8 +62,8 @@
                                 <div>
                                     <h4>Édition</h4>
                                     <h5>Gestionnaire de blog</h5>
+                                    <a href="http://localhost/blog/2">Editer</a>
                                 </div>
-                          
                             </div>
                             <div class="right-part-card">
                                 <img src="../dist/assets/icons/star.png" />

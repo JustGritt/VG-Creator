@@ -1,10 +1,10 @@
 <?php
 namespace App\Controller;
-session_start();
+//session_start();
 
 use App\Core\CleanWords;
+use App\Core\Handler;
 use App\Core\Sql;
-use App\Core\SqlPDO;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
@@ -12,9 +12,10 @@ use App\Core\Mail;
 use App\Model\PasswordRecovery;
 use App\Model\OauthUser;
 use App\Core\Facebook;
+use App\Core\Security;
 
 class User {
-    
+
     public function loginwithfb()
     {
         $user = new UserModel();
@@ -23,13 +24,13 @@ class User {
         $facebooklogin = new Facebook();
         $token =  (string)$_GET['code'];
         $user_info = $facebooklogin->login($token);
-       
+
         if (!$user_info) {
             echo "OOps sorry something went wrong with facebook";
             unset($_SESSION['id']);
             unset($_SESSION['code']);
             unset($_SESSION['email']);
-            header("Refresh: 5; ".DOMAIN."/login "); 
+            header("Refresh: 5; ".DOMAIN."/login ");
         }
 
         $oauth_user = new OauthUser();
@@ -40,6 +41,8 @@ class User {
         $_SESSION['code'] = $token;
         $_SESSION['lastname'] = $user_name[1];
         $_SESSION['firstname'] = $user_name[0];
+        //$_SESSION['username'] = $user_info['name'];
+        $_SESSION['role'] = ($user_info['id_role'] == 1) ? 'admin' : 'user';
 
         if(!$oauth_user->isUserExist($user_info['email'])){
             $oauth_user->setFirstname($user_name[0]);
@@ -47,23 +50,25 @@ class User {
             $oauth_user->setEmail($user_info['email']);
             $oauth_user->setOauth_id( $user_info['id']);
             $oauth_user->setOauth_provider('facebook_api');
-            $oauth_user->save();     
+            $oauth_user->setRole(1);
+            $oauth_user->save();
         }
-        echo "Bienvenue"; 
-        header("Location: ".DOMAIN."/dashboard"); 
+        echo "Bienvenue";
+        header("Location: ".DOMAIN."/dashboard");
 
     }
-
 
     public function login()
     {
         $user = new UserModel();
+        $errors = array();
         $view = new View("login");
         $view->assign("user", $user);
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        if (!empty($_POST)) {
-            $result = Verificator::checkForm($user->getLoginForm(), $_POST);
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
+            unset($_SESSION['csrf_token']);
+
             $getPwd = $_POST['password'];
             $user->setEmail($_POST['email']);
             $user->setPassword($getPwd);
@@ -72,107 +77,154 @@ class User {
             if (is_null($userverify)) {
                 echo 'Utilisateur non retouvé dans la bdd';
                 return;
+
             }elseif (empty($userverify['status'])) {
                 echo "Veuillez confirmé votre email";
                 return;
             }
-            
+
             if (!password_verify($getPwd, $userverify['password'])) {
-                echo "<strong class='alert'>mot de passe incorrect</strong>"; 
+                echo "<strong class='alert'>mot de passe incorrect</strong>";
+                return;
             }
-            
+            //Check if user role for URI
+            if ($_GET['url'] == 'login') {
+                $userRoleForVG = $user->getRoleOfUser($userverify['id'], VGCREATORID);
+                $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+                $_SESSION['id_site'] = $userRoleForVG[0]['id_site'];
+            }
+
             $_SESSION['email'] = $user->getEmail();
-            $_SESSION['session_token'] = substr(bin2hex(random_bytes(64)), 0, 128);
+            $_SESSION['token'] = substr(bin2hex(random_bytes(64)), 0, 128);
             $_SESSION['firstname']  = $userverify['firstname'];
             $_SESSION['id'] = $userverify['id'];
-            $_SESSION['id_role'] = $userverify['id_role'];
-            $view->assign("role", $user->setIdRole(2));
-            echo "Bienvenue"; 
+            $_SESSION['pseudo'] = $userverify['pseudo'];
+
+
+            echo "Bienvenue";
             header("Location: ".DOMAIN."/dashboard" );
-            
         }
-        if (!empty($_GET)) {
-           
-            $oauth_user = new OauthUser();
-            $redirect_uri = DOMAIN."/login";
-            $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
-            var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
-            $access_token = $data['access_token'];
-            $user_info = $this->GetUserProfileInfo($access_token);
-            
-            if (!$user_info['verified_email']) {
-                echo "OOps sorry something went wrong with google";
-                unset($_SESSION['id']);
-                unset($_SESSION['code']);
-                unset($_SESSION['email']);
-                //var_dump(isset($_SESSION['id']));
-                var_dump($_SESSION);
-                header("Refresh: 5; ".DOMAIN."/login "); 
+
+        //Logins with Oauth
+        if (!empty($_GET) && !empty($_GET['state'])) {
+            Switch ($_GET['state']) {
+                case 'VG-CREATOR-FACEBOOK':
+                    $this->loginFacebook();
+                    break;
+                case 'VG-CREATOR-GOOGLE':
+                    $this->loginwithGoogle();
+                    break;
+                default:
+                    header("Location: ".DOMAIN."/login" );
+                    break;
             }
-           
-            $_SESSION['id'] = $user_info['id'];
-            $_SESSION['id_role'] = $user_info['id_role'];
-            $_SESSION['email'] = $user_info['email'];
-            $_SESSION['code'] = $access_token;
-            $_SESSION['lastname'] = $user_info['family_name'];
-            $_SESSION['firstname'] = $user_info['given_name'];
-           
-            if (!$oauth_user->isUserExist($user_info['email'])) {
-                $oauth_user->setFirstname($user_info['given_name']);
-                $oauth_user->setLastname($user_info['family_name']);
-                $oauth_user->setEmail($user_info['email']);
-                $oauth_user->setOauth_id( $user_info['id']);
-                $oauth_user->setOauth_provider('google_api');
-                $oauth_user->save();     
-            }
-            $view->assign("user", $user);
-            echo "Bienvenue"; 
-            header("Location: ".DOMAIN."/dashboard");
-            
         }
-        
-        
+        unset($_SESSION['csrf_token']);
     }
-    
+
+    public function loginwithGoogle(){
+
+        $user = new UserModel();
+        //$view = new View("login");
+        //$view->assign("user", $user);
+
+        $oauth_user = new OauthUser();
+        $redirect_uri = DOMAIN."/login";
+        $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
+        //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
+        $access_token = $data['access_token'];
+        $user_info = $this->GetUserProfileInfo($access_token);
+
+        if (!$user_info['verified_email']) {
+            echo "OOps sorry something went wrong with google";
+            unset($_SESSION['id']);
+            unset($_SESSION['code']);
+            unset($_SESSION['email']);
+            //var_dump(isset($_SESSION['id']));
+            var_dump($_SESSION);
+            header("Refresh: 5; ".DOMAIN."/login ");
+        }
+        $id = $user->getIdFromEmail($user_info['email']);
+
+        $_SESSION['id'] = $user_info['id'];
+        $_SESSION['email'] = $user_info['email'];
+        $_SESSION['firstname'] = $user_info['given_name'];
+        $_SESSION['lastname'] = $user_info['family_name'];
+
+        //Check if user role for URI
+        if ($_GET['url'] == 'login') {
+            $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
+            $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+            $_SESSION['id_site'] = $userRoleForVG[0]['id_site'];
+        }
+
+
+        if (!$user->getUserByEmail($user_info['email'])) {
+            $_SESSION['NOT-SET'] = 'NOT-SET';
+            $_SESSION['email'] = $user_info['email'];
+            $_SESSION['firstname'] = $user_info['given_name'];
+            $_SESSION['lastname'] = $user_info['family_name'];
+            $_SESSION['token'] = $user->generateToken();
+            $_SESSION['oauth_provider'] = 'google_api';
+            $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
+        }
+        header("Location: ".DOMAIN."/dashboard");
+
+
+
+    }
 
     public function register()
     {
         $user = new UserModel();
         $view = new View("register");
         $view->assign("user", $user);
-    
+        $errors = [];
+
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        if (!empty($_POST)) {
-             
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
+
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
-        
+
             if ($user->isUserExist($_POST['email'])) {
                 echo 'Vous avez deja un compte';
                 header("Refresh: 5; ".DOMAIN."/login ");
                 return;
-            } 
-            
+            }
+
             $user->setFirstname($_POST['firstname']);
             $user->setLastname($_POST['lastname']);
             $user->setEmail($_POST['email']);
             $user->setPassword($_POST['password']);
+            $user->setPseudo($_POST['pseudo']);
             $user->generateToken();
-            $user->setIdRole(2);
+            //$user->setIdRole(1); // 1 = Admin, 2 = User
             $user->setStatus(0);
-            
+
             $verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
-            
+
             if (!$verifyPassword) {
                 echo 'Mot de passe different..';
-                header("Location: http://localhost/register" );
+                header("Refresh: 5; ".DOMAIN."/register ");
                 return;
             }
 
-            $user->save();   
+            if (!$user->is_unique_pseudo($_POST['pseudo'])) {
+                echo 'Pseudo deja utilisé';
+                header("Refresh: 5; ".DOMAIN."/register ");
+                return;
+            }
+
+            $user->save();
             $id = $user->getIdFromEmail($user->getEmail());
+            Handler::setMemberRole($id);
             $_SESSION['id'] = $id;
-            
+            $_SESSION['pseudo'] = $_POST['pseudo'];
+            $_SESSION['email'] = $_POST['email'];
+
             $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
+
             $template_var = array(
                 "{{product_url}}" => "".DOMAIN."/",
                 "{{product_name}}" => "VG-CREATOR",
@@ -197,21 +249,18 @@ class User {
             foreach(array_keys($template_var) as $key){
                 if (strlen($key) > 2 && trim($key) != "") {
                     $body = str_replace($key, $template_var[$key], $body);
-                    
                 }
             }
-            
+
             $mail = new Mail();
             $subject = "Veuillez confirmée votre email";
             $mail->sendMail($_POST['email'] , $body, $subject);
-            //flush the current session
             echo 'Merci pour votre inscription, confirmez votre email';
-            unset($_SESSION['id']);
-            session_destroy();
+
             header("Refresh: 5; ".DOMAIN."/");
-            return;        
         }
-       
+
+        $view->assign("errors", $errors);
     }
 
     public function logout():void {
@@ -225,41 +274,39 @@ class User {
         unset($_SESSION['firstname']);
         session_destroy();
         header("Location: ".DOMAIN."/login" );
-        return;
     }
 
+    public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code) {
+        $url = 'https://www.googleapis.com/oauth2/v4/token';
 
-    public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code) {	
-        $url = 'https://www.googleapis.com/oauth2/v4/token';			
-    
         $curl = 'client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&client_secret=' . $client_secret . '&code='. $code . '&grant_type=authorization_code';
-        $ch = curl_init();		
-        curl_setopt($ch, CURLOPT_URL, $url);		
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);		
-        curl_setopt($ch, CURLOPT_POST, 1);		
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);	
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
         $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);		
+        $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
         if ($http_code != 200) {
             //echo 'Error : Failed to receieve access token';
             return false;
         }
-        
+
         return $data;
     }
 
-    public function GetUserProfileInfo($access_token) {	
-        $url = 'https://www.googleapis.com/oauth2/v2/userinfo?fields=id,given_name,family_name,email,verified_email';	
+    public function GetUserProfileInfo($access_token) {
+        $url = 'https://www.googleapis.com/oauth2/v2/userinfo?fields=id,given_name,family_name,email,verified_email';
         //$url2 = 'https://www.googleapis.com/userinfo/v2/me?';
 
-        $ch = curl_init();		
-        curl_setopt($ch, CURLOPT_URL, $url);		
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '. $access_token));
         $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);		
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if($http_code != 200) {
             //echo 'Error : Failed to get user information';
             return false;
@@ -269,19 +316,19 @@ class User {
     }
 
     public function revokeToken($token){
-        $url = 'https://oauth2.googleapis.com/revoke?token='. $token;	
-        		
-        $ch = curl_init();		
-        curl_setopt($ch, CURLOPT_URL, $url);		
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);		
-        curl_setopt($ch, CURLOPT_POST, 1);		
+        $url = 'https://oauth2.googleapis.com/revoke?token='. $token;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);	
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
         $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);		
-        if($http_code != 200) 
+        $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+        if($http_code != 200)
             echo 'Error : Failed to revoke access token';
-        
+
         return $data;
     }
 }

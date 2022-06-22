@@ -2,11 +2,15 @@
 
 namespace App;
 
+
+use App\Core\Router;
+use App\Core\Route;
+use App\Core\Security;
 require "conf.inc.php";
+session_start();
 
 function myAutoloader($class)
 {
-
     // $class => CleanWords();
     $class = str_replace("App\\","",$class);
     $class = str_replace("\\", "/",$class);
@@ -18,7 +22,86 @@ function myAutoloader($class)
 spl_autoload_register("App\myAutoloader");
 
 //Réussir à récupérer l'URI
+$router = new Router($_GET['url'] ?? "");
 
+$router->group('/', function($router) {
+    $router->get('/', 'main@home');
+    $router->get('/login', 'user@login');
+    $router->post('/login', 'user@login');
+    //$router->get('/login-google', 'user@loginwithGoogle');
+    $router->get('/login-fb', 'user@loginwithfb');
+    $router->get('/logout', 'user@logout');
+    $router->post('/logout', 'user@logout');
+    $router->get('/register', 'user@register');
+    $router->post('/register', 'user@register');
+    $router->get('/forget', 'passwordrecovery@pwdforget');
+    $router->post('/forget', 'passwordrecovery@pwdforget');
+    $router->get('/confirmation', 'confirmation@confirmation');
+    $router->post('/confirmation', 'confirmation@confirmation');
+    $router->get('/reset-new-password', 'confirmation@confirmationPwd');
+    $router->post('/reset-new-password', 'confirmation@confirmationPwd');
+});
+
+//$router->get('/template', 'main@template');
+$router->get('/client_website', 'admin@client');
+
+
+
+$router->group('/dashboard', function($router) {
+    $router->get('/', 'admin@dashboard');
+    $router->post('/', 'admin@dashboard');
+    if (Security::isVGdmin()){
+        $router->get('/clients', 'admin@setClientOfSite');
+        $router->post('/clients', 'admin@setClientOfSite');
+        $router->get('/sites', 'admin@getAllSite');
+        $router->post('/sites', 'admin@getsite');
+    }
+    $router->get('/subscribe', 'admin@dashboard');
+    $router->post('/subscribe', 'admin@dashboard');
+    $router->get('/settings', 'admin@dashboard');
+    $router->get('/settings/profile', 'admin@dashboard');
+    $router->get('/history', 'admin@dashboard');
+    $router->get('/articles', 'admin@getAllArticles');
+    $router->get('/articles/:id', 'admin@setEditorView')
+        ->with('id', '[0-9]+');
+});
+
+$router->get('/payment', 'payment@payment');
+$router->get('/test', 'admin@test');
+$router->post('/test', 'admin@test');
+$router->get('/test2', 'admin@client');
+
+// Comments
+$router->get('/comment', 'comment@comment');
+
+
+//TEST CLIENT WEBSITE
+$router->get('/blog/:id/', 'Blog@show')->with('id' ,'[0-9]+');
+$router->get('/blog/:id/:article', 'Blog@show')
+    ->with('id', '[0-9]+')
+    ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
+
+$router->get('/@:author', 'main@initContent')
+    ->with('author', '([a-z\-0-9]+)');//TEST PRUPOSE ONLY
+
+$router->get('/@:author/:slug', 'main@initContent')
+    ->with('author', '([a-z\-0-9]+)')
+    ->with('slug',  '([A-Za-z]+)');//TEST PRUPOSE ONLY
+
+$router->get('/@:author/:slug/:pages', 'main@initContent')
+    ->with('author', '([a-z\-0-9]+)')
+    ->with('slug',  '([A-Za-z]+)')
+    ->with('pages', '([A-Za-z]+)');//TEST PRUPOSE ONLY
+
+$router->get('/@:author/:slug/:pages/:id', 'main@initContent')
+    ->with('author', '([a-z\-0-9]+)')
+    ->with('slug',  '([A-Za-z]+)')
+    ->with('pages', '([A-Za-z]+)')
+    ->with('id', '[0-9]+');//TEST PRUPOSE ONLY
+
+$router->run();
+
+/*
 $uri = $_SERVER["REQUEST_URI"];
 
 $routeFile = "routes.yml";
@@ -30,11 +113,14 @@ $routes = yaml_parse_file($routeFile);
 $global_uri = strtok($uri, '?');
 
 if (empty($routes[$global_uri]) ||  empty($routes[$global_uri]["controller"])  ||  empty($routes[$global_uri]["action"])) {
-    die("Erreur 404");
+    var_dump($global_uri);
+    //die("Erreur 404");
 }
+
 
 $controller = ucfirst(strtolower($routes[$global_uri]["controller"]));
 $action = strtolower($routes[$global_uri]["action"]);
+*/
 
 
 /*
@@ -54,7 +140,7 @@ $action = strtolower($routes[$uri]["action"]);
  *
  */
 
-
+/*
 $controllerFile = "Controller/".$controller.".class.php";
 if(!file_exists($controllerFile)){
     die("Le controller ".$controllerFile." n'existe pas");
@@ -75,3 +161,4 @@ if( !method_exists($objectController, $action)){
 }
 // $action = login ou logout ou register ou home
 $objectController->$action();
+*/
