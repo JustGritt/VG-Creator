@@ -15,8 +15,7 @@ class Main {
 
     public function template()
     {
-        
-        $view = new View("front_template");
+        $view = new View("front_website");
     }
 
     public function initContent(){

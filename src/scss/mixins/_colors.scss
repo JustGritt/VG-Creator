@@ -15,9 +15,7 @@ $cyan: #96F4DE;
 $rose: #FFBFE0;
 $pale: #FFC0FC;
 $link: #1538B5;
-// $red: #F44848;
 $red: #ED4C67;
-
 
 /* DASHBOARD PALETTE  
 ======================= */
@@ -31,7 +29,7 @@ $grey-blue: #7B8093;
 $light-blue: #E6E9F4;
 $light-dark-blue: #A0AACF;
 $mid-light-blue: #787C90;
-$black:   #000000;
+// $black:   #000000;
 $white:   #ffffff;
 $orange: #F39C12;
 $yellow: #FFE780;
@@ -42,6 +40,8 @@ $yellow: #FFE780;
     // Simple colors
     --color-white: #{$white};
     --color-black: #{$black};
+    --color-accent: #{$blue};
+    --color-danger: #{$red};
 
 
     // Content colors

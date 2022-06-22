@@ -4,7 +4,7 @@
 
 /template:
   controller: main
-  action: template
+  action: home 
 
 /login:
   controller: user
@@ -66,3 +66,8 @@
 /payment:
   controller: payment
   action: payment
+
+
+/comment:
+  controller: comment
+  action: comment

@@ -100,7 +100,8 @@ header {
             z-index: 10;
             opacity: 0;
             width: 100%;
-            transform: translateY(25%);
+            // transform: translateY(25%);
+            transform: translateY(25%) translateX(100%);
 
             li {
                 padding: 10px 20px;
@@ -111,6 +112,7 @@ header {
 
                 a {
                     color: var(--color-text);
+                    z-index: 10;
 
                     &::after {
                         height: 4px;
@@ -162,8 +164,9 @@ header {
                 box-shadow: 0 0 0 100vw var(--color-shadow), 0 0 0 100vh var(--color-shadow);
                 border-radius: 0;
 
-                +ul {
+                + ul {
                     opacity: 1;
+                    transform: translateY(25%);
                 }
 
                 .hamburger {
@@ -199,7 +202,7 @@ header {
             box-shadow: 0 0 0 0 var(--color-shadow), 0 0 0 0 var(--color-shadow);
             cursor: pointer;
             display: none;
-
+            
             @media screen and (max-width: g.$tablet) {
                 display: block;
             }

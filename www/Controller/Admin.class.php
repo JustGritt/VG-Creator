@@ -164,7 +164,7 @@ class Admin
             ->update('esgi_user', $colmuns, $values)
             ->getQuery();
         $result = Sql::getInstance()
-             ->query($query);
+            ->query($query);
         return $result;
     }
 
@@ -219,6 +219,8 @@ class Admin
         $view = new View('front_template', 'front');  
     }
 
+    
+
     public function articles($builder = BUILDER){
         $queryBuilder = new $builder();
         $query = $queryBuilder
@@ -249,9 +251,6 @@ class Admin
             ->getQuery();
         
         //var_dump(Sql::getInstance()->query($sql)->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User'));
-        
-      
-       
         $class = BUILDER;
         $queryBuilder = new $class();
         
@@ -278,5 +277,27 @@ class Admin
         var_dump($query)
         */
     }
+
+
+
+
+
+
+
+
+    // public function comment()
+    // {
+    //     $view = new View("register", "back");
+    // }
+
+    public function comment() {
+        $view = new View('front_template', 'front');  
+    }
+
+
+
+
+
+
 
 }

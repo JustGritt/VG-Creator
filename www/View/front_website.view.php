@@ -21,8 +21,10 @@
             <h1 class="title">Faites de vos idées une réalité</h1>
             <h2 class="sub-title">Simplifiez vous la vie et optez pour un site web de qualité</h2>
             <div class="hero-input">
-                <input type="email" name="mail" id="mail" placeholder="Saisir votre adresse mail">
-                <input type="submit" value="S'inscrire" class="button">
+                <form action="/register" method="GET">
+                    <input type="email" name="mail" id="mail" placeholder="Saisir votre adresse mail">
+                    <input type="submit" value="S'inscrire" class="button" href="/register">
+                </form>
             </div>
         </div>  
 

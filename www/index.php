@@ -46,6 +46,7 @@ $router->group('/', function($router) {
 $router->get('/client_website', 'admin@client');
 
 
+
 $router->group('/dashboard', function($router) {
     $router->get('/', 'admin@dashboard');
     $router->post('/', 'admin@dashboard');
@@ -71,6 +72,9 @@ $router->get('/payment', 'payment@payment');
 $router->get('/test', 'admin@test');
 $router->post('/test', 'admin@test');
 $router->get('/test2', 'admin@client');
+
+// Comments
+$router->get('/comment', 'comment@comment');
 
 
 //TEST CLIENT WEBSITE
