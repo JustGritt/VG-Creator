@@ -45,9 +45,9 @@
         </label>
     </header>
         
-        <?php include "View/".$this->view.".view.php"; ?>
+    <?php include "View/".$this->view.".view.php"; ?>
         
-        <footer id="footer" class="footer">
+    <footer id="footer" class="footer">
 
         <div class="footer-list footer-list-container flex">
             <ul>

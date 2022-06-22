@@ -37,14 +37,16 @@ body main {
 
         flex-direction: column;
         color: c.$black;
-        // background: rgba(255, 255, 255, 0.71);
-        // box-shadow: 0px 4px 4px rgba(159, 159, 159, 0.25);
         backdrop-filter: blur(4px);
 
         width: 75vw;
         min-width: 420px;
         max-width: 768px;
         border-radius: 31px;
+
+        a.link {
+            color: var(--color-text);
+        }
 
         @media only screen and (max-width: 768px) {
             width: 100%;
@@ -64,6 +66,12 @@ body main {
                 &:nth-child(1) { margin-top: 25px; }
                 &[type="submit"] {
                     margin-top: 75px;
+                    color: var(--color-text);
+                    border: 1px solid var(--color-border);
+                    &:hover {
+                        background: var(--color-button-background);
+                        color: var(--color-button-text);
+                    }
                 }
             }
             + a.link {
@@ -80,6 +88,11 @@ body main {
             font-size: em(1px, 6px);
             line-height: 52px;
             margin-top: 80px;
+            color: var(--color-text);
+        }
+        
+        .sub-title {
+            color: var(--color-text);
         }
 
         .inputForm {

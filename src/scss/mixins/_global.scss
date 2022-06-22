@@ -137,7 +137,7 @@ body {
             width: 0;
             height: 2px;
             border-radius: 100px;
-            background: #1538B5;
+            background: var(--color-nav-link);
             transition: all .4s ease-in-out;
         }
 

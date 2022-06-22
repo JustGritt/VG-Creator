@@ -27,14 +27,16 @@ header {
         justify-content: space-around;
         width: 100%;
         height: 70px;
+        @media only screen and (max-width: g.$tablet) {
+            display: none;
+            z-index: -1;
+            opacity: 0;
+        }
 
         ul {
             list-style: none;
         }
 
-        @media only screen and (max-width: g.$tablet) {
-            display: none;
-        }
 
         .link {
             color: var(--color-text);

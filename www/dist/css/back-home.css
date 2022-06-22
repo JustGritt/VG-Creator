@@ -5,49 +5,49 @@
 /* DARK MODE VARIABLES
  ========== */
 :root {
-  --color-white: #ffffff;
+  --color-white: #f2f2f2;
   --color-black: #333333;
   --color-accent: #82ccdd;
   --color-danger: #ED4C67;
-  --color-background: #ffffff;
+  --color-background: #f2f2f2;
   --color-background-alt: #EFF3FE;
   --color-border: #333333;
   --color-text: #333333;
   --color-pseudo: #333333;
   --color-link: #1538B5;
-  --color-shadow: #ffffff;
+  --color-shadow: #f2f2f2;
   --color-nav-link: #ED4C67;
   --color-button-background: #333333;
-  --color-button-text: #ffffff;
-  --color-button-hover-background: #ffffff;
+  --color-button-text: #f2f2f2;
+  --color-button-hover-background: #f2f2f2;
   --color-button-hover-text: #333333;
   --color-button-link: #82ccdd;
-  --color-footer-background: #ffffff;
-  --color-border-invert: #ffffff;
-  --color-hover-text: #ffffff;
+  --color-footer-background: #f2f2f2;
+  --color-border-invert: #f2f2f2;
+  --color-hover-text: #f2f2f2;
   --color-hover-background: #333333;
 }
 
 .dark {
-  --color-white: #ffffff;
+  --color-white: #f2f2f2;
   --color-black: #333333;
   --color-background: #333333;
   --color-background-alt: #CBCBCB;
-  --color-border: #ffffff;
-  --color-text: #ffffff;
-  --color-pseudo: #ffffff;
+  --color-border: #f2f2f2;
+  --color-text: #f2f2f2;
+  --color-pseudo: #f2f2f2;
   --color-link: #1538B5;
   --color-shadow: #333333;
   --color-nav-link: #ED4C67;
-  --color-button-background: #ffffff;
+  --color-button-background: #f2f2f2;
   --color-button-text: #333333;
   --color-button-hover-background: #333333;
-  --color-button-hover-text: #ffffff;
+  --color-button-hover-text: #f2f2f2;
   --color-button-link: #82ccdd;
   --color-footer-background: #333333;
   --color-border-invert: #333333;
   --color-hover-text: #333333;
-  --color-hover-background: #ffffff;
+  --color-hover-background: #f2f2f2;
 }
 
 *,
@@ -190,7 +190,7 @@ h6 {
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info .left-part-card > div > h4 {
   font-size: 1.2em;
-  color: #ffffff;
+  color: #f2f2f2;
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info .left-part-card > div > h5 {
   font-size: 1em;
@@ -199,7 +199,7 @@ h6 {
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info .left-part-card > h6 {
   font-size: 2.6em;
-  color: #ffffff;
+  color: #f2f2f2;
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info > div {
   max-width: 344.49px;
@@ -275,7 +275,7 @@ h6 {
 .card-publications-dasboard > .all-articles-publications-dasboard article header span {
   position: absolute;
   background-color: #E6E9F4;
-  color: #2b3353;
+  color: rgb(43, 51, 83);
   font-family: Roboto;
   font-style: normal;
   right: 0;
@@ -298,31 +298,26 @@ h6 {
   .card-publications-dasboard > .all-articles-publications-dasboard {
     grid-template-columns: repeat(3, 1fr);
   }
-
   .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 52px;
   }
-
   .left-panel-dasboard {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
   }
-
   .all-card-info-dasboard {
     width: 100%;
     min-width: 100%;
   }
-
   .all-card-info-dasboard .card-info-dasboard > div:nth-child(1) {
     flex-direction: column;
     align-items: center;
   }
-
   .all-card-info-dasboard .card-info-dasboard > div:nth-child(1) > div {
     margin: 27px 0px;
     align-items: center;

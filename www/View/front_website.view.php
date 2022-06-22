@@ -1,21 +1,5 @@
 <main>
-    <!-- <section id="home">
-
-        <div class="hero-container flex">
-            <h1 class="title">Faites de vos idées une réalité</h1>
-            <h2 class="sub-title">Simplifiez vous la vie et optez pour un site web de qualité</h2>
-
-            <div class="hero-input">
-                <input type="email" name="mail" id="mail" placeholder="Saisir votre adresse mail">
-                <input type="submit" value="S'inscrire" class="button">
-            </div>
-        </div>
-
-        <img class="hero-img" src="https://i.ibb.co/tMsQmkV/Image.png" alt="Image" border="0">
-    </section> -->
-    
     <section id="home">
-
         <div class="hero-content flex">
 
             <h1 class="title">Faites de vos idées une réalité</h1>
