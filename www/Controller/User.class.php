@@ -61,10 +61,13 @@ class User {
     public function login()
     {
         $user = new UserModel();
-        $errors = array();
+
         $view = new View("login");
         $view->assign("user", $user);
-
+        $errors = ["Utilisateur non retouvé dans la bdd", "Mot de passe incorrect"];
+        $view->assign("errors", $errors);
+        
+        
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
             unset($_SESSION['csrf_token']);
@@ -100,24 +103,23 @@ class User {
             $_SESSION['id'] = $userverify['id'];
             $_SESSION['pseudo'] = $userverify['pseudo'];
 
-
             echo "Bienvenue";
             header("Location: ".DOMAIN."/dashboard" );
         }
-
+        
         //Logins with Oauth
         if (!empty($_GET) && !empty($_GET['state'])) {
             Switch ($_GET['state']) {
                 case 'VG-CREATOR-FACEBOOK':
                     $this->loginFacebook();
                     break;
-                case 'VG-CREATOR-GOOGLE':
-                    $this->loginwithGoogle();
+                    case 'VG-CREATOR-GOOGLE':
+                        $this->loginwithGoogle();
+                        break;
+                        default:
+                        header("Location: ".DOMAIN."/login" );
                     break;
-                default:
-                    header("Location: ".DOMAIN."/login" );
-                    break;
-            }
+                }
         }
         unset($_SESSION['csrf_token']);
     }
