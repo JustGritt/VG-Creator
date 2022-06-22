@@ -146,7 +146,7 @@ class User {
         }
         $id = $user->getIdFromEmail($user_info['email']);
 
-        $_SESSION['id'] = $user_info['id'];
+        $_SESSION['id'] = $id;
         $_SESSION['email'] = $user_info['email'];
         $_SESSION['firstname'] = $user_info['given_name'];
         $_SESSION['lastname'] = $user_info['family_name'];

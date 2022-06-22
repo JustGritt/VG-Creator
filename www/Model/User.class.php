@@ -428,6 +428,20 @@ class User extends Sql{
 
     }
 
+    public function getUserByPseudo($pseudo) {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_user', ['*'])
+            ->where('pseudo', $pseudo)
+            ->limit(0, 1)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($query)
+            ->fetchAll(\PDO::FETCH_CLASS, get_called_class());
+        return $result;
+    }
+
     public function getCountUser($id_site){
         $sql =
             "SELECT count(1) FROM `esgi_user` u

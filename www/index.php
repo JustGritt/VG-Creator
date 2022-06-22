@@ -57,6 +57,8 @@ $router->group('/dashboard', function($router) {
     }
     $router->get('/subscribe', 'admin@dashboard');
     $router->post('/subscribe', 'admin@dashboard');
+    $router->get('/gallery', 'admin@showGallery');
+    $router->post('/gallery', 'admin@showGallery');
     $router->get('/settings', 'admin@dashboard');
     $router->get('/settings/profile', 'admin@dashboard');
     $router->get('/history', 'admin@dashboard');
@@ -77,8 +79,10 @@ $router->get('/blog/:id/:article', 'Blog@show')
     ->with('id', '[0-9]+')
     ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
+/*
 $router->get('/@:author', 'main@initContent')
     ->with('author', '([a-z\-0-9]+)');//TEST PRUPOSE ONLY
+*/
 
 $router->get('/@:author/:slug', 'main@initContent')
     ->with('author', '([a-z\-0-9]+)')

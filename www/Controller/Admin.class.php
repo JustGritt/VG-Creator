@@ -59,7 +59,7 @@ class Admin
         if(!empty($_POST['submit']))
         {
             if(!empty($_FILES)) {
-                $this->uploadFile();
+                Handler::uploadFile();
             }
         }
 
@@ -79,6 +79,19 @@ class Admin
                 break;
         }
 
+    }
+    public function showGallery()
+    {
+        $user = new UserModel();
+        $sql = "SELECT * FROM `esgi_document` WHERE `id_user` = ? ORDER BY `id_document` DESC";
+        $request =  Sql::getInstance()->prepare($sql);
+        $request->execute(array($_SESSION['id']));
+        $images =  $request->fetchAll();
+
+        var_dump($images);
+        $view = new View("gallery", "back");
+        $view->assign('user', $user);
+        $view->assign('images', $images);
     }
 
     public function setOauthUser($user){
@@ -166,39 +179,6 @@ class Admin
             ->query($sql);
         return $result;    
     }
-
-    public function uploadFile() {
-        $file = $_FILES['fileToUpload'];
-        $fileName = $file['name'];
-        $fileTmpName = $file['tmp_name'];
-        $fileSize = $file['size'];
-        $fileError = $file['error'];
-        $fileType = $file['type'];
-
-        $fileExt = explode('.', $fileName);
-        $fileActualExt = strtolower(end($fileExt));
-
-        $allowed = array('jpg', 'jpeg', 'png');
-
-        if (in_array($fileActualExt, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 500000) {
-                    $fileNameNew = uniqid('', true) . "." . $fileActualExt;
-                    $fileDestination = 'uploads/' . $fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
-                    echo "File uploaded successfully";
-                    $_FILES = [];
-                } else {
-                    echo "Your file is too big";
-                }
-            } else {
-                echo "There was an error uploading your file";
-            }
-        } else {
-            echo "You cannot upload files of this type";
-        }
-    }
-
 
     public function setClientOfSite()
     {

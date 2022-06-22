@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Core\Cache;
 use App\Core\View;
 use App\Core\Sql;
+use App\Model\User as UserModel;
 class Main {
 
     public function home()
@@ -28,7 +30,14 @@ class Main {
             $path = "./UserSites/".$author."/".$site_title."/";
             if (is_dir($path) && $site_title != ""){
                 echo " Site exists";
+                $user = new UserModel();
+                $user = $user->getUserByPseudo($author);
+                var_dump($author);
                 $view = new View("index", 'client', $path);
+                $view->assign("user", $user);
+                $author = 'Auhtor' . $user['pseudo'];
+
+
                 /*
                 $view->assign("site_title", $site_title);
                 $view->assign("author", $author);
@@ -39,7 +48,7 @@ class Main {
             }
 
         }
-        header('HTTP/1.1 404 Not Found');
+        //header('HTTP/1.1 404 Not Found');
         /*
         $find_author = $this->findAuthorByName($author);
         if (!isset($find_author)) {
