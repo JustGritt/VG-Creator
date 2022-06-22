@@ -58,16 +58,30 @@ body {
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1.5px;
+        margin-top: 20px;
+        margin-right: 20px;
         &:hover {
             background: var(--color-button-hover-background);
             color: var(--color-button-hover-text);
         }
-        &:nth-last-child(1) {
-            background: var(--color-danger);
-            color: var(--color-white);
-            border: none;
-            margin-left: 25px;
-        }
+    }
+
+    input[type="reset"] {
+        
+        background: var(--color-danger);
+        color: var(--color-white);
+        border: none;
+        margin: 20px 20px 20px 0px;
+        max-width: 200px;
+        font-size: .8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-radius: 100px;
+        width: 100%;
+        height: 46px;
+        filter: none;
+        cursor: pointer;
     }
 
     textarea {
@@ -77,6 +91,8 @@ body {
         border-radius: 4px;
         outline: 0;
         width: 100%;
+        min-height: 100px;
+        min-width: 100px;
         max-height: 300px;
         max-width: 100%;
         &:focus {
@@ -94,14 +110,13 @@ body {
         top: 0;
         padding: calc(var(--bezel) * 0.75) calc(var(--bezel) * .5);
         margin: calc(var(--bezel) * 0.75 + 3px) calc(var(--bezel) * .5);
-        background: pink;
         white-space: nowrap;
         transform: translate(0, 0);
         transform-origin: 0 0;
         background: var(--color-background);
         transition: transform 120ms ease-in;
         font-weight: bold;
-        line-height: 1.2;
+        font-size: 16px;
     }
 
     &__field {

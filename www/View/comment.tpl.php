@@ -18,7 +18,7 @@
         <form method="POST" id="comment_form">
             <div class="form-group">
                 <label class="input">
-                    <input class="input__field" type="text" name="comment_name" id="comment_name" placeholder=" " />
+                    <input class="input__field" type="text" name="comment_name" id="comment_name" placeholder=" " maxlength="20"/>
                     <span class="input__label">@Pseudo</span>
                 </label>
             </div>
@@ -27,8 +27,8 @@
         
             <div class="form-group">
                 <input type="hidden" name="comment_id" id="comment_id" value="0" />
-                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Publier" />
-                <input type="submit" name="submit" id="submit" class="btn btn-info" value="Annuler" />
+                <input type="submit" name="submit" id="submit"value="Publier" />
+                <input type="reset" name="reset" id="reset" value="Annuler" />
             </div>
         </form>
 
@@ -41,6 +41,12 @@
 </html>
 
 <script>
+
+    document.querySelector('#comment_form input[type="reset"]').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector('#comment_form input[type="text"]').value = '';
+        document.querySelector('#comment_form textarea').value = '';
+    });
 
     document.getElementById('comment_form').addEventListener('submit', loadComment);
 
