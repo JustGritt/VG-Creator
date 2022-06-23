@@ -6,6 +6,7 @@ namespace App;
 use App\Core\Router;
 use App\Core\Route;
 use App\Core\Security;
+use App\Core\FlashMessage;
 require "conf.inc.php";
 session_start();
 
@@ -20,7 +21,8 @@ function myAutoloader($class)
 }
 
 spl_autoload_register("App\myAutoloader");
-
+$flash_message = new FlashMessage();
+var_dump($_SESSION['flash_message']);
 //Réussir à récupérer l'URI
 $router = new Router($_GET['url'] ?? "");
 

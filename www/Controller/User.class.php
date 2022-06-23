@@ -3,6 +3,7 @@ namespace App\Controller;
 //session_start();
 
 use App\Core\CleanWords;
+use App\Core\FlashMessage;
 use App\Core\Handler;
 use App\Core\Sql;
 use App\Core\Verificator;
@@ -64,10 +65,7 @@ class User {
 
         $view = new View("login");
         $view->assign("user", $user);
-        $errors = ["Utilisateur non retouvé dans la bdd", "Mot de passe incorrect"];
-        $view->assign("errors", $errors);
-        
-        
+
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
             unset($_SESSION['csrf_token']);
@@ -78,16 +76,22 @@ class User {
             $userverify = $user->connexion($user->getEmail(), $getPwd);
 
             if (is_null($userverify)) {
-                echo 'Utilisateur non retouvé dans la bdd';
+                //echo 'Utilisateur non retouvé dans la bdd';
+                FlashMessage::setFlash('errors', "Utilisateur non retouvé dans la bdd");
+                //header("Location: ".DOMAIN."/login" );
                 return;
 
             }elseif (empty($userverify['status'])) {
-                echo "Veuillez confirmé votre email";
+                //echo "Veuillez confirmé votre email";
+                FlashMessage::setFlash('errors', "Veuillez confirmé votre email");
+                //header("Location: ".DOMAIN."/login" );
                 return;
             }
 
             if (!password_verify($getPwd, $userverify['password'])) {
-                echo "<strong class='alert'>mot de passe incorrect</strong>";
+                //echo "<strong class='alert'>mot de passe incorrect</strong>";
+                FlashMessage::setFlash('errors', "Mot de passe incorrect");
+                //header("Location: ".DOMAIN."/login" );
                 return;
             }
             //Check if user role for URI
@@ -103,7 +107,7 @@ class User {
             $_SESSION['id'] = $userverify['id'];
             $_SESSION['pseudo'] = $userverify['pseudo'];
 
-            echo "Bienvenue";
+            FlashMessage::setFlash('success', "Bienvenue ".$_SESSION['firstname']);
             header("Location: ".DOMAIN."/dashboard" );
         }
         

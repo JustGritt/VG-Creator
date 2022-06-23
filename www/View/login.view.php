@@ -5,11 +5,13 @@
 <main>
     <section id="login">
         <div class="wrapper flex center-transform">
-        
-    
-        <?php 
-            var_dump($this->includePartial("errors", ['errors' => $errors]));
-        ?>
+
+            <?php
+                use App\Core\FlashMessage;
+                $flash = new FlashMessage();
+                $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
+                //$this->includePartial("flash_messages", ['success' => [$flash->getFlash('errors')]]);
+            ?>
 
             <h1 class="title">Se connecter</h1>
             <p class="sub-title">Vous n'avez pas encore de compte ? <a class="link" href="/register">S'inscrire</a></p>
