@@ -194,16 +194,16 @@ class User {
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
 
             if ($user->isUserExist($_POST['email'])) {
-                echo 'Vous avez deja un compte';
+                FlashMessage::setFlash('errors', 'Vous avez deja un compte');
                 header("Refresh: 5; ".DOMAIN."/login ");
                 return;
             }
 
-            $user->setFirstname($_POST['firstname']);
-            $user->setLastname($_POST['lastname']);
-            $user->setEmail($_POST['email']);
-            $user->setPassword($_POST['password']);
-            $user->setPseudo($_POST['pseudo']);
+            $user->setFirstname(htmlspecialchars($_POST['firstname']));
+            $user->setLastname(htmlspecialchars($_POST['lastname']));
+            $user->setEmail(htmlspecialchars($_POST['email']));
+            $user->setPassword(htmlspecialchars($_POST['password']));
+            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
             $user->generateToken();
             //$user->setIdRole(1); // 1 = Admin, 2 = User
             $user->setStatus(0);

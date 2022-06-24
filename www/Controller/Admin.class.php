@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\CleanWords;
+use App\Core\FlashMessage;
 use App\Core\Security;
 use App\Core\Sql;
 use App\Core\Verificator;
@@ -84,14 +85,13 @@ class Admin
     public function setOauthUser($user){
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             if(!$user->is_unique_pseudo($_POST['pseudo'])){
-                echo "Ce pseudo est déjà utilisé";
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
                 header('Refresh: 3; '.DOMAIN.'/dashboard');
                 return;
             }
             $user->save();
             Handler::setMemberRole($user->getId());
             header("Location: " . DOMAIN . "/dashboard");
-            return;
         }
     }
     public function setSettingsView(){
@@ -262,6 +262,8 @@ class Admin
 
     }
 
+
+    /*
     public function SAUV() {
         $request = new MySqlBuilder();
         $sql2 = $request
@@ -289,20 +291,14 @@ class Admin
             }
         }
         
-        /*
+
         $query = $queryBuilder
             ->insert('esgi_file', '',[$fileName, $id_user, $id_site])
             ->getQuery();
 
         var_dump($query)
-        */
     }
-
-
-
-
-
-
+*/
 
 
     // public function comment()

@@ -30,19 +30,7 @@ class Confirmation {
         $getToken = $_GET['token'];
         $user->confirmUser($getId, $getToken);
 
-        Handler::setDirectoryForUser($_SESSION['pseudo']);
-        /*
-        $pseudo = './UserSites/'.$_SESSION['pseudo'];
-        if (!file_exists($pseudo)) {
-            mkdir($pseudo, 0777, true);
-            //create the file
-            $file = fopen($pseudo.'/conf.inc.php', 'a+');
-            fwrite($file, '<?php'."\n");
-            fwrite($file, "\n");
-            fwrite($file, 'define("AUTHOR", '.$_SESSION['id'].');'."\n");
-            fclose($file);
-        }
-        */
+        //Handler::setDirectoryForUser($_SESSION['pseudo']);
 
         FlashMessage::setFlash('success', "Your account has been validated! You will be redirect to the login page in few secondes..");
         header("Refresh: 3; ".DOMAIN."/login" );

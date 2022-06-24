@@ -171,13 +171,11 @@ class User extends Sql{
 
     public function getRegisterForm(): array
     {
-        
         if(isset($_GET['mail'])){
-            $email = htmlspecialchars($_GET['mail']);
+            $email = htmlentities(addslashes($_GET['mail']));
         } else {
             $email = null;
         }
-
         return [
             "config"=>[
                 "method"=>"POST",
@@ -193,7 +191,7 @@ class User extends Sql{
                     "id"=>"firstnameForm",
                     "min"=>2,
                     "max"=>50,
-                    "error"=>"Prénom incorrect"
+                    "error"=>"Prénom incorrect",
                 ],
                 "lastname"=>[
                     "type"=>"text",
@@ -413,6 +411,13 @@ class User extends Sql{
         }
 
         return $userexist;
+    }
+
+    public function getUserByPseudo($pseudo) {
+        $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `pseudo` = ?");
+        $sql->execute(array(addslashes($pseudo)));
+        $result = $sql->rowCount();
+        return $result == 1;
     }
 
     public function is_unique_pseudo($pseudo)

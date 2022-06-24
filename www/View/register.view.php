@@ -12,12 +12,13 @@
             </p>
 
             <?php $this->includePartial("form", $user->getRegisterForm()) ?>
-            <?php foreach ($errors as $error):?>
-                <p class="error"><?= $error ?></p>
-            <?php endforeach;?>
 
-            <?php var_dump($_GET) ?>
-    
+            <?php
+            use App\Core\FlashMessage;
+            $flash = new FlashMessage();
+            $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
+            //$this->includePartial("flash_messages", ['success' => [$flash->getFlash('errors')]]);
+            ?>
         </div>
     </section>
 </main>

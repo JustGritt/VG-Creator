@@ -8,6 +8,7 @@ class Verificator
 
     public static function checkForm($config, $data): array
     {
+        $flash = new FlashMessage();
         $result = [];
         //Le nb de inputs envoyés ?
         if( count($data) != count($config['inputs'])){
@@ -17,7 +18,8 @@ class Verificator
         foreach ($config['inputs'] as $name=>$input){
 
             if(!isset($data[$name]) ){
-                $result[] = "Le champs ".$name." n'existe pas";
+                $result[] =  "Le champs {$name} n'existe pas";
+
             }
 
             if(empty($data[$name]) && !empty($input["required"]) ){
