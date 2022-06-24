@@ -15,6 +15,8 @@
             <?php foreach ($errors as $error):?>
                 <p class="error"><?= $error ?></p>
             <?php endforeach;?>
+
+            <?php var_dump($_GET) ?>
     
         </div>
     </section>

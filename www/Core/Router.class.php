@@ -63,7 +63,10 @@ class Router {
         return $this->namedRoutes[$name]->getUrl($params);
     }
 
+// URI -> Route définie 
+// URI -> Existe pas -> 404
 
+// 
 
 
 

@@ -1,0 +1,36 @@
+.error {
+    &-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        width: 500px;
+        height: 200px;
+        background: #fff;
+        border: 5px solid var(--color-danger);
+        z-index: 100;
+    }
+    &-close {
+        position: absolute;
+        z-index: 10;
+        top: 4px;
+        right: 8px;
+        color: var(--color-danger);
+        font-weight: bold;
+        cursor: pointer;
+        padding: 4px 12px;
+        border-radius: 100%;
+        &:hover {
+            animation: close-btn .4s ease-in-out 1;
+        }
+        @keyframes close-btn {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(180deg); }
+        }
+    }
+    &-message {
+        color: var(--color-danger);
+        font-size: 1.5rem;
+    }
+}

@@ -171,6 +171,13 @@ class User extends Sql{
 
     public function getRegisterForm(): array
     {
+        
+        if(isset($_GET['mail'])){
+            $email = htmlspecialchars($_GET['mail']);
+        } else {
+            $email = null;
+        }
+
         return [
             "config"=>[
                 "method"=>"POST",
@@ -201,6 +208,7 @@ class User extends Sql{
                     "type"=>"email",
                     "placeholder"=>"Email",
                     "required"=>true,
+                    "value"=>$email,
                     "class"=>"inputForm",
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"

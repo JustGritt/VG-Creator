@@ -7,7 +7,6 @@ use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 
-
 class Comment {
 
     public function comment() {
@@ -15,7 +14,5 @@ class Comment {
         $user = new User();
         $view->assign("user", $user);
     }
-
-
 
 }
