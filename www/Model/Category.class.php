@@ -1,0 +1,87 @@
+<?php
+namespace App\Model;
+
+use App\Core\Sql;
+
+
+class Category extends Sql{
+
+    public $id_category = null;
+    public $name = null;
+    public $id_site = null;
+
+
+    public function __construct($name= '',$id_site='', $id_category='' ){
+        $calledClassExploded = explode("\\",get_called_class());
+        $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
+        $this->setName($name);
+        $this->setIdSite($id_site);
+        $this->setIdCategory($id_category);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCategories():array
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $request = $queryBuilder->select('esgi_category', ['*'])->getQuery();
+        $result = Sql::getInstance()->query($request)->fetchAll();
+        return array_map(function ($v){
+            return new Category($v['name'], $v['id_site'], $v['id_category']);
+        }, $result);
+    }
+
+    /**
+     * @return null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param null $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return null
+     */
+    public function getIdSite()
+    {
+        return $this->id_site;
+    }
+
+    /**
+     * @param null $id_site
+     */
+    public function setIdSite($id_site): void
+    {
+        $this->id_site = $id_site;
+    }
+
+    /**
+     * @param null $id_category
+     */
+    public function setIdCategory($id_category): void
+    {
+        $this->id_category = $id_category;
+    }
+
+    /**
+     * @param string
+     */
+    public function getIdCategory($id_category): string
+    {
+       return $this->id_category ;
+    }
+    
+
+   
+
+}

@@ -117,7 +117,9 @@ abstract class Sql
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
 
-        if($this->getId() == null){
+        $id = preg_grep('/^id_(.*)/', array_keys($columns))[0] ?? "id";
+
+        if( $this->getId() == null){
             $sql = "INSERT INTO ".$this->table." (".implode(",",array_keys($columns)).") 
             VALUES ( :".implode(",:",array_keys($columns)).")";
         }else{
@@ -126,13 +128,11 @@ abstract class Sql
             {
                 $update[] = $column."=:".$column;
             }
-            $sql = "UPDATE ".$this->table." SET ".implode(",",$update)." WHERE id=".$this->getId() ;
-
+            $sql = "UPDATE ".$this->table." SET ".implode(",",$update)." WHERE ".$id."=".$this->getId() ;
         }
 
         $queryPrepared = $this->pdo->prepare($sql);
         return $queryPrepared->execute( $columns );
-
     }
 
     public function getLink()

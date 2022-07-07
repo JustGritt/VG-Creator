@@ -26,7 +26,7 @@ if (extension_loaded('postgres')) {
 
 //Google aouth
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
-define("GOOGLE_SECRET" , "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");
+define("GOOGLE_SECRET" , "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");
 
 
 //ROLE VGCREATOR
