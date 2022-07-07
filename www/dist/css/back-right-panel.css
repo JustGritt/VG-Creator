@@ -1,3 +1,6 @@
+/* IMPORTS
+======================= */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap");
 /* COLORS VARIABLES  
 ======================= */
 /* DASHBOARD PALETTE  
@@ -7,12 +10,17 @@
 :root {
   --color-white: #ffffff;
   --color-black: #000000;
+  --color-grey-dark: #ADADAD;
+  --color-blue-dark:#7E86A5;
+  --color-red:#ED4C67;
+  --color-real-green:#BCF682;
   --color-background: #ffffff;
   --color-background-alt: #EFF3FE;
   --color-border: #000000;
   --color-text: #000000;
   --color-pseudo: #000000;
   --color-link: #1538B5;
+  --color-main-blue: #2D4291;
   --color-shadow: #ffffff;
   --color-nav-link: #ED4C67;
   --color-button-background: #000000;
@@ -48,14 +56,61 @@
   --color-hover-background: #ffffff;
 }
 
+/* CLASSES 
+======================= */
+/* CLASSES 
+======================= */
+h1,
+.h1 {
+  display: block;
+  font-size: clamp(2rem, 5vw, 76px);
+  font-weight: bold;
+  margin: 0;
+}
+
+h2,
+.h2 {
+  display: block;
+  font-size: clamp(1rem, 5vw, 64px);
+  font-weight: normal;
+}
+
+h3,
+.h3,
+.title {
+  display: block;
+  font-size: clamp(1rem, 5vw, 48px);
+  font-weight: normal;
+}
+
+.sub-title {
+  font-size: clamp(1rem, 5vw, 24px);
+  margin: 20px 0;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
 header {
   position: relative;
+}
+
+.title-page {
+  line-height: normal;
+  font-size: clamp(2rem, 5vw, 42px);
+  font-family: "Lato", sans-serif;
+  color: var(--color-black);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 42px;
+  line-height: 50px;
 }
 
 .right-panel-dasboard {
   max-width: 300px;
   min-width: 300px;
-  height: 100vh;
+  min-height: 100vh;
   border-radius: 0;
   background: #E6E9F4;
   padding: 20px 0;

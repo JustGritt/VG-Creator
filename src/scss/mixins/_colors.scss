@@ -7,6 +7,7 @@ $violet: #BFB0FF;
 $yellow: #FFE780;
 $orange: #fa8231;
 $green: #C8FF8D;
+$real-green: #BCF682;
 $black: #333333;
 $white: #f2f2f2;
 $grey: #404040;
@@ -18,23 +19,25 @@ $link: #1538B5;
 // $red: #F44848;
 $red: #ED4C67;
 
-
 /* DASHBOARD PALETTE  
 ======================= */
 
 $dark-blue: #141827;
 $main-blue: #2D4291;
+$blue-dark :#7E86A5;
 $dark-moy-blue: #5F6889;
 $fair-blue: #2D4392;
 $grey: #CBCBCB;
+$grey-dark :#ADADAD;
 $grey-blue: #7B8093;
 $light-blue: #E6E9F4;
 $light-dark-blue: #A0AACF;
 $mid-light-blue: #787C90;
-$black:   #000000;
-$white:   #ffffff;
+$black: #000000;
+$white: #ffffff;
 $orange: #F39C12;
 $yellow: #FFE780;
+
 /* DARK MODE VARIABLES
  ========== */
 
@@ -42,28 +45,28 @@ $yellow: #FFE780;
     // Simple colors
     --color-white: #{$white};
     --color-black: #{$black};
-
-
+    --color-grey-dark: #{$grey-dark};
+    --color-blue-dark :#{$blue-dark };
+    --color-red :#{$red};
     // Content colors
+    --color-real-green :#{$real-green};
     --color-background: #{$white};
     --color-background-alt: #{$light-grey};
     --color-border: #{$black};
     --color-text: #{$black};
     --color-pseudo: #{$black};
     --color-link: #{$link};
+    --color-main-blue: #{$main-blue};
     --color-shadow: #{$white};
     --color-nav-link: #{$red};
-    
     // Button colors
     --color-button-background: #{$black};
     --color-button-text: #{$white};
     --color-button-hover-background: #{$white};
     --color-button-hover-text: #{$black};
     --color-button-link: #{$blue};
-
     // Footer colors
     --color-footer-background: #{$white};
-    
     // Invert & hover colors
     --color-border-invert: #{$white};
     --color-hover-text: #{$white};
@@ -74,7 +77,6 @@ $yellow: #FFE780;
     // Simple colors
     --color-white: #{$white};
     --color-black: #{$black};
-
     // Content colors
     --color-background: #{$black};
     --color-background-alt: #{$grey};
@@ -84,17 +86,14 @@ $yellow: #FFE780;
     --color-link: #{$link};
     --color-shadow: #{$black};
     --color-nav-link: #{$red};
-    
     // Button colors
     --color-button-background: #{$white};
     --color-button-text: #{$black};
     --color-button-hover-background: #{$black};
     --color-button-hover-text: #{$white};
     --color-button-link: #{$blue};
-
     // Footer colors
     --color-footer-background: #{$black};
-    
     // Invert & hover colors
     --color-border-invert: #{$black};
     --color-hover-text: #{$black};
