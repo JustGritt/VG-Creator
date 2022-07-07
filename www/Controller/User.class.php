@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 //session_start();
 
@@ -14,7 +15,8 @@ use App\Model\OauthUser;
 use App\Core\Facebook;
 use App\Core\Security;
 
-class User {
+class User
+{
 
     public function loginwithfb()
     {
@@ -30,11 +32,11 @@ class User {
             unset($_SESSION['id']);
             unset($_SESSION['code']);
             unset($_SESSION['email']);
-            header("Refresh: 5; ".DOMAIN."/login ");
+            header("Refresh: 5; " . DOMAIN . "/login ");
         }
 
         $oauth_user = new OauthUser();
-        $user_name =  explode(" " , $user_info['name']);
+        $user_name =  explode(" ", $user_info['name']);
 
         $_SESSION['id'] = $user_info['id'];
         $_SESSION['email'] = $user_info['email'];
@@ -44,18 +46,17 @@ class User {
         //$_SESSION['username'] = $user_info['name'];
         $_SESSION['role'] = ($user_info['id_role'] == 1) ? 'admin' : 'user';
 
-        if(!$oauth_user->isUserExist($user_info['email'])){
+        if (!$oauth_user->isUserExist($user_info['email'])) {
             $oauth_user->setFirstname($user_name[0]);
             $oauth_user->setLastname($user_name[1]);
             $oauth_user->setEmail($user_info['email']);
-            $oauth_user->setOauth_id( $user_info['id']);
+            $oauth_user->setOauth_id($user_info['id']);
             $oauth_user->setOauth_provider('facebook_api');
             $oauth_user->setRole(1);
             $oauth_user->save();
         }
         echo "Bienvenue";
-        header("Location: ".DOMAIN."/dashboard");
-
+        header("Location: " . DOMAIN . "/dashboard");
     }
 
     public function login()
@@ -66,7 +67,7 @@ class User {
         $view->assign("user", $user);
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_SESSION['csrf_token']);
 
             $getPwd = $_POST['password'];
@@ -75,16 +76,15 @@ class User {
             $userverify = $user->connexion($user->getEmail(), $getPwd);
 
             if (is_null($userverify)) {
-                echo 'Utilisateur non retouvé dans la bdd';
+                echo "<span style='color:black;/* margin-top: 79px; */position: fixed;bottom: 0;display: block;z-index: 100;background-color: red;color: white;padding: 12px;font-weight: 800;border-radius: 0px 12px 0px 0px;'>This email does not exist.</span>";
                 return;
-
-            }elseif (empty($userverify['status'])) {
-                echo "Veuillez confirmé votre email";
+            } elseif (empty($userverify['status'])) {
+                echo "<span style='color:black;/* margin-top: 79px; */position: fixed;bottom: 0;display: block;z-index: 100;background-color: red;color: white;padding: 12px;font-weight: 800;border-radius: 0px 12px 0px 0px;'>Your account is not activated yet</span>";
                 return;
             }
 
             if (!password_verify($getPwd, $userverify['password'])) {
-                echo "<strong class='alert'>mot de passe incorrect</strong>";
+                echo "<span style='color:black;/* margin-top: 79px; */position: fixed;bottom: 0;display: block;z-index: 100;background-color: red;color: white;padding: 12px;font-weight: 800;border-radius: 0px 12px 0px 0px;'>Incorrect password</span>";
                 return;
             }
             //Check if user role for URI
@@ -100,14 +100,14 @@ class User {
             $_SESSION['id'] = $userverify['id'];
             $_SESSION['pseudo'] = $userverify['pseudo'];
 
-
             echo "Bienvenue";
-            header("Location: ".DOMAIN."/dashboard" );
+            header("Location: " . DOMAIN . "/dashboard");
         }
+
 
         //Logins with Oauth
         if (!empty($_GET) && !empty($_GET['state'])) {
-            Switch ($_GET['state']) {
+            switch ($_GET['state']) {
                 case 'VG-CREATOR-FACEBOOK':
                     $this->loginFacebook();
                     break;
@@ -115,22 +115,23 @@ class User {
                     $this->loginwithGoogle();
                     break;
                 default:
-                    header("Location: ".DOMAIN."/login" );
+                    header("Location: " . DOMAIN . "/login");
                     break;
             }
         }
         unset($_SESSION['csrf_token']);
     }
 
-    public function loginwithGoogle(){
+    public function loginwithGoogle()
+    {
 
         $user = new UserModel();
         //$view = new View("login");
         //$view->assign("user", $user);
 
         $oauth_user = new OauthUser();
-        $redirect_uri = DOMAIN."/login";
-        $data = $this->GetAccessToken(GOOGLE_ID , $redirect_uri , GOOGLE_SECRET , $_GET['code']);
+        $redirect_uri = DOMAIN . "/login";
+        $data = $this->GetAccessToken(GOOGLE_ID, $redirect_uri, GOOGLE_SECRET, $_GET['code']);
         //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
         $access_token = $data['access_token'];
         $user_info = $this->GetUserProfileInfo($access_token);
@@ -142,7 +143,7 @@ class User {
             unset($_SESSION['email']);
             //var_dump(isset($_SESSION['id']));
             var_dump($_SESSION);
-            header("Refresh: 5; ".DOMAIN."/login ");
+            header("Refresh: 5; " . DOMAIN . "/login ");
         }
         $id = $user->getIdFromEmail($user_info['email']);
 
@@ -169,10 +170,7 @@ class User {
             $_SESSION['oauth_id'] = $user_info['id'];
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
-        header("Location: ".DOMAIN."/dashboard");
-
-
-
+        header("Location: " . DOMAIN . "/dashboard");
     }
 
     public function register()
@@ -183,13 +181,13 @@ class User {
         $errors = [];
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token']) ) {
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
 
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
 
             if ($user->isUserExist($_POST['email'])) {
                 echo 'Vous avez deja un compte';
-                header("Refresh: 5; ".DOMAIN."/login ");
+                header("Refresh: 5; " . DOMAIN . "/login ");
                 return;
             }
 
@@ -206,13 +204,13 @@ class User {
 
             if (!$verifyPassword) {
                 echo 'Mot de passe different..';
-                header("Refresh: 5; ".DOMAIN."/register ");
+                header("Refresh: 5; " . DOMAIN . "/register ");
                 return;
             }
 
             if (!$user->is_unique_pseudo($_POST['pseudo'])) {
                 echo 'Pseudo deja utilisé';
-                header("Refresh: 5; ".DOMAIN."/register ");
+                header("Refresh: 5; " . DOMAIN . "/register ");
                 return;
             }
 
@@ -223,10 +221,10 @@ class User {
             $_SESSION['pseudo'] = $_POST['pseudo'];
             $_SESSION['email'] = $_POST['email'];
 
-            $toanchor = DOMAIN.'/confirmation?id='.$id.'&token='.$user->getToken();
+            $toanchor = DOMAIN . '/confirmation?id=' . $id . '&token=' . $user->getToken();
 
             $template_var = array(
-                "{{product_url}}" => "".DOMAIN."/",
+                "{{product_url}}" => "" . DOMAIN . "/",
                 "{{product_name}}" => "VG-CREATOR",
                 "{{name}}" => $user->getFirstname(),
                 "{{action_url}}" => $toanchor,
@@ -239,32 +237,32 @@ class User {
             );
 
             $template_file = "/var/www/html/Templates/confirmation_email.php";
-            if(file_exists($template_file)){
+            if (file_exists($template_file)) {
                 $body = file_get_contents($template_file);
-            }else{
+            } else {
                 die('ennable to load the templates');
             }
 
             //swapping the variable into the templates
-            foreach(array_keys($template_var) as $key){
+            foreach (array_keys($template_var) as $key) {
                 if (strlen($key) > 2 && trim($key) != "") {
                     $body = str_replace($key, $template_var[$key], $body);
-
                 }
             }
 
             $mail = new Mail();
             $subject = "Veuillez confirmée votre email";
-            $mail->sendMail($_POST['email'] , $body, $subject);
+            $mail->sendMail($_POST['email'], $body, $subject);
             echo 'Merci pour votre inscription, confirmez votre email';
 
-            header("Refresh: 5; ".DOMAIN."/");
+            header("Refresh: 5; " . DOMAIN . "/");
         }
 
         $view->assign("errors", $errors);
     }
 
-    public function logout():void {
+    public function logout(): void
+    {
         if (!empty($_SESSION['code'])) {
             $this->revokeToken($_SESSION['code']);
         }
@@ -274,13 +272,14 @@ class User {
         unset($_SESSION['email']);
         unset($_SESSION['firstname']);
         session_destroy();
-        header("Location: ".DOMAIN."/login" );
+        header("Location: " . DOMAIN . "/login");
     }
 
-    public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code) {
+    public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code)
+    {
         $url = 'https://www.googleapis.com/oauth2/v4/token';
 
-        $curl = 'client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&client_secret=' . $client_secret . '&code='. $code . '&grant_type=authorization_code';
+        $curl = 'client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&client_secret=' . $client_secret . '&code=' . $code . '&grant_type=authorization_code';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -288,7 +287,7 @@ class User {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
         $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if ($http_code != 200) {
             //echo 'Error : Failed to receieve access token';
             return false;
@@ -297,7 +296,8 @@ class User {
         return $data;
     }
 
-    public function GetUserProfileInfo($access_token) {
+    public function GetUserProfileInfo($access_token)
+    {
         $url = 'https://www.googleapis.com/oauth2/v2/userinfo?fields=id,given_name,family_name,email,verified_email';
         //$url2 = 'https://www.googleapis.com/userinfo/v2/me?';
 
@@ -305,10 +305,10 @@ class User {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '. $access_token));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_token));
         $data = json_decode(curl_exec($ch), true);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if($http_code != 200) {
+        if ($http_code != 200) {
             //echo 'Error : Failed to get user information';
             return false;
         }
@@ -316,8 +316,9 @@ class User {
         return $data;
     }
 
-    public function revokeToken($token){
-        $url = 'https://oauth2.googleapis.com/revoke?token='. $token;
+    public function revokeToken($token)
+    {
+        $url = 'https://oauth2.googleapis.com/revoke?token=' . $token;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -326,13 +327,10 @@ class User {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
         $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
-        if($http_code != 200)
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_code != 200)
             echo 'Error : Failed to revoke access token';
 
         return $data;
     }
 }
-
-
-

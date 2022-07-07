@@ -1,29 +1,84 @@
 /* IMPORTS
 ======================= */
 
-@use './colors' as c;
-@use './fonts' as f;
-
+@use './colors'as c;
+@use './fonts'as f;
 
 /* VARIABLES GLOBALES
 ======================= */
 
-$desktop : 1200px !default;
-$tablet : 768px !default;
-$mobile : 480px !default;
+$desktop: 1200px !default;
+$tablet: 768px !default;
+$mobile: 480px !default;
 
 /* RESET
 ======================= */
 
-html { 
-    box-sizing: border-box; 
+// $status      : ('draft', 'publish');
+html {
+    box-sizing: border-box;
     scroll-behavior: smooth;
     margin: 0;
     padding: 0;
     transition: none;
 }
 
-*, *:before, *:after {
+.flex-05 {
+    flex: 0.5 !important;
+}
+
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable,
+.ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+    min-height: 80px;
+    padding: 12px;
+}
+
+.ck.ck-reset {
+    margin-top: 12px !important;
+}
+
+.ck.ck-editor {
+    margin-top: 12px;
+    h2,
+    h3,
+    h4 {
+        color: var(--color-black);
+        margin: 0;
+    }
+}
+
+.w-300 {
+    max-width: 300px !important;
+    width: 100%;
+}
+
+
+.btm-btn {
+    background-color: var(--color-main-blue);
+    border: 1px solid var(--color-main-blue);
+    padding: 12px 8px;
+    border-radius: 4px;
+    width: 143px;
+    color: var(--color-white);
+    cursor: pointer;
+    position: absolute;
+    bottom: 0;
+    margin: 20px auto;
+    left: 0;
+    right: 0;
+    &:hover {
+        background-color: var(--color-white);
+        color: var(--color-main-blue);
+    }
+}
+
+.err-txt {
+    color: var(--color-red) !important;
+}
+
+*,
+*:before,
+*:after {
     box-sizing: inherit;
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
@@ -36,39 +91,66 @@ html {
     background: transparent;
 }
 
-html, body, ul, ol, form, button { 
-    margin: 0; 
-    padding: 0; 
+html,
+body,
+ul,
+ol,
+form,
+button {
+    margin: 0;
+    padding: 0;
 }
 
-p, ul, ol, blockquote, pre, 
-td, th, label, textarea {
+p,
+ul,
+ol,
+blockquote,
+pre,
+td,
+th,
+label,
+textarea {
     margin: f.$line-height * 1em 0;
     line-height: f.$line-height;
     font-size: 1em;
 }
 
-article, aside, figure, footer, 
-header, main, menu, nav, section { 
-    display: block; 
+article,
+aside,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section {
+    display: block;
 }
 
-sup, sub {
+sup,
+sub {
     position: relative;
     vertical-align: 0;
 }
 
-li p, li ul {
+li p,
+li ul {
     margin-bottom: 0;
     margin-top: 0;
 }
 
-table, td, th, pre, div, p {
+table,
+td,
+th,
+pre,
+div,
+p {
     word-wrap: break-word;
 }
 
-img, iframe { 
-    vertical-align: middle; 
+img,
+iframe {
+    vertical-align: middle;
     margin: 0;
 }
 
@@ -77,56 +159,47 @@ img, iframe {
 ======================= */
 
 body {
-
     width: 100vw;
     background: var(--color-background);
     font-family: f.$primary;
     overflow-x: hidden;
     line-height: f.$line-height;
-
     .no-selection {
-        -ms-user-select:none;
-        -moz-user-select:none;
-        -webkit-user-select:none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
         -webkit-touch-callout: none;
         -khtml-user-select: none;
-        user-select:none;
+        user-select: none;
     }
-
     .uppercase {
         text-transform: uppercase;
     }
-
     .flex {
-        display: flex;  
+        display: flex;
         justify-content: center;
         align-items: center;
     }
-
     .underline {
         border-bottom: 2px solid c.$black;
         line-height: 1.5;
     }
-
     .hidden {
         display: none;
         opacity: 0;
         z-index: -999;
     }
-
     .center-transform {
-        position: absolute ;
+        position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
-
     a.link {
         text-decoration: none;
         color: c.$link;
         display: inline-block;
         margin-left: 5px;
-
         &::after {
             content: '';
             position: relative;
@@ -140,12 +213,10 @@ body {
             background: #1538B5;
             transition: all .4s ease-in-out;
         }
-
         &:hover::after {
             width: 100%;
         }
     }
-
     .section {
         position: relative;
         width: 100vw;
@@ -153,17 +224,18 @@ body {
         background: c.$white;
         overflow-x: hidden;
     }
-
 }
+
 
 /* IM BATMAN
 ======================= */
+
 .dark {
-    $text-color : c.$black !default;
-    $link-color : c.$black !default;
-    $border-color : c.$black !default;
-    $pseudo-color : c.$black !default;
-    $shadow-color : c.$white !default;
-    $link-hover-color : c.$black !default;
-    $background-color : c.$white !default;
+    $text-color: c.$black !default;
+    $link-color: c.$black !default;
+    $border-color: c.$black !default;
+    $pseudo-color: c.$black !default;
+    $shadow-color: c.$white !default;
+    $link-hover-color: c.$black !default;
+    $background-color: c.$white !default;
 }

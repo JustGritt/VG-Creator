@@ -9,7 +9,14 @@ class View
     private $data=[];
     private $path;
 
-    public function __construct($view, $template="front", $path="View/")
+    /**
+     * Set view properties in construct
+     *
+     * @param $view
+     * @param string $template
+     * @param string $path
+     */
+    public function __construct($view, string $template="front", string $path="View/")
     {
         $this->setView($view);
         $this->setTemplate($template);
@@ -47,9 +54,11 @@ class View
 
     public function __destruct()
     {
-        //array("pseudo"=>"Prof") ---> $pseudo = "Prof";
         extract($this->data);
-        include $this->path.$this->template.".tpl.php";
+        if(file_exists($this->path.$this->template.".tpl.php")){
+            include $this->path.$this->template.".tpl.php";
+        }else{
+            include "View/Templates/".$this->template.".tpl.php";
+        }
     }
-
 }

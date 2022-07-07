@@ -1,0 +1,123 @@
+@use './mixins/fonts'as font;
+@use '../scss/mixins/colors'as c;
+.bar-menu {
+
+    .bar-menu-head {
+        span {
+            margin-right: 23px;
+            cursor: pointer;
+            color: var(--color-grey-dark);
+            transition: color .3s;
+            &.active {
+                color: var(--color-main-blue);
+                font-weight: 600;
+                position: relative;
+                &:hover {
+                    color: lighten(c.$main-blue, 20);
+                }
+                &::after {
+                    content: "";
+                    display: block;
+                    background-color: var(--color-main-blue);
+                    height: 1.5px;
+                    width: -webkit-fill-available;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                }
+            }
+            &:hover {
+                color: lighten(c.$grey-dark, 20);
+            }
+        }
+    }
+}
+
+.articles-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    display: block;
+    min-height: 100vh;
+    // margin-bottom: 20px;
+    .articles-content {
+        margin: clamp(2rem, 5vw, 23px) clamp(2rem, 5vw, 53px);
+        p {
+            display: block;
+            max-width: 499px;
+            color: var(--color-grey-dark);
+            font-family: 'Lato';
+            font-style: normal;
+            line-height: 15px;
+            font-size: 13px;
+            font-weight: 400
+        }
+        // width: 50%;
+        .articles-cards {
+            margin-top: 23px;
+
+            a{
+                text-decoration: none;
+            }
+        }
+        .card-article {
+            max-width: 354px;
+            height: 387px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            align-items: flex-start;
+            cursor: pointer;
+            background: #FFFFFF;
+            box-shadow: 0px 1px 30px 2px rgba(0, 0, 0, 0.08);
+            border-radius: 28px;
+            margin-bottom: 23px;
+            &:hover {
+                h4 {
+                    text-decoration: underline;
+                }
+            }
+            .card-article__image {
+                width: 100%;
+                height: 68%;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 28px;
+                }
+            }
+            .card-article-body {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: 100%;
+                justify-content: space-evenly;
+                padding: 0 23px;
+                .info-card-article-body {
+                    display: flex;
+                    justify-content: space-between;
+                    color: var(--color-grey-dark);
+                    span {
+                        &:nth-of-type(3) {
+                            color: var(--color-blue-dark);
+                            & i {
+                                color: var(--color-real-green);
+                            }
+                        }
+                    }
+                }
+            }
+            h4 {
+                font-size: clamp(2rem, 5vw, 23px);
+                color: var(--color-black);
+                font-family: 'Lato';
+                font-style: normal;
+                font-weight: 700;
+                font-size: clamp(1.3rem, 5vw, 15px);
+                line-height: 0px;
+                color: var(--color-main-blue);
+            }
+        }
+    }
+}

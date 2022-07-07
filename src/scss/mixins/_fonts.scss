@@ -6,38 +6,48 @@
 /* CLASSES 
 ======================= */
 
-$base-font : 16 !default; 
-$line-height : 1.5 !default;
-$px : 1;
-$base : 1;
-
-@function em($px, $base: $base-font) {
+$base-font: 16 !default;
+$line-height: 1.5 !default;
+$px: 1;
+$base: 1;
+$title-size: clamp(2rem,
+5vw,
+42px);
+@function em($px,
+$base: $base-font) {
     @return ($px / $base) * 1em;
 }
 
-$primary: 'Lato', sans-serif;
-$secondary: 'Lato', sans-serif;
-
-$title : 'Lato', serif;
-$paragraph : 'Lato', serif;
+$primary: 'Lato',
+sans-serif;
+$secondary: 'Lato',
+sans-serif;
+$title: 'Lato',
+serif;
+$paragraph: 'Lato',
+serif;
 
 /* CLASSES 
 ======================= */
 
-h1, .h1 {
+h1,
+.h1 {
     display: block;
     font-size: clamp(2rem, 5vw, 76px);
     font-weight: bold;
     margin: 0;
 }
 
-h2, .h2 {
+h2,
+.h2 {
     display: block;
     font-size: clamp(1rem, 5vw, 64px);
     font-weight: normal;
 }
 
-h3, .h3, .title {
+h3,
+.h3,
+.title {
     display: block;
     font-size: clamp(1rem, 5vw, 48px);
     font-weight: normal;
@@ -48,19 +58,16 @@ h3, .h3, .title {
 //     @include f-hr(20); // equiv 20px
 //     font-weight: normal;
 // }
-
 // h5, .h5 {
 //     display: block;
 //     @include f-hr(18); // equiv 18px
 //     font-weight: normal;
 // }
-
 // h6, .h6 {
 //     display: block;
 //     @include f-hr(16); // equiv 16px
 //     font-weight: normal;
 // }
-
 .sub-title {
     font-size: clamp(1rem, 5vw, 24px);
     margin: 20px 0;

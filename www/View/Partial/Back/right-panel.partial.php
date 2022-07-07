@@ -5,7 +5,7 @@
     <?php
 
     use App\Core\Security;
-    use App\Utils\DynamicSvg; ?>
+    use App\Helpers\DynamicSvg; ?>
 
     <nav class="right-panel-menu">
         <ul>
@@ -39,7 +39,7 @@
             <?php endif; ?> -->
 
             <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
-            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "articles" ? "active" : "") : null ?>><a href="/dashboard/articles"><?php echo DynamicSvg::getIcon("articles", "dark"); ?> <span>Articles</span> </a></li>
+            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "articles" ) ? "active" : "") : null ?>><a href="/dashboard/articles"><?php echo DynamicSvg::getIcon("articles", "dark"); ?> <span>Articles</span> </a></li>
             <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "subscribe" ? "active" : "") : null ?>><a href="/dashboard/subscribe"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Abonnements</span> </a></li>
             <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "settings" ? "active" : "") : null ?>><a href="/dashboard/settings"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
             <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "history" ? "active" : "") : null ?>><a href="/dashboard/history"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Historique</span> </a></li>

@@ -5,6 +5,8 @@ namespace App\Core;
 
 class Security
 {
+
+    //* genrerate csrf token
     public static function generateCsfrToken(): string
     {
         $token = md5(uniqid(rand(), true));
@@ -37,7 +39,7 @@ class Security
     }
 
     public static function isVGdmin(){
-        if (isset($_SESSION['id']) && ($_SESSION['VGCREATOR'] == IS_ADMIN) ?? '') {
+        if (isset($_SESSION['id']) && isset($_SESSION['VGCREATOR']) && ($_SESSION['VGCREATOR'] == IS_ADMIN)  ?? '') {
             return true;
         }
         return false;

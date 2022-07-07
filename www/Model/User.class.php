@@ -30,6 +30,24 @@ class User extends Sql{
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
+
+    /**
+     * @param string $id_user
+     * @return User
+     */
+    public function getOneUser(string $id_user): User
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $request = $queryBuilder->select('esgi_user', ['*'])->where('id', $id_user)->getQuery();
+        $result = $this->pdo->query($request)->fetchObject();
+
+        $this->setId($result->id);
+        $this->setFirstname($result->firstname);
+        $this->setLastname($result->lastname);
+
+        return $this;
+    }
     
     /**
      * @return null|int
@@ -425,7 +443,6 @@ class User extends Sql{
        $request =  $this->pdo->prepare($sql);
        $request->execute(array($id, $id_site));
        return $request->fetchAll();
-
     }
 
     public function getCountUser($id_site){
