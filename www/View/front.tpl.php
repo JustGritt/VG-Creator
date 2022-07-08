@@ -46,6 +46,7 @@
     </header>
         
     <?php include "View/".$this->view.".view.php"; ?>
+
         
     <footer id="footer" class="footer">
 

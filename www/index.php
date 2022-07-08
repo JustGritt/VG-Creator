@@ -49,24 +49,6 @@ $router->get('/client_website', 'admin@client');
 
 
 
-$router->group('/dashboard', function($router) {
-    $router->get('/', 'admin@dashboard');
-    $router->post('/', 'admin@dashboard');
-    if (Security::isVGdmin()){
-        $router->get('/clients', 'admin@setClientOfSite');
-        $router->post('/clients', 'admin@setClientOfSite');
-        $router->get('/sites', 'admin@getAllSite');
-        $router->post('/sites', 'admin@getsite');
-    }
-    $router->get('/subscribe', 'admin@dashboard');
-    $router->post('/subscribe', 'admin@dashboard');
-    $router->get('/settings', 'admin@dashboard');
-    $router->get('/settings/profile', 'admin@dashboard');
-    $router->get('/history', 'admin@dashboard');
-    $router->get('/articles', 'admin@getAllArticles');
-    $router->get('/articles/:id', 'admin@setEditorView')
-        ->with('id', '[0-9]+');
-});
 
 $router->get('/payment', 'payment@payment');
 $router->get('/test', 'admin@test');

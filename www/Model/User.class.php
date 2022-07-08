@@ -312,6 +312,77 @@ class User extends Sql{
         ];
     }
 
+    public function getInvitationForm(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Inviter",
+                "id"=>"formulaire"
+            ],
+            'inputs'=>[
+                "firstname"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Prénom",
+                    "class"=>"inputForm tmp",
+                    "id"=>"firstnameForm",
+                    "min"=>2,
+                    "max"=>50,
+                    "error"=>"Prénom incorrect",
+                ],
+                "lastname"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Nom",
+                    "class"=>"inputForm tmp",
+                    "id"=>"lastnameForm",
+                    "min"=>2,
+                    "max"=>100,
+                    "error"=>"Nom incorrect"
+                ],
+                "email"=>[
+                    "type"=>"email",
+                    "placeholder"=>"Email",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+                "role"=>[
+                    "type"=>"checkbox",
+                    "name"=>"role",
+                    "value"=>"admin",
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+                "pseudo"=>[
+                    "type"=>"text",
+                    "placeholder"=>"@Pseudo",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"pseudoForm",
+                    "error"=>"@Pseudo incorrect",
+                    "unicity"=>"true",
+                    "errorUnicity"=>"@Pseudo already in use",
+                ],
+                "password"=>[
+                    "type"=>"password",
+                    "placeholder"=>"Mot de passe",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"pwdForm",
+                    "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ],
+        ];
+    }
     public function getLogoutForm(): array
     {
         return [

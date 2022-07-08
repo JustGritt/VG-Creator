@@ -6,13 +6,14 @@ use App\Core\CleanWords;
 use App\Core\FlashMessage;
 use App\Core\Security;
 use App\Core\Sql;
+use App\Core\Uploader;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 use App\Core\Mail;
-use App\Core\MySqlBuilder;
 use App\Core\QueryBuilder;
 use App\Core\Handler;
+use App\Model\Document;
 
 class Admin
 {
@@ -57,22 +58,24 @@ class Admin
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
 
-        if(!empty($_POST['submit']))
-        {
-            if(!empty($_FILES)) {
-                $this->uploadFile();
-            }
-        }
-
         $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
         $page = end($explode_url);
         switch ($page) {
-            case "settings":
-                $view = $this->setSettingsView();
+            case "clients":
+                $this->setClientsView();
                 break;
             case "subscribe":
                 $view = new View("dashboard", "back");
                 $view->assign('user', $user);
+                break;
+            case "comments":
+                $view = new View("dashboard", "back");
+                var_dump($this->getAllComments(2));
+                $view->assign('user', $user);
+                break;
+            case "media":
+                $view = new View("dashboard", "back");
+                $this->setUploadMediaView();
                 break;
             default:
                 $view = new View("back_home", "back");
@@ -80,6 +83,156 @@ class Admin
                 break;
         }
 
+    }
+
+    public function setClientsView(){
+        $view = new View('clients', 'back');
+        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == 1) || !($_SESSION['VGCREATOR'] == VGCREATORADMIN)) {
+            FlashMessage::setFlash("errors", "Le champ apparait lorsque vous auriez un site enregistré");
+            return;
+        }
+        $user = new UserModel();
+        $result = $this->getUserOfSite($_SESSION['id_site']);
+        $view->assign("result", $result);
+        $view->assign('user', $user);
+
+
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_POST['csrf_token']);
+            $this->addUser();
+        }
+        return $view;
+    }
+
+    //Hard ban on level of VGCREATOR (admin)
+    public function banUserVG(){
+        $user = new UserModel();
+        $user->setId($_POST['id']);
+        $user->setStatus(0);
+        $user->save();
+        FlashMessage::setFlash("success", "Utilisateur banni");
+        header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+    }
+
+    // This function is used to ban a user from the site (admin only)
+    public function deleteClient(){
+        if (Security::isVGdmin()) {
+           var_dump('VG admin');
+           var_dump($_POST);
+           //$this->banUserVG();
+           die();
+        }
+        if (!Security::isAdmin()) {
+            FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
+            exit();
+        }
+        $user = new UserModel();
+        $user->setId($_POST['id']);
+        $user->delete();
+        header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+    }
+
+    public function getUserOfSite($id_site)
+    {
+        $sql =
+            "SELECT * FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
+
+        $result = Sql::getInstance()->query($sql)->fetchAll();
+        return $result;
+    }
+
+    private function addUser(){
+        $user = new UserModel();
+        $user->setFirstname($_POST['firstname']);
+        $user->setLastname($_POST['lastname']);
+        $user->setEmail($_POST['email']);
+        $user->setPseudo($_POST['pseudo']);
+        $user->setPassword($_POST['password']);
+        $user->generateToken();
+        if (!$user->is_unique_pseudo($_POST['pseudo'])) {
+            FlashMessage::setFlash("errors", "Pseudo déjà utilisé");
+            return;
+        }
+        $user->save();
+
+        $id = $user->getIdFromEmail($user->getEmail());
+        $toanchor = DOMAIN.'/invitation?id='.$id.'&token='.$user->getToken();
+
+        $template_var = array(
+            "{{product_url}}" => "".DOMAIN."/",
+            "{{product_name}}" => "VG-CREATOR",
+            "{{name}}" => $user->getFirstname(),
+            "{{action_url}}" => $toanchor,
+            "{{login_url}}" => $toanchor,
+            "{{username}}" =>  $user->getEmail(),
+            "{{support_email}}" => "contact@vgcreator.fr",
+            "{{sender_name}}" => "VG-CREATOR",
+            "{{help_url}}" => "https://github.com/popokola/VG-CREATOR-SERVER.git",
+            "{{company_name}}" => "VG-CREATOR",
+        );
+
+        $template_file = "/var/www/html/Templates/confirmation_email.php";
+        if(file_exists($template_file)){
+            $body = file_get_contents($template_file);
+        }else{
+            die('ennable to load the templates');
+        }
+
+        //swapping the variable into the templates
+        foreach(array_keys($template_var) as $key){
+            if (strlen($key) > 2 && trim($key) != "") {
+                $body = str_replace($key, $template_var[$key], $body);
+            }
+        }
+
+        $mail = new Mail();
+        $subject = "Veuillez confirmée votre email";
+        $mail->sendMail($user->getEmail() , $body, $subject);
+
+        //Handler::setRoleForUser($user->getId(), $_SESSION['id_site'],  $_POST['role']);
+        FlashMessage::setFlash("success", "L'utilisateur a bien été ajouté");
+        //header('Refresh: 3; '.DOMAIN.'/dashboard');
+    }
+
+    public function getAllComments($id_site){
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
+            ->where('id_site', ':id_site')
+            ->limit(0, 10)
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_site" => $id_site]);
+        return $result->fetch() ?? null;
+    }
+
+    public function setUploadMediaView()
+    {
+        $user = new UserModel();
+        $user->setFirstname($_SESSION['firstname']);
+        $view = new View("media", "back");
+        $view->assign('user', $user);
+
+        if(!empty($_POST['submit']) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_POST['csrf_token']);
+            if(!empty($_FILES)) {
+                $document = new Document();
+                $upload = new Uploader($_FILES);
+                if ($upload->upload()) {
+                    $document->setPath($upload->getFilePath());
+                    $document->setType($upload->getFileType());
+                    $document->setIdSite($_SESSION['id_site']);
+                    $document->setIdUser($_SESSION['id']);
+                    $document->save();
+                    $_FILES = [];
+                }
+                $_FILES = [];
+            }
+        }
     }
 
     public function setOauthUser($user){
@@ -93,16 +246,6 @@ class Admin
             Handler::setMemberRole($user->getId());
             header("Location: " . DOMAIN . "/dashboard");
         }
-    }
-    public function setSettingsView(){
-        $view = new View('settings', 'back');
-        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER) && $_SESSION['id_site'] != 1) {
-            $result = $this->getUserOfSite($_SESSION['id_site']);
-        }
-        $result = 0;
-        echo 'Le champ apparait lorsque vous auriez un site enregistré';
-        $view->assign("result", $result);
-        return $view;
     }
 
     public function setEditorView()
@@ -118,7 +261,7 @@ class Admin
         $builder = BUILDER;
         $queryBuilder = new $builder();
         $query = $queryBuilder
-            ->select('esgi_articles', ['*'])
+            ->select('esgi_post', ['*'])
             ->limit(0, 10)
             ->getQuery();
         $result =Sql::getInstance()
@@ -135,14 +278,6 @@ class Admin
             ->getQuery();
 
         return $query;
-    }
-
-    public function sendUploadedFileToDB(QueryBuilder $queryBuilder, $fileName, $id_user, $id_site)
-    {
-        $query = $queryBuilder
-            ->insert('esgi_file', ['name', 'id_user', 'id_site'], [$fileName, $id_user, $id_site])
-            ->getQuery();
-        return (bool)Sql::getInstance()->query($query);
     }
 
     public function updateUser($colmuns, $values, $builder = BUILDER) {
@@ -186,19 +321,40 @@ class Admin
                     $fileNameNew = uniqid('', true) . "." . $fileActualExt;
                     $fileDestination = 'uploads/' . $fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
-                    echo "File uploaded successfully";
+                    $this->sendUploadedFileToDB(
+                        $fileDestination,
+                        $fileActualExt,
+                        intval($_SESSION['id']),
+                        intval($_SESSION['id_site']));
+                    FlashMessage::setFlash("success", "File uploaded successfully");
                     $_FILES = [];
                 } else {
-                    echo "Your file is too big";
+                    FlashMessage::setFlash("errors", "File is too big");
                 }
             } else {
-                echo "There was an error uploading your file";
+                FlashMessage::setFlash("errors", "There was an error uploading your file");
             }
-        } else {
-            echo "You cannot upload files of this type";
+        }else {
+            FlashMessage::setFlash("errors", "You cannot upload files of this type {$fileActualExt}");
         }
     }
 
+    public function sendUploadedFileToDB($filePath, $type, $id_user, $id_site)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        var_dump($query);
+        return $result->execute([
+            $filePath,
+            $type,
+            $id_user,
+            $id_site,
+        ]);
+    }
 
     public function setClientOfSite()
     {
@@ -220,19 +376,6 @@ class Admin
         $request =  Sql::getInstance()->prepare($sql);
         $request->execute(array($id_site));
         return $request->fetchAll();
-    }
-
-    public function getUserOfSite($id_site)
-    {
-        $sql =
-            "SELECT * FROM `esgi_user` u
-            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
-            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
-            WHERE rs.id_site ='.$id_site.'";
-
-        $result = Sql::getInstance()->query($sql)->fetchAll();
-        var_dump($result);
-        return $result;
     }
 
     public function client() {

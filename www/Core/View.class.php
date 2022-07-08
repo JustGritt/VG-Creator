@@ -49,7 +49,7 @@ class View
     {
         //array("pseudo"=>"Prof") ---> $pseudo = "Prof";
         extract($this->data);
-        include $this->path.$this->template.".tpl.php";
+        include $this->path."/".$this->template.".tpl.php";
     }
 
 }

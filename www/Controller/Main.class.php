@@ -19,47 +19,34 @@ class Main {
     }
 
     public function initContent(){
-        //$view = new View("front_template");
+
         $url_parse = explode("/", $_GET['url']);
         $author = $url_parse[0];
         $site_title = $url_parse[1] ?? "";
         $user = new UserModel();
+
         $id_site = $this->getSite($site_title);
-        if($user->getUserByPseudo($author) && !is_null($id_site)){
-          //GET THE SITE
+        $containt = $this->getSiteContaint($id_site, $site_title);
+
+        if($user->getUserByPseudo($author) && !is_null($id_site) && !is_null($containt)){
+            //GET THE SITE
+            //$view = new View("front_template", "client");
             echo 'OK';
-            $containt = $this->getSiteContaint($id_site, $site_title);
             echo $containt;
-            if(is_null($containt)){
-                return;
-            }
         }
-        // Check if the author exists in direcotry
-        /*
-        if (is_dir("./UserSites/".$author)){
-            echo "Author exists";
-            $path = "./UserSites/".$author."/".$site_title."/";
-            if (is_dir($path) && $site_title != ""){
-                echo " Site exists";
-                $view = new View("index", 'client', $path);
-
-            } else {
-                echo " Site does not exist";
-            }
-
-        }*/
         return header('HTTP/1.1 404 Not Found');
     }
 
     public function getSite($slug){
-        $sql = "SELECT id_site
-        FROM esgi_site
-        WHERE name = ?";
-        $test = Sql::getInstance()->prepare($sql);
-        $test->execute(array(addslashes($slug)));
-        //$result = Sql::getInstance()->query($sql)->rowCount();
-        $result = $test->fetch();
-        return $result['id_site'];
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_site', ['id_site'])
+            ->where("name",  ":slug")
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["slug" => $slug]);
+        return $result->fetch()['id_site'] ?? null;
     }
 
     public function getSiteContaint($id_site, $site_title){
@@ -68,10 +55,18 @@ class Main {
         if ($uri[1] == "" || $uri[1] == "/"){
             $slug  = "homepage";
         }
-        $sql = "SELECT containts FROM `esgi_page` WHERE id_site = 2 and slug = ?";
-        $test = Sql::getInstance()->prepare($sql);
-        $test->execute(array(addslashes($slug)));
-        return $test->fetch()['containts'] ?? null;
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_page', ['containts'])
+            ->where("id_site",  ":id_site")
+            ->where('slug', ':slug')
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute([
+            "id_site" => $id_site,
+            "slug" => $slug]);
+        return $result->fetch()['containts'] ?? null;
     }
 
 

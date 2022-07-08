@@ -13,6 +13,22 @@ class Handler
         $sql->execute(array($id_user, VGCREATORMEMBER));
     }
 
+    public static function getIdRoleSite($id_site, $role){
+        $request = "SELECT `id` FROM `esgi_role_site` WHERE `id_site` = ? and name = ?";
+        $sql = Sql::getInstance()->prepare($request);
+        $sql->execute(array($id_site, $role));
+        $result = $sql->fetch();
+        return $result['id_role'];
+    }
+
+    public static function setRoleForUser($id_user, $id_site, $role){
+        $id_role = self::getIdRoleSite($id_site, $role);
+        $request = "INSERT INTO `esgi_user_role` (`id`, `id_role_site`) VALUES (?, ?)";
+        $sql = Sql::getInstance()->prepare($request);
+        $sql->execute(array($id_user, $id_role));
+    }
+
+
     public static function setDirectoryForUser($pseudo){
         $pseudo_site = './UserSites/'.$pseudo;
         if (!file_exists($pseudo_site)) {

@@ -10,13 +10,13 @@ define("DBPREFIXE", "esgi_");
 
 define("DOMAIN" , "http://localhost");
 //gmail credential
-define("SMTP_USERNAME", "vgcreator1@gmail.com" );
-define("SMTP_PWD", "ESGI2021");
+//define("SMTP_USERNAME", "vgcreator1@gmail.com" );
+//define("SMTP_PWD", "ESGI2021");
 
 
 //Postmark email marketing api
-//define("SMTP_USERNAME", "364a064d-be01-4096-97fd-1591c1132128" );
-//define("SMTP_PWD", "364a064d-be01-4096-97fd-1591c1132128");
+define("SMTP_USERNAME", "0e9e74ca-ed8a-441b-9be9-58b07fe92890" );
+define("SMTP_PWD", "0e9e74ca-ed8a-441b-9be9-58b07fe92890");
 if (extension_loaded('pdo_mysql')) {
     define("BUILDER" , 'App\Core\MySqlBuilder');
 }
@@ -26,7 +26,7 @@ if (extension_loaded('postgres')) {
 
 //Google aouth
 define("GOOGLE_ID" , "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com");
-define("GOOGLE_SECRET" , "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");
+define("GOOGLE_SECRET" , "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");
 
 
 //ROLE VGCREATOR
