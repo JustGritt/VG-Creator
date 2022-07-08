@@ -46,7 +46,6 @@ class Admin
                 $user->setPseudo($_POST['pseudo']);
                 $user->save();
                 Handler::setMemberRole($user->getIdFromEmail($_SESSION['email']));
-                Handler::setDirectoryForUser($_POST['pseudo']);
 
                 $_SESSION['pseudo'] = $_POST['pseudo'];
                 unset($_SESSION['NOT-SET']);
