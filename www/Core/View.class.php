@@ -55,14 +55,10 @@ class View
     public function __destruct()
     {
         extract($this->data);
-<<<<<<< HEAD
-        include $this->path."/".$this->template.".tpl.php";
-=======
         if(file_exists($this->path.$this->template.".tpl.php")){
             include $this->path.$this->template.".tpl.php";
         }else{
             include "View/Templates/".$this->template.".tpl.php";
         }
->>>>>>> 6f53ec8af6710a572a38ae05942c0994434b0763
     }
 }

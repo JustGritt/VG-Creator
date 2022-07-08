@@ -37,8 +37,8 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/', 'admin@dashboard');
     $router->post('/', 'admin@dashboard');
     if (Security::isVGdmin()) {
-        $router->get('/clients', 'admin@setClientOfSite');
-        $router->post('/clients', 'admin@setClientOfSite');
+        $router->get('/clients', 'admin@dashboard');
+        $router->post('/clients', 'admin@dashboard');
         $router->get('/sites', 'admin@getAllSite');
         $router->post('/sites', 'admin@getsite');
     }

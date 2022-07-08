@@ -19,7 +19,7 @@ class Route{
      */
     public function __construct(string $path,$callable)
     {
-        $this->path = trim($path,'/');;
+        $this->path = trim($path,'/');
         $this->callable = $callable;
     }
 

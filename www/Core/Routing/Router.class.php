@@ -13,13 +13,8 @@ class Router{
     private $namedRoutes = [];
     private $path;
     private $groupPattern;
-
-    /**
-     * Singleton
-     */
     private static $_instance = null;
     private  $current_route;
-
 
     public function __construct()
     {
@@ -103,7 +98,6 @@ class Router{
         unset($this->groupPattern);
     }
 
-
     /**
      * Get url of a specific route name and add param to them
      *
@@ -119,10 +113,6 @@ class Router{
         }
         return $this->namedRoutes[$name]->getUrl($params);
     }
-
-
-
-
 
     /**
      * Start the router

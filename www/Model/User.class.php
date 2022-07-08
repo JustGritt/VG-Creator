@@ -518,11 +518,11 @@ class User extends Sql{
 
     public function getRoleOfUser($id , $id_site = 1) {
         $sql=
-        "SELECT urole.id_role_site, s.name, rs.name as role, s.id_site
+        "SELECT urole.id_role_site, s.name, rs.name as role, s.id
         FROM esgi_user_role urole 
-        LEFT JOIN esgi_role_site rs ON urole.id_role_site = rs.id_role 
-        LEFT JOIN esgi_site s ON s.id_site = rs.id_site 
-        LEFT JOIN esgi_user u ON urole.id_user = u.id WHERE u.id = ? and s.id_site = ?";
+        LEFT JOIN esgi_role_site rs ON urole.id_role_site = rs.id 
+        LEFT JOIN esgi_site s ON s.id = rs.id_site 
+        LEFT JOIN esgi_user u ON urole.id_user = u.id WHERE u.id = ? and s.id = ?";
 
         $request =  $this->pdo->prepare($sql);
         $request->execute(array($id, $id_site));
@@ -534,7 +534,7 @@ class User extends Sql{
         $sql =
             "SELECT count(1) FROM `esgi_user` u
             LEFT JOIN esgi_user_role ur on u.id = ur.id_user
-            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site = ?";
 
         if ($_SESSION['VGCREATOR'] == 1 && $_SESSION['id_site'] == 1) {
