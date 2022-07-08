@@ -20,7 +20,7 @@ class Admin
 
     public function dashboard()
     {
-        var_dump($_SESSION);
+        // var_dump($_SESSION);
 
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
@@ -38,9 +38,9 @@ class Admin
             $view2 = new View('register-step-2', 'back');
             $view2->assign('user', $user);
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
-                if(!$user->is_unique_pseudo($_POST['pseudo'])){
+                if (!$user->is_unique_pseudo($_POST['pseudo'])) {
                     echo "Ce pseudo est déjà utilisé";
-                    header('Refresh: 3; '.DOMAIN.'/dashboard');
+                    header('Refresh: 3; ' . DOMAIN . '/dashboard');
                     return;
                 }
                 $user->setPseudo($_POST['pseudo']);
@@ -50,13 +50,19 @@ class Admin
 
                 $_SESSION['pseudo'] = $_POST['pseudo'];
                 unset($_SESSION['NOT-SET']);
-                header('Refresh: 3; '.DOMAIN.'/dashboard');
+                header('Refresh: 3; ' . DOMAIN . '/dashboard');
                 return;
             }
         }
 
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
+
+        if (!empty($_POST['submit'])) {
+            if (!empty($_FILES)) {
+                $this->uploadFile();
+            }
+        }
 
         $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
         $page = end($explode_url);
@@ -82,7 +88,6 @@ class Admin
                 $view->assign('user', $user);
                 break;
         }
-
     }
 
     public function setClientsView(){
@@ -247,12 +252,23 @@ class Admin
             header("Location: " . DOMAIN . "/dashboard");
         }
     }
+    public function setSettingsView()
+    {
+        $view = new View('settings', 'back');
+        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER) && $_SESSION['id_site'] != 1) {
+            $result = $this->getUserOfSite($_SESSION['id_site']);
+        }
+        $result = 0;
+        echo 'Le champ apparait lorsque vous auriez un site enregistré';
+        $view->assign("result", $result);
+        return $view;
+    }
 
     public function setEditorView()
     {
         $view = new View('editor', 'back');
-        $result = $this->getUserOfSite();
-        $view->assign("result", $result);
+        // $result = $this->getUserOfSite();
+        //  $view->assign("result", $result);
     }
 
     public function getAllArticles()
@@ -264,13 +280,35 @@ class Admin
             ->select('esgi_post', ['*'])
             ->limit(0, 10)
             ->getQuery();
-        $result =Sql::getInstance()
+
+        $query_drafts = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('status', 0)
+            ->getQuery();
+
+        $query_published = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('status', 1)
+            ->getQuery();
+
+        $result = Sql::getInstance()
             ->query($query)
             ->fetchAll();
-        $view->assign("result", $result);
+
+        $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
+        $result_published = Sql::getInstance()->query($query_published)->fetchAll();
+
+        if (isset($_GET['published'])) {
+            $view->assign("result", $result_published);
+        } else if (isset($_GET['drafts'])) {
+            $view->assign("result", $result_draft);
+        } else {
+            $view->assign("result", $result);
+        }
     }
 
-    public function selectAllUserOfBlog(QueryBuilder $queryBuilder , $id){
+    public function selectAllUserOfBlog(QueryBuilder $queryBuilder, $id)
+    {
         $query = $queryBuilder
             ->select('esgi_user', ['*'])
             ->where('id', $id)
@@ -280,7 +318,16 @@ class Admin
         return $query;
     }
 
-    public function updateUser($colmuns, $values, $builder = BUILDER) {
+    public function sendUploadedFileToDB(QueryBuilder $queryBuilder, $fileName, $id_user, $id_site)
+    {
+        $query = $queryBuilder
+            ->insert('esgi_file', ['name', 'id_user', 'id_site'], [$fileName, $id_user, $id_site])
+            ->getQuery();
+        return (bool)Sql::getInstance()->query($query);
+    }
+
+    public function updateUser($colmuns, $values, $builder = BUILDER)
+    {
         $queryBuilder = new $builder();
         $query = $queryBuilder
             ->update('esgi_user', $colmuns, $values)
@@ -290,8 +337,9 @@ class Admin
         return $result;
     }
 
-    public function deleteUserById($id , $builder = BUILDER) {
-    
+    public function deleteUserById($id, $builder = BUILDER)
+    {
+
         $queryBuilder = new $builder();
         $sql = $queryBuilder
             ->delete('esgi_user')
@@ -299,10 +347,11 @@ class Admin
             ->getQuery();
         $result = Sql::getInstance()
             ->query($sql);
-        return $result;    
+        return $result;
     }
 
-    public function uploadFile() {
+    public function uploadFile()
+    {
         $file = $_FILES['fileToUpload'];
         $fileName = $file['name'];
         $fileTmpName = $file['tmp_name'];
@@ -378,8 +427,22 @@ class Admin
         return $request->fetchAll();
     }
 
-    public function client() {
-        $view = new View('front_template', 'front');  
+    public function getUserOfSite($id_site)
+    {
+        $sql =
+            "SELECT * FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id_role = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
+
+        $result = Sql::getInstance()->query($sql)->fetchAll();
+        //  var_dump($result);
+        return $result;
+    }
+
+    public function client()
+    {
+        $view = new View('front_template', 'front');
     }
 
     
@@ -391,14 +454,15 @@ class Admin
             ->limit(0, 10)
             ->getQuery();
         $result = Sql::getInstance()
-                ->query($query)
-                ->fetchAll();
+            ->query($query)
+            ->fetchAll();
 
         $view = new View('succes', 'back');
         $view->assign('result', $result);
     }
 
-    public function test(){
+    public function test()
+    {
         $user = new User();
         $view = new View('test', 'back');
         //$view->assign('user', $user);
@@ -414,21 +478,20 @@ class Admin
             ->where('id', $_SESSION['id'])
             ->limit(0, 1)
             ->getQuery();
-        
+
         //var_dump(Sql::getInstance()->query($sql)->fetchALL(\PDO::FETCH_CLASS, 'App\Model\User'));
         $class = BUILDER;
         $queryBuilder = new $class();
-        
+
         $lol = $this->test($queryBuilder, $_SESSION['id']);
         $kok = Sql::getInstance()->query($lol)->fetchAll();
         //var_dump($kok);
 
         //var_dump( $this->sendUploadedFileToDB($queryBuilder, $fileName, $id_user, $id_site));
-        
+
         //var_dump($_POST);
-        if(!empty($_POST['submit']))
-        {
-            if(!empty($_FILES)) {
+        if (!empty($_POST['submit'])) {
+            if (!empty($_FILES)) {
                 $this->uploadFile();
                 unset($_POST['submit']);
             }

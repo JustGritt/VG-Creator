@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Core\View;
 
-class Blog {
+class Blog
+{
 
     public function show($id)
     {
@@ -14,7 +15,11 @@ class Blog {
             header("Location: " . DOMAIN . "/login");
         }*/
 
-        $view = new View("editor" , 'back');
+        $view = new View("editor", 'back');
     }
 
+    public function showArticles()
+    {
+        $view = new View("articles", 'back');
+    }
 }

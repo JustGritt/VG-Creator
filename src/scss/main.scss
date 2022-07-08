@@ -37,6 +37,9 @@ body {
 
 
 main {
+  .justify-space-between{
+    justify-content: space-between;
+  }
 
   section {
     background: var(--color-background);

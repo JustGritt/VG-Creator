@@ -5,6 +5,8 @@ namespace App\Core;
 
 class Security
 {
+
+    //* genrerate csrf token
     public static function generateCsfrToken(): string
     {
         $token = md5(uniqid(rand(), true));
