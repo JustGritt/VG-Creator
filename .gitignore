@@ -3,4 +3,5 @@ www/.env*
 www/conf.inc.php
 www/dist/*
 www/ideas/*
+conf.inc.php
 
