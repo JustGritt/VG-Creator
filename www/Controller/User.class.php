@@ -17,7 +17,6 @@ use App\Core\Security;
 
 class User
 {
-
     public function loginwithfb()
     {
         $user = new UserModel();

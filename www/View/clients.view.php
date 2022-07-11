@@ -4,7 +4,6 @@
 <?php } else { ?>
 
     <div>
-        //create table of user
         <table>
             <tr>
                 <th>Firstname</th>
@@ -56,8 +55,7 @@
             <?php }  ?>
 
         </table>
-
-
+        
         //create table of blacklist
         <h3>Blacklist</h3>
         <table>
