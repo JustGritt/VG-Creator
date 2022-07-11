@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Core\FlashMessage;
 use App\Core\Sql;
+use App\Core\QueryBuilder;
 
 class Document extends Sql
 {
@@ -80,7 +81,7 @@ class Document extends Sql
             ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
             ->getQuery();
         $result = Sql::getInstance()->prepare($query);
-        var_dump($query);
+
         return $result->execute([
             $filePath,
             $type,
@@ -129,4 +130,19 @@ class Document extends Sql
             FlashMessage::setFlash("errors", "You cannot upload files of this type {$fileActualExt}");
         }
     }
+
+    public function getAllDocumentsForSite($id_site)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_document', ['*'])
+            ->where('id_site', ':id_site')
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_site" => $id_site]);
+        // return $result->fetchObject(Document::class);
+        return $result->fetchAll(\PDO::FETCH_CLASS, Document::class);
+    }
+
 }

@@ -74,6 +74,7 @@ class User
             $user->setEmail($_POST['email']);
             $user->setPassword($getPwd);
             $userverify = $user->connexion($user->getEmail(), $getPwd);
+            
 
             if (is_null($userverify)) {
                 //echo 'Utilisateur non retouvé dans la bdd';
@@ -97,8 +98,8 @@ class User
             //Check if user role for URI
             if ($_GET['url'] == 'login') {
                 $userRoleForVG = $user->getRoleOfUser($userverify['id'], VGCREATORID);
-                $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
-                $_SESSION['id_site'] = $userRoleForVG[0]['id'];
+                $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+                $_SESSION['id_site'] = $userRoleForVG['id'];
             }
 
             $_SESSION['email'] = $user->getEmail();

@@ -81,7 +81,7 @@ class Admin
                 $view->assign('user', $user);
                 break;
             case "media":
-                $view = new View("dashboard", "back");
+                // $view = new View("dashboard", "back");
                 $this->setUploadMediaView();
                 break;
             case "settings":
@@ -266,10 +266,14 @@ class Admin
 
     public function setUploadMediaView()
     {
+        var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
+        $document = new Document();
+        $documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
         $view = new View("media", "back");
         $view->assign('user', $user);
+        $view->assign('documents', $documents);
 
         if(!empty($_POST['submit']) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_POST['csrf_token']);
@@ -438,7 +442,7 @@ class Admin
             ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
             ->getQuery();
         $result = Sql::getInstance()->prepare($query);
-        var_dump($query);
+        
         return $result->execute([
             $filePath,
             $type,
