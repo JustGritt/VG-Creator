@@ -117,11 +117,12 @@ class User
                 case 'VG-CREATOR-FACEBOOK':
                     $this->loginFacebook();
                     break;
-                    case 'VG-CREATOR-GOOGLE':
-                        $this->loginwithGoogle();
-                        break;
-                        default:
-                        header("Location: ".DOMAIN."/login" );
+                case 'VG-CREATOR-GOOGLE':
+                    $this->loginwithGoogle();
+                    unset($_SESSION['csrf_token']);
+                    break;
+                default:
+                    header("Location: ".DOMAIN."/login" );
                     break;
                 }
         }
@@ -165,7 +166,6 @@ class User
             $_SESSION['id_site'] = $userRoleForVG[0]['id'];
         }
 
-
         if (!$user->getUserByEmail($user_info['email'])) {
             $_SESSION['NOT-SET'] = 'NOT-SET';
             $_SESSION['email'] = $user_info['email'];
@@ -176,6 +176,7 @@ class User
             $_SESSION['oauth_id'] = $user_info['id'];
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
+
         header("Location: " . DOMAIN . "/dashboard");
     }
 

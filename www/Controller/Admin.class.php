@@ -14,13 +14,15 @@ use App\Core\Mail;
 use App\Core\QueryBuilder;
 use App\Core\Handler;
 use App\Model\Document;
+use App\Model\Backlist;
+use App\Model\User_role;
 
 class Admin
 {
 
     public function dashboard()
     {
-        var_dump($_SESSION);
+        //var_dump($_SESSION);
 
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
@@ -101,56 +103,98 @@ class Admin
             return ;
         }
         $user = new UserModel();
+        $backlist = new Backlist();
+        $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
+        var_dump($backlist);
+
         $result = $this->getUserOfSite($_SESSION['id_site']);
         $view->assign("result", $result);
         $view->assign('user', $user);
+        $view->assign('backlist', $backlist);
 
-
-        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
-            unset($_POST['csrf_token']);
-            $this->addUser();
+        if (!empty($_POST)) {
+            $this->updateUser();
         }
         return $view;
     }
 
-    //Hard ban on level of VGCREATOR (admin)
-    public function banUserVG(){
-        $user = new UserModel();
-        $user->setId($_POST['id']);
-        $user->setStatus(0);
-        $user->save();
-        FlashMessage::setFlash("success", "Utilisateur banni");
-        header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
-    }
+    public function updateUser(){
 
-    // This function is used to ban a user from the site (admin only)
-    public function deleteClient(){
-        if (Security::isVGdmin()) {
-           var_dump('VG admin');
-           var_dump($_POST);
-           //$this->banUserVG();
-           die();
-        }
-        if (!Security::isAdmin()) {
+        if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
         }
-        $user = new UserModel();
-        $user->setId($_POST['id']);
-        $user->delete();
-        header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+
+        if (Security::isVGdmin()){
+            $backlist = new Backlist();
+            $user = new UserModel();
+            $user_role = new User_role();
+            $user = $user->getUserById($_POST['id']);
+
+            //Check if the user is already in the backlist and Update the user if he is
+            if ($backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Active') {
+                FlashMessage::setFlash("errors", "Utilisateur déjà banni");
+                exit();
+            }
+            if (!$backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Active') {
+                $backlist->setIdUser($_POST['id']);
+                $backlist->setIdSite($_SESSION['id_site']);
+                //$backlist->setReason($_POST['reason']);
+                $backlist->save();
+            }elseif ($backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Inactive') {
+                $backlist->deleteUserFromBackList($_SESSION['id_site'], $user->getId());
+            }
+
+            $role_post = ucfirst(htmlspecialchars($_POST['roles']));
+            //Change the role for the user of the site
+            $roles_available = $this->getAvailableRolesForSite($_SESSION['id_site']);
+
+            $selected_role = 0;
+            foreach ($roles_available as $role) {
+                if ($role['name'] == $role_post) {
+                    $selected_role = $role['id'];
+                }
+            }
+
+            $user_role = $user_role->getAllUserRoleForSite($user->getId());
+            $user_role->setIdUser($user->getId());
+            $user_role->setIdRoleSite($selected_role);
+            $user_role->save();
+
+            //$user->setUserRoleForSite($user->getId(), $role['id']);
+
+
+        }
+
+
+        //header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+
     }
 
     public function getUserOfSite($id_site)
     {
         $sql =
-            "SELECT * FROM `esgi_user` u
+            "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
+            FROM `esgi_user` u
             LEFT JOIN esgi_user_role ur on u.id = ur.id_user
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site ='.$id_site.'";
 
-        $result = Sql::getInstance()->query($sql)->fetchAll();
-        return $result;
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getAvailableRolesForSite($id_site)
+    {
+        $sql =
+            "SELECT id, name
+            FROM esgi_role_site
+            WHERE id_site = '".$id_site."'";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     private function addUser(){

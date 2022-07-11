@@ -100,8 +100,9 @@ $router->get('/@:author/:slug/:pages/:id', 'main@initContent')
     ->with('pages', '([A-Za-z]+)')
     ->with('id', '[0-9]+'); //TEST PRUPOSE ONLY
 
-$router->get('/error-404', 'error@show404', "error.404");
-
+//$router->get('/error-404', 'error@show404', "error.404");
+$router->run();
+/*
 try {
     $router->run();
 } catch (Core\Exceptions\Routing\RouterException $e) {
@@ -112,4 +113,5 @@ try {
     header("Location: /error-404",FALSE, 302);
     die();
 }
+*/
 

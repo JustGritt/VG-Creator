@@ -295,6 +295,7 @@ class User extends Sql{
             ]
         ];
     }
+
     public function getLoginForm(): array
     {
         return [
@@ -370,6 +371,7 @@ class User extends Sql{
                     "type"=>"checkbox",
                     "name"=>"role",
                     "value"=>"admin",
+                    "label" => "Admin",
                     "class"=>"inputForm",
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
@@ -401,6 +403,7 @@ class User extends Sql{
             ],
         ];
     }
+
     public function getLogoutForm(): array
     {
         return [
@@ -447,6 +450,33 @@ class User extends Sql{
         ];
     }
 
+    public function  getUpdateForm(){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Update",
+            ],
+            'inputs'=>[
+                "email"=>[
+                    "type"=>"email",
+                    "placeholder"=>"Votre email ...",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ]
+        ];
+
+    }
+
     public function updateStatus($getId){
         $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = 1 WHERE id = ?");
         $updateStatus->execute(array($getId));
@@ -483,6 +513,7 @@ class User extends Sql{
         $result = $sql->fetchObject(User::class);
         return $result;
     }
+
     public function isUserExist($email) {
         $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE email = ? ");
         $sql->execute(array(addslashes($email)));
@@ -516,6 +547,7 @@ class User extends Sql{
         return !$sql->rowCount();
     }
 
+
     public function getRoleOfUser($id , $id_site = 1) {
         $sql=
         "SELECT urole.id_role_site, s.name, rs.name as role, s.id
@@ -526,7 +558,7 @@ class User extends Sql{
 
         $request =  $this->pdo->prepare($sql);
         $request->execute(array($id, $id_site));
-        return $request->fetchAll();
+        return $request->fetch(\PDO::FETCH_ASSOC);
 
     }
 
