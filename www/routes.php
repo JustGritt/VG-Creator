@@ -100,7 +100,6 @@ $router->get('/@:author/:slug/:pages/:id', 'main@initContent')
     ->with('pages', '([A-Za-z]+)')
     ->with('id', '[0-9]+'); //TEST PRUPOSE ONLY
 
-$router->get('/error-404', 'error@show404', "error.404");
 
 try {
     $router->run();
@@ -108,7 +107,7 @@ try {
     //http_redirect();
 } catch (Core\Exceptions\Routing\RouterNotFoundException $e) {
     $router = Router::getInstance();
-
+    $router->get('/error-404', 'error@show404', "error.404");
     header("Location: /error-404",FALSE, 302);
     die();
 }
