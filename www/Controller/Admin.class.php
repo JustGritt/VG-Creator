@@ -22,7 +22,7 @@ class Admin
 
     public function dashboard()
     {
-        //var_dump($_SESSION);
+        var_dump($_SESSION);
 
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");

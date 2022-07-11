@@ -154,7 +154,7 @@ class User
         }
         $id = $user->getIdFromEmail($user_info['email']);
 
-        $_SESSION['id'] =  $id['id'];
+        $_SESSION['id'] =  $id;
         $_SESSION['email'] = $user_info['email'];
         $_SESSION['firstname'] = $user_info['given_name'];
         $_SESSION['lastname'] = $user_info['family_name'];
@@ -164,8 +164,6 @@ class User
             $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
             $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
             $_SESSION['id_site'] = $userRoleForVG['id'];
-            var_dump($userRoleForVG['id'], $userRoleForVG['role'] );
-            die();
         }
 
         if (!$user->getUserByEmail($user_info['email'])) {
