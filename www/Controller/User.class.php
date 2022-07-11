@@ -74,6 +74,7 @@ class User
             $user->setEmail($_POST['email']);
             $user->setPassword($getPwd);
             $userverify = $user->connexion($user->getEmail(), $getPwd);
+            
 
             if (is_null($userverify)) {
                 //echo 'Utilisateur non retouvé dans la bdd';
