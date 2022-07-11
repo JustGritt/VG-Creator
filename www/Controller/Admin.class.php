@@ -266,6 +266,7 @@ class Admin
 
     public function setUploadMediaView()
     {
+        var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
         $view = new View("media", "back");
