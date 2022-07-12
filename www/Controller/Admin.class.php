@@ -9,6 +9,7 @@ use App\Core\Sql;
 use App\Core\Uploader;
 use App\Core\Verificator;
 use App\Core\View;
+use App\Model\Site;
 use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Core\QueryBuilder;
@@ -22,11 +23,11 @@ class Admin
 
     public function dashboard()
     {
-        var_dump($_SESSION);
-
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
+
+        var_dump($_SESSION);
         if (isset($_SESSION['NOT-SET'])) {
             $user = new UserModel();
             $user->setFirstname($_SESSION['firstname']);
@@ -49,6 +50,7 @@ class Admin
                 $user->save();
                 Handler::setMemberRole($user->getIdFromEmail($_SESSION['email']));
 
+                $_SESSION['id'] = $user->getId();
                 $_SESSION['pseudo'] = $_POST['pseudo'];
                 unset($_SESSION['NOT-SET']);
                 header('Refresh: 3; ' . DOMAIN . '/dashboard');
@@ -105,8 +107,6 @@ class Admin
         $user = new UserModel();
         $backlist = new Backlist();
         $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
-        var_dump($backlist);
-
         $result = $this->getUserOfSite($_SESSION['id_site']);
         $view->assign("result", $result);
         $view->assign('user', $user);

@@ -517,8 +517,6 @@ class User extends Sql{
     public function isUserExist($email) {
         $sql = $this->pdo->prepare("SELECT id FROM ".$this->table." WHERE email = ? ");
         $sql->execute(array(addslashes($email)));
-        $result = $sql->fetch();
-        
         return !!$sql->rowCount();
     }
     
@@ -536,8 +534,7 @@ class User extends Sql{
     public function getUserByPseudo($pseudo) {
         $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `pseudo` = ?");
         $sql->execute(array(addslashes($pseudo)));
-        $result = $sql->rowCount();
-        return $result == 1;
+        return $sql->fetchObject(User::class);
     }
 
     public function is_unique_pseudo($pseudo)

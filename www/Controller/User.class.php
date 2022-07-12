@@ -14,6 +14,8 @@ use App\Model\PasswordRecovery;
 use App\Model\OauthUser;
 use App\Core\Facebook;
 use App\Core\Security;
+use App\Model\Backlist;
+use App\Model\Site;
 
 class User
 {
@@ -61,6 +63,7 @@ class User
     public function login()
     {
         $user = new UserModel();
+        $backlist = new Backlist();
 
         $view = new View("login");
         $view->assign("user", $user);
@@ -69,11 +72,14 @@ class User
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_SESSION['csrf_token']);
 
+
             $getPwd = $_POST['password'];
             $user->setEmail($_POST['email']);
             $user->setPassword($getPwd);
             $userverify = $user->connexion($user->getEmail(), $getPwd);
-            
+
+            //Check if user is backlisted
+            $this->checkIfUserIsBaned($userverify['id']);
 
             if (is_null($userverify)) {
                 //echo 'Utilisateur non retouvé dans la bdd';
@@ -133,6 +139,7 @@ class User
     {
 
         $user = new UserModel();
+
         //$view = new View("login");
         //$view->assign("user", $user);
 
@@ -141,7 +148,7 @@ class User
         $data = $this->GetAccessToken(GOOGLE_ID, $redirect_uri, GOOGLE_SECRET, $_GET['code']);
         //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
         $access_token = $data['access_token'];
-        $user_info = $this->GetUserProfileInfo($access_token);
+        $user_info = $this->GetUserProfileInfo($access_token);;
 
         if (!$user_info['verified_email']) {
             echo "OOps sorry something went wrong with google";
@@ -153,6 +160,9 @@ class User
             header("Refresh: 5; " . DOMAIN . "/login ");
         }
         $id = $user->getIdFromEmail($user_info['email']);
+
+        //Check if user is backlisted
+        $this->checkIfUserIsBaned($id);
 
         $_SESSION['id'] =  $id;
         $_SESSION['email'] = $user_info['email'];
@@ -174,6 +184,7 @@ class User
             $_SESSION['token'] = $user->generateToken();
             $_SESSION['oauth_provider'] = 'google_api';
             $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['id'] =  hash('sha256', $user_info['id']);
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
 
@@ -339,5 +350,26 @@ class User
             echo 'Error : Failed to revoke access token';
 
         return $data;
+    }
+
+    public function checkIfUserIsBaned($id_user)
+    {
+        //Check if user is backlisted
+        $backlist = new Backlist();
+        $site = new Site();
+        if ($_GET['url'] == 'login') {
+            $site->getSiteByName('vg-creator');
+        }
+        //TODO check the site name via url
+        $site->getSiteByName($_GET['url']);
+        $is_banned = $backlist->isUserBacklisted($id_user);
+        if ($is_banned) {
+            //send 404 header
+            //new View("404", 'error', 'Errors');
+            header("HTTP/1.0 403 Forbidden");
+            FlashMessage::setFlash('errors', "Vous êtes banni de ce site");
+            header("Refresh: 3; " . DOMAIN . "/");
+            die();
+        }
     }
 }

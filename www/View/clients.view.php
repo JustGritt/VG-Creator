@@ -1,9 +1,10 @@
 
-<?php if (!isset($result) || empty($result)) { ?>
+<?php if (!\App\Core\Security::isVGdmin() && !\App\Core\Security::isAdmin()) { ?>
     <h2>Creer votre site et revenez voire cette page !</h2>
 <?php } else { ?>
 
     <div>
+        <h3>Utilisateurs</h3>
         <table>
             <tr>
                 <th>Firstname</th>
@@ -55,8 +56,6 @@
             <?php }  ?>
 
         </table>
-        
-        //create table of blacklist
         <h3>Blacklist</h3>
         <table>
             <tr>

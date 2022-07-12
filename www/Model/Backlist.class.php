@@ -97,6 +97,8 @@ class Backlist extends Sql
         return $sql->rowCount() == 1;
     }
 
+
+
     public function deleteUserFromBackList($id_site, $id_user)
     {
         $request = "DELETE FROM `esgi_backlist` WHERE id_site = '$id_site' AND id_user = '$id_user'";

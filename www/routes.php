@@ -77,25 +77,26 @@ $router->get('/test2', 'admin@client');
 
 
 //TEST CLIENT WEBSITE
-$router->get('/blog/:id/', 'Blog@show')->with('id', '[0-9]+');
+$router->get('/blog/:id/', 'Blog@show')
+    ->with('id', '[0-9]+');
 $router->get('/blog/:id/:article', 'Blog@show')
     ->with('id', '[0-9]+')
     ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
+    ->with('author', '([A-Za-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author/:slug', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)')
+    ->with('author', '([A-Za-z\-0-9]+)')
     ->with('slug',  '([A-Za-z]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author/:slug/:pages', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)')
+    ->with('author', '([A-Za-z\-0-9]+)')
     ->with('slug',  '([A-Za-z]+)')
     ->with('pages', '([A-Za-z]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author/:slug/:pages/:id', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)')
+    ->with('author', '([A-Za-z\-0-9]+)')
     ->with('slug',  '([A-Za-z]+)')
     ->with('pages', '([A-Za-z]+)')
     ->with('id', '[0-9]+'); //TEST PRUPOSE ONLY
