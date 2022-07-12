@@ -55,7 +55,7 @@ class Security
 
     public static function isGuest(): bool
     {
-        if (isset($_SESSION['id']) && isset($_SESSION['role']) && ($_SESSION['role'] == 'GUEST') ?? '') {
+        if (isset($_SESSION['id']) && isset($_SESSION['role']) && ($_SESSION['role'] == 'Guest') ?? '') {
             return true;
         }
         return false;
@@ -63,7 +63,7 @@ class Security
 
     public static function isModerator(): bool
     {
-        if (isset($_SESSION['id']) && isset($_SESSION['role']) &&  ($_SESSION['role'] ==  'MODERATOR')) {
+        if (isset($_SESSION['id']) && isset($_SESSION['role']) &&  ($_SESSION['role'] ==  'Moderator')) {
             return true;
         }
         return false;
@@ -71,7 +71,7 @@ class Security
 
     public static function isEditor(): bool
     {
-        if (isset($_SESSION['id']) && isset($_SESSION['role']) &&  ($_SESSION['role'] == 'EDITOR')) {
+        if (isset($_SESSION['id']) && isset($_SESSION['role']) &&  ($_SESSION['role'] == 'Editor')) {
             return true;
         }
         return false;

@@ -2,7 +2,7 @@
 <?php  use App\Core\Security;?>
 
 
-<?php if (!Security::isVGdmin() || Security::isMember()) { ?>
+<?php if (!Security::isVGdmin() && !Security::isAdmin()) { ?>
     <h2>Creer votre site et revenez voire cette page !</h2>
 <?php } else { ?>
 

@@ -119,7 +119,6 @@ class Admin
                 $this->setUploadMediaView();
                 break;
             case "settings":
-                $view = new View("dashboard", "back");
                 $this->setSettingsView();
                 break;
             default:
@@ -341,12 +340,35 @@ class Admin
     public function setSettingsView()
     {
         $view = new View('settings', 'back');
-        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER) && $_SESSION['id_site'] != 1) {
-            $result = $this->getUserOfSite($_SESSION['id_site']);
-        }
-        $result = 0;
+
+        $user = new UserModel();
+        $user = $user->getUserById($_SESSION['id']);
+
         echo 'Le champ apparait lorsque vous auriez un site enregistré';
-        $view->assign("result", $result);
+        $view->assign("user", $user);
+
+        if(!empty($_POST)) {
+            
+            if(empty($_POST['newpwdconfirm']) && empty($_POST['newpwd']) && empty($_POST['newpwdconfirm']) ){
+                $user->setFirstname($_POST['firstname']);
+                $user->setLastname($_POST['lastname']);
+                
+                if(isset($_POST['pseudo']) && $user->getPseudo() == $_POST['pseudo'] && ($user->is_unique_pseudo($_POST['pseudo']))){
+                    FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                } 
+                $user->setPseudo($_POST['pseudo']);
+
+                $user->setEmail($_POST['email']);
+                var_dump($user->save());
+
+                $user->save();
+                FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
+            }
+        }
+        var_dump($_POST);
+
         return $view;
     }
 
