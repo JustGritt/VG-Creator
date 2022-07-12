@@ -90,7 +90,7 @@ class User
 
             }elseif (empty($userverify['status'])) {
                 //echo "Veuillez confirmé votre email";
-                FlashMessage::setFlash('errors', "Veuillez confirmé votre email");
+                FlashMessage::setFlash('errors', "Veuillez confirmer votre email");
                 //header("Location: ".DOMAIN."/login" );
                 return;
             }
@@ -106,7 +106,17 @@ class User
                 $userRoleForVG = $user->getRoleOfUser($userverify['id'], VGCREATORID);
                 $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
                 $_SESSION['id_site'] = $userRoleForVG['id'];
+
+                $site = new Site();
+                $site = $site->getAllSiteByIdUser($userverify['id']);
+                
+                if(count($site) >= 2) {
+                    $_SESSION['choice'] = 'choice';
+                }
             }
+
+
+
 
             $_SESSION['email'] = $user->getEmail();
             $_SESSION['token'] = substr(bin2hex(random_bytes(64)), 0, 128);
@@ -118,6 +128,7 @@ class User
             header("Location: ".DOMAIN."/dashboard" );
         }
         
+
         //Logins with Oauth
         if (!empty($_GET) && !empty($_GET['state'])) {
             switch ($_GET['state']) {

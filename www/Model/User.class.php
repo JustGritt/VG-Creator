@@ -566,7 +566,7 @@ class User extends Sql{
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site = ?";
 
-        if ($_SESSION['VGCREATOR'] == 1 && $_SESSION['id_site'] == 1) {
+        if (isset($_SESSION['VGCREATOR']) && $_SESSION['VGCREATOR'] == 1 && $_SESSION['id_site'] == 1) {
             $request = Sql::getInstance()->prepare($sql);
             $request->execute(array($_SESSION['id_site']));
             $result = $request->fetchAll();

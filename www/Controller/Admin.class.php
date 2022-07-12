@@ -59,6 +59,37 @@ class Admin
         }
 
 
+        // Else 
+        $user_role = new User_role();
+        $site = new Site();
+        $site = $site->getAllSiteByIdUser($_SESSION['id']);
+       // $_SESSION['choice'] = 'choice';
+        // $choice = true;
+        if(isset($_SESSION['choice'])){
+
+            $view2 = new View('login-step-2', 'back');
+            $view2->assign('site', $site);
+            
+            if(!empty($_POST )) {
+
+                var_dump($_POST['site']);
+                if($_POST['site'] == 'vg-creator')  {
+                    unset($_SESSION['choice']);
+                    header('Location: ' . DOMAIN . '/dashboard');
+                    return;
+                }
+                
+                $_SESSION['id_site'] = $_POST['id_site'];
+                $_SESSION['role'] = $_POST['role'];
+                $_SESSION[strtoupper($_POST['site'])] = $_POST['role'];
+                
+                unset($_SESSION['choice']);
+                header('Location: ' . DOMAIN . '/dashboard');
+                return;
+            }
+            return;
+        }
+    
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
 
@@ -101,9 +132,10 @@ class Admin
     public function setClientsView(){
 
         $view = new View('clients', 'back');
-        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == '1') || !($_SESSION['VGCREATOR'] == VGCREATORADMIN)) {
+
+        if (isset($_SESSION['VGCREATOR']) && (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == '1'))) {
             FlashMessage::setFlash("errors", "Le champ apparait lorsque vous auriez un site enregistré");
-            return ;
+            exit();
         }
         $user = new UserModel();
         $backlist = new Backlist();
@@ -121,12 +153,12 @@ class Admin
 
     public function updateUser(){
 
-        if (!Security::isVGdmin() && !Security::isAdmin()) {
+        if (!Security::isVGdmin() || !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
         }
 
-        if (Security::isVGdmin()){
+        if (Security::isVGdmin() || Security::isAdmin()) {
             $backlist = new Backlist();
             $user = new UserModel();
             $user_role = new User_role();

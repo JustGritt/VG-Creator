@@ -61,7 +61,7 @@ class Site extends Sql
     }
 
     public function getAllSiteByIdUser($id_user){
-        $request = "SELECT * 
+        $request = "SELECT s.id, s.name as site, rs.name as role, rs.id as role_id
             FROM esgi_site s 
             LEFT JOIN esgi_role_site rs on s.id = rs.id_site
             LEFT JOIN esgi_user_role ur on rs.id = ur.id_role_site
