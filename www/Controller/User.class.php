@@ -16,6 +16,7 @@ use App\Core\Facebook;
 use App\Core\Security;
 use App\Model\Backlist;
 use App\Model\Site;
+use App\Model\User_role;
 
 class User
 {
@@ -171,6 +172,24 @@ class User
 
         //Check if user role for URI
         if ($_GET['url'] == 'login') {
+
+            $user_role = new User_role();
+            $site = new Site();
+            $site = $site->getAllSiteByIdUser($id);
+            var_dump($site);
+
+            $test = $user_role->getUserRoleForAllSite($id);
+            var_dump($test);
+            die();
+            if (count($test) == 2) {
+                $_SESSION['VGCREATOR'] = IS_MEMBER;
+                $_SESSION['id_site'] = $test[1]->getId_site();
+            } else {
+                $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
+                $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+                $_SESSION['id_site'] = $userRoleForVG['id'];
+            }
+
             $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
             $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
             $_SESSION['id_site'] = $userRoleForVG['id'];

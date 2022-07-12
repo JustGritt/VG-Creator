@@ -58,5 +58,13 @@ class User_role extends Sql
         return $sql->fetchObject(User_role::class);
     }
 
+    public function getUserRoleForAllSite($id_user)
+    {
+        $request = "SELECT * FROM esgi_user_role WHERE id_user = ?";
+        $sql = Sql::getInstance()->prepare($request);
+        $sql->execute(array($id_user));
+        return $sql->fetchAll(\PDO::FETCH_CLASS, User_role::class);
+    }
+
 
 }

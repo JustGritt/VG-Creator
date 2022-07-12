@@ -58,6 +58,7 @@ class Admin
             }
         }
 
+
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
 
