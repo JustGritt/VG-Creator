@@ -115,9 +115,6 @@ class User
                 }
             }
 
-
-
-
             $_SESSION['email'] = $user->getEmail();
             $_SESSION['token'] = substr(bin2hex(random_bytes(64)), 0, 128);
             $_SESSION['firstname']  = $userverify['firstname'];
@@ -183,27 +180,16 @@ class User
 
         //Check if user role for URI
         if ($_GET['url'] == 'login') {
-
-            $user_role = new User_role();
-            $site = new Site();
-            $site = $site->getAllSiteByIdUser($id);
-            var_dump($site);
-
-            $test = $user_role->getUserRoleForAllSite($id);
-            var_dump($test);
-            die();
-            if (count($test) == 2) {
-                $_SESSION['VGCREATOR'] = IS_MEMBER;
-                $_SESSION['id_site'] = $test[1]->getId_site();
-            } else {
-                $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
-                $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
-                $_SESSION['id_site'] = $userRoleForVG['id'];
-            }
-
-            $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
+            $userRoleForVG = $user->getRoleOfUser( $id, VGCREATORID);
             $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
             $_SESSION['id_site'] = $userRoleForVG['id'];
+
+            $site = new Site();
+            $site = $site->getAllSiteByIdUser($id);
+
+            if(count($site) >= 2) {
+                $_SESSION['choice'] = 'choice';
+            }
         }
 
         if (!$user->getUserByEmail($user_info['email'])) {
