@@ -3,7 +3,6 @@
         <?php
 
         include "dist/css/articles.css";
-
         include "dist/css/post.css";
 
         ?>

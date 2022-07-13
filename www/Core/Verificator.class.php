@@ -38,9 +38,7 @@ class Verificator
                 $result[] = $input["error"];
             }
 
-
         }
-
 
         return $result;
 
@@ -54,7 +52,6 @@ class Verificator
 
     public static function checkPassword($password): bool
     {
-
         return strlen($password)>=8
             && preg_match("/[0-9]/", $password, $match)
             && preg_match("/[a-z]/", $password, $match)

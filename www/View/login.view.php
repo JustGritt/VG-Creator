@@ -4,7 +4,7 @@
 
 <main>
     <section id="login">
-        <div class="wrapper flex center-transform">
+        <div class="wrapper flex">
 
             <h1 class="title">Se connecter</h1>
             <p class="sub-title">Vous n'avez pas encore de compte ? <a class="link" href="/register">S'inscrire</a></p>

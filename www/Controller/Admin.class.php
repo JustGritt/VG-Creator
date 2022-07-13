@@ -111,6 +111,7 @@ class Admin
 
         $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
         $page = end($explode_url);
+        var_dump($page);
         switch ($page) {
             case "clients":
                 $this->setClientsView();
@@ -131,9 +132,12 @@ class Admin
             case "settings":
                 $this->setSettingsView();
                 break;
+            case "add":
+                $this->addClient();
+                die('  add');
+                break;
             default:
-                $view = new View("back_home", "back");
-                $view->assign('user', $user);
+                die("404");
                 break;
         }
     }
@@ -359,23 +363,60 @@ class Admin
 
         if(!empty($_POST)) {
             
-            if(empty($_POST['newpwdconfirm']) && empty($_POST['newpwd']) && empty($_POST['newpwdconfirm']) ){
-                $user->setFirstname($_POST['firstname']);
-                $user->setLastname($_POST['lastname']);
-                
-                if(isset($_POST['pseudo']) && $user->getPseudo() == $_POST['pseudo'] && ($user->is_unique_pseudo($_POST['pseudo']))){
-                    FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
-                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
-                    return;
-                } 
-                $user->setPseudo($_POST['pseudo']);
+            $user->setFirstname(htmlspecialchars($_POST['firstname']));
+            $user->setLastname(htmlspecialchars($_POST['lastname']));
+            
+            $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            if(!$pseudotocheck) return FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            
+            if(isset($_POST['pseudo']) && $user->getPseudo() == $_POST['pseudo'] && ($user->is_unique_pseudo($_POST['pseudo']))){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                return;
+            } 
 
-                $user->setEmail($_POST['email']);
-                var_dump($user->save());
+            $newpw = password_hash(htmlspecialchars($_POST['newpwd']), PASSWORD_DEFAULT);
+            $newpwconfirm = $_POST['newpwdconfirm'];
 
-                $user->save();
-                FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
+            var_dump($_POST);
+            var_dump(isset($_POST['oldpwd']));
+            var_dump(Verificator::checkPassword($_POST['newpwd']));
+            var_dump(Verificator::checkPassword($_POST['newpwdconfirm']));
+            var_dump(isset($_POST['oldpwd'])
+            && Verificator::checkPassword($_POST['newpwd']) 
+            && Verificator::checkPassword($_POST['newpwdconfirm'])
+            && password_verify($_POST['oldpwd'], $user->getPassword()) 
+            && password_verify($_POST['newpwdconfirm'], $newpw));
+
+            // Google 
+            if(!isset($_POST['oldpwd']) 
+            && Verificator::checkPassword($_POST['newpwd']) 
+            && Verificator::checkPassword($_POST['newpwdconfirm'])
+            && password_verify($newpwconfirm, $newpw)) 
+            {
+                $user->setPassword($newpw);
+            } 
+            elseif(isset($_POST['oldpwd'])
+            && Verificator::checkPassword($_POST['newpwd']) 
+            && Verificator::checkPassword($_POST['newpwdconfirm'])
+            && password_verify($_POST['oldpwd'], $user->getPassword()) 
+            && password_verify($_POST['newpwdconfirm'], $newpw)) 
+            {
+                $user->setPassword($_POST['newpwd']);
+            } 
+            else {
+                FlashMessage::setFlash("errors", "Votre mot de passe n'est pas valide");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                return;
             }
+
+            $user->setEmail($_POST['email']);
+            var_dump($user->save());
+
+            $user->save();
+            FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
+            
         }
         var_dump($_POST);
 
@@ -516,6 +557,16 @@ class Admin
         ]);
     }
 
+    public function addClient() 
+    {
+        $user = new UserModel();
+        $view = new View('add_clients', 'Templates/back');
+        $view->assign("user", $user);
+
+
+        return $view;
+    }
+
     public function setClientOfSite()
     {
         $view = new View('settings', 'back');
@@ -533,10 +584,12 @@ class Admin
         LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
         LEFT Join esgi_site s on s.id = rs.id_site WHERE s.id = ?";
 
-        $request =  Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll();
-    }
+$request =  Sql::getInstance()->prepare($sql);
+$request->execute(array($id_site));
+return $request->fetchAll();
+}
+
+    
 
     public function client()
     {
@@ -565,10 +618,13 @@ class Admin
         $view = new View('test', 'back');
         //$view->assign('user', $user);
 
+
     }
 
     public function comment() {
         $view = new View('front_template', 'front');  
     }
+
+
 
 }

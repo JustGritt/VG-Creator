@@ -47,6 +47,7 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/settings', 'admin@dashboard');
     $router->post('/settings', 'admin@dashboard');
     $router->get('/history', 'admin@dashboard');
+    // $router->get('/articles', 'admin@getAllArticles');
     $router->get('/articles', 'admin@getAllArticles');
     $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
 
@@ -57,10 +58,8 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->get('/clients', 'admin@dashboard');
     $router->post('/clients', 'admin@dashboard');
-    $router->get('/clients/edit', 'admin@editClient');
-    $router->post('/clients/edit', 'admin@editClient');
-    $router->get('/clients/delete', 'admin@deleteClient');
-    $router->post('/clients/delete', 'admin@deleteClient');
+    $router->get('/clients/add', 'admin@dashboard');
+    $router->post('/clients/add', 'admin@dashboard');
 
     
     $router->get('/comments', 'admin@getAllComments');
