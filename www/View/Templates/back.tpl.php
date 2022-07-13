@@ -31,7 +31,8 @@
     <main>
         <div class="body-container-dashboard">
             <?php include "View/Partial/Back/right-panel.partial.php" ?>
-            <?php include "View/" . $this->view . ".view.php"; ?>
+
+            <?php  include "View/" . $this->view . ".view.php"; ?>
         </div>
     </main>
 </body>

@@ -2,7 +2,8 @@
 
 namespace App\Helpers;
 
-use App\Core\Router;
+use App\Core\Routing\Router;
+
 
 class Utils
 {
@@ -18,21 +19,12 @@ class Utils
         return $text;
     }
 
-    public static function redirect($where = null)
+    public static function redirect($where = null): void
     {
-        $router = null;
-
         if (isset($where)) {
-            header('Location: ' . $where);
+            header('Location: /' . Router::getInstance()->url($where));
             Exit();
-        } else {
-            // $router = Routing::getInstance();
-            // $router->redirect = "sd";
-            // $router
-            //$router->getName();
         }
-
-       // return \App\Core\Routing::getInstance();
     }
 
     /**

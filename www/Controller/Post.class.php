@@ -4,106 +4,41 @@ namespace App\Controller;
 
 use App\Core\Controller;
 use App\Core\View;
+use App\Helpers\Utils;
 use App\Model\Category;
 
 
 class Post extends  Controller
 {
 
-
     public function __construct()
     {
-
         $category=  new Category();
-        $categories =   $category->getCategories();
-        $this->render("post", "back", ['categories'=>$categories]);
-       // $post->getOnePost($id_post);
-       //  $id = intval($_GET['id']);
-
+        $categories =   $category->getCategoriesFromSite($_SESSION['id_site']);
+        $this->render("post", "back", ['categories'=>$categories]  );
+        // $post->getOnePost($id_post);
+        // $id = intval($_GET['id']);
     }
 
     public function showAll()
     {
         $category=  new Category();
         $categories =   $category->getCategories();
-        $this->render("articles", "back", []);
+      //  $this->render("articles", "back", []);
 
     }
 
-    public function showOne($id)
-    {
-
-    }
-
-    public function editPost($id_post){
-        $post = new \App\Model\Post();
-        $post = $post->getOnePost($id_post);
-
-        // $post = new Post();
-        if(isset($_POST['title'])) $this->view->assign('fields', $_POST);
-        else $this->view->assign('post', $post);
-
-        if (isset($errors) and count($errors) > 0) {
-            $this->view->assign('errors', $errors);
-        }else{
-            if($_SERVER['REQUEST_METHOD'] == "POST"){
-                ['title' => $title,
-                    'status' => $status,
-                    'category' => $category,
-                    'body' => $body,
-                    'author' => $author,
-                    'metadescription' => $metadescription,
-                    'metatitle' => $metatitle, ] = $_POST;
-
-                $post->setIdPost($post->getId());
-                $post->setTitle($title);
-                $post->setAuthor($author);
-                $post->setCategory($category);
-                $post->setMetatitle($metatitle);
-                $post->setStatus($status);
-                $post->setBody($body);
-                $post->setMetadescription($metadescription);
-
-               var_dump($author);
-               var_dump( $post->save());
-            }
-
-            //  $post->getOnePost();
-            // var_dump($categories);
-        }
+    public function editShowPost($id_post){
+        $this->sendDataPost($id_post);
     }
 
     public function createPost()
     {
+        $this->view->un_assign('id_post');
+        $this->sendDataPost();
     }
 
-    public function sendPost()
-    {
-        $verify_fields = [
-            'title' => [
-                "min_size" => 9,
-                "required" => true,
-            ],
-            'body' => [
-                "min_size" => 100,
-                "required" => true,
-            ],
-            'metadata' => [
-                "required" => true,
-            ]
-        ];
-        $errors = $this->verifyForm($_REQUEST, $verify_fields);
-        if(isset($_POST)) $this->view->assign('fields', $_POST);
 
-        // $post = new Post();
-
-        if (isset($errors) and count($errors) > 0) {
-            $this->view->assign('errors', $errors);
-        }else{
-          //  $post->getOnePost();
-           // var_dump($categories);
-        }
-    }
 
     /**
      * @param array $form
@@ -119,9 +54,67 @@ class Post extends  Controller
                     $result[$name] =  "Le champs " . $name . " est vide.";
                 } else if (isset($verify_fields[$name]["min_size"])  and strlen($input) < $verify_fields[$name]["min_size"]) {
                     $result[$name] =  "Le champs " . $name . " est inférieur à " . $verify_fields[$name]["min_size"];
+                } else if (isset($verify_fields[$name]["max_size"])  and strlen($input) > $verify_fields[$name]["max_size"]) {
+                    $result[$name] =  "Le champs " . $name . " est supérieur à " . $verify_fields[$name]["max_size"];
                 }
             }
         }
         return $result;
+    }
+
+
+    public function sendDataPost($id_post= null)
+    {
+
+        $verify_fields = [
+            'title' => [
+                "min_size" => 9,
+                "max_size" => 30,
+                "required" => true,
+            ],
+            'body' => [
+                "min_size" => 100,
+                "required" => true,
+            ],
+            'metadata' => [
+                "required" => true,
+            ]
+        ];
+        $errors = $this->verifyForm($_REQUEST, $verify_fields);
+
+        if (isset($errors) and count($errors) > 0) {
+             $this->view->assign('errors', $errors);
+        }else{
+            $post = new \App\Model\Post();
+            if(isset($id_post)){
+                $post = $post->getOnePost($id_post);
+                $this->view->assign('id_post', $id_post);
+                $this->view->assign('post', $post);
+            }
+            if($_SERVER['REQUEST_METHOD'] == "POST"){
+                    ['title' => $title,
+                        'status' => $status,
+                        'category' => $category,
+                        'body' => $body,
+                        'metadescription' => $metadescription,
+                        'metatitle' => $metatitle, ] = $_POST;
+
+                    if(isset($id_post)) $post->setIdPost($post->getId());
+                    $post->setTitle($title);
+                    $post->setAuthor(isset($id_post) ? $post->getAuthor()->getId() : $_SESSION['id']);
+                    $post->setCategory($category);
+                    $post->setMetatitle($metatitle);
+                    $post->setStatus($status);
+                    $post->setBody($body);
+                    $post->setMetadescription($metadescription);
+                    $post->save();
+
+                    if(isset($id_post)) Utils::redirect('admin.allPost');
+            }
+        }
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $this->view->assign('fields', $_POST);
+        }
     }
 }
