@@ -33,6 +33,24 @@ body main {
         }
     }
 
+    section#register-step-2 {
+        position: relative;
+        width: 100vw;
+        height: 100%;
+
+        .title {
+            margin-bottom: 50px;
+        }
+
+        form {
+            width: 60%;
+        }
+
+        input[type="submit"] {
+            margin-top: 50px;
+        }
+    }
+
     .wrapper {
     
         flex-direction: column;

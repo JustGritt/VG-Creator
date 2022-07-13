@@ -38,15 +38,24 @@ class Admin
             $user->setOauthId($_SESSION['oauth_id']);
             $user->setOauthProvider($_SESSION['oauth_provider']);
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
-            $view2 = new View('register-step-2', 'back');
+            $view2 = new View('register-step-2', 'blank');
             $view2->assign('user', $user);
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+                $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            
+                if(!$pseudotocheck) {
+                    FlashMessage::setFlash('errors', 'Pseudo invalide');
+                    header("Refresh: 3; ".DOMAIN."/register ");
+                    return;
+                } else {
+                    $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+                }
+
                 if (!$user->is_unique_pseudo($_POST['pseudo'])) {
                     echo "Ce pseudo est déjà utilisé";
                     header('Refresh: 3; ' . DOMAIN . '/dashboard');
                     return;
                 }
-                $user->setPseudo($_POST['pseudo']);
                 $user->save();
                 Handler::setMemberRole($user->getIdFromEmail($_SESSION['email']));
 
@@ -56,6 +65,7 @@ class Admin
                 header('Refresh: 3; ' . DOMAIN . '/dashboard');
                 return;
             }
+            return;
         }
 
 

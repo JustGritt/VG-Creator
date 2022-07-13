@@ -220,7 +220,7 @@ class User
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
 
             if ($user->isUserExist($_POST['email'])) {
-                FlashMessage::setFlash('errors', 'Vous avez deja un compte');
+                FlashMessage::setFlash('errors', 'Vous avez dejà un compte');
                 header("Refresh: 5; ".DOMAIN."/login ");
                 return;
             }
@@ -229,7 +229,16 @@ class User
             $user->setLastname(htmlspecialchars($_POST['lastname']));
             $user->setEmail(htmlspecialchars($_POST['email']));
             $user->setPassword(htmlspecialchars($_POST['password']));
-            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            
+            if(!$pseudotocheck) {
+                FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+                // header("Refresh: 3; ".DOMAIN."/register ");
+                return;
+            } else {
+                $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            }
+            
             $user->generateToken();
             //$user->setIdRole(1); // 1 = Admin, 2 = User
             $user->setStatus(0);
