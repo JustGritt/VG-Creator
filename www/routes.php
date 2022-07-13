@@ -48,7 +48,7 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/settings', 'admin@dashboard');
     $router->post('/settings', 'admin@dashboard');
     $router->get('/history', 'admin@dashboard');
-    $router->get('/articles', 'admin@getAllArticles');
+    $router->get('/articles', 'admin@getAllArticles', 'admin.allPost');
     $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
 
     $router->get('/articles/create', 'post@createPost', 'post.createPost');

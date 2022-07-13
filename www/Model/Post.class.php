@@ -10,7 +10,7 @@ use App\Core\Security;
 
 class Post extends Sql{
 
-    protected $id_post = null;
+    protected $id = null;
     protected $title = null;
     protected $body = null;
     protected $created_at = null;
@@ -38,21 +38,8 @@ class Post extends Sql{
     {
         $builder = BUILDER;
         $queryBuilder = new $builder();
-        $request = $queryBuilder->select('esgi_post', ['*'])->where('id_post', $id_post)->getQuery();
-        $result = $this->pdo->query($request)->fetchObject();
-
-
-        $this->setIdPost($result->id_post);
-        $this->setTitle($result->title);
-        $this->setBody($result->body);
-        $this->setStatus($result->status);
-        $this->setMetatitle($result->metatitle);
-        $this->setMetadescription($result->metadescription);
-        $this->setCreatedAt($result->created_at);
-        $this->setCategory($result->category);
-        $this->setAuthor($result->author);
-
-        return $this;
+        $request = $queryBuilder->select('esgi_post', ['*'])->where('id', $id_post)->getQuery();
+        return $this->pdo->query($request)->fetchObject(Post::class);
     }
 
     /**
@@ -60,7 +47,7 @@ class Post extends Sql{
      */
     public function getId(): ?int
     {
-        return $this->id_post;
+        return $this->id;
     }
 
     /**
@@ -68,11 +55,11 @@ class Post extends Sql{
      */
     public function setIdPost(int $id_post): void
     {
-        $this->id_post = $id_post;
+        $this->id = $id_post;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTitle(): ?string
     {
@@ -177,7 +164,7 @@ class Post extends Sql{
     public function getAuthor(): ?User
     {
         $user = new User();
-        return $user->getOneUser($this->author);
+        return $user->getUserById($this->author);
     }
 
     /**

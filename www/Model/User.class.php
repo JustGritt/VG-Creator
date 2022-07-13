@@ -31,23 +31,8 @@ class User extends Sql{
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
 
-    /**
-     * @param string $id_user
-     * @return User
-     */
-    public function getOneUser(string $id_user): User
-    {
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $request = $queryBuilder->select('esgi_user', ['*'])->where('id', $id_user)->getQuery();
-        $result = $this->pdo->query($request)->fetchObject();
 
-        $this->setId($result->id);
-        $this->setFirstname($result->firstname);
-        $this->setLastname($result->lastname);
 
-        return $this;
-    }
     
     /**
      * @return null|int
@@ -506,7 +491,12 @@ class User extends Sql{
         return $result;
     }
 
-    public function getUserById($id) {
+    /**
+     * @param string $id
+     * @return User
+     */
+    public function getUserById($id):User
+    {
         $sql = $this->pdo->prepare("SELECT * FROM ".$this->table."  WHERE `id` = ?");
         $sql->execute(array($id));
         //$result = $sql->setFetchMode($this->pdo::FETCH_CLASS, User::class);

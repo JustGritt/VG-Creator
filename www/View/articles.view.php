@@ -27,8 +27,8 @@
                 $status = $value['status'] == 0 ?  'tag-status-draft' : 'tag-status-publish';
                 $status_name = $value['status'] == 0 ?  'Brouillon' : 'Publiée';
 
-                echo '<a href=/'. Router::getInstance()->url("post.editShowPost",["id_post"=> $value['id_post'] ]).'>'.
-                    '<article class="card-article" onClick="navigate(' . $value['id_post'] . ')"}" >
+                echo '<a href=/'. Router::getInstance()->url("post.editShowPost",["id_post"=> $value['id'] ]).'>'.
+                    '<article class="card-article" onClick="navigate(' . $value['id'] . ')"}" >
                 <div class="card-article__image">
                     <img src="https://via.placeholder.com/300.png/09f/fff" alt="" />
                  <!--   <a href="#"></a>  -->

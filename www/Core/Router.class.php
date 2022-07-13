@@ -132,12 +132,15 @@ class Router
     }
 
 
-
-    public function url($name, $params = [])
+    /**
+     * @param $name
+     * @param throw $params
+     * @return mixed
+     */
+    public function url($name,  $params = []): mixed
     {
-
         if (!isset($this->namedRoutes[$name])) {
-            throw new \RuntimeException("No route matches this name");
+            throw new App\Core\Exceptions\Routing\RouterNotFoundException("No route matches this name");
         }
         return $this->namedRoutes[$name]->getUrl($params);
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\Controller;
 use App\Core\View;
+use App\Helpers\Utils;
 use App\Model\Category;
 
 
@@ -13,7 +14,7 @@ class Post extends  Controller
     public function __construct()
     {
         $category=  new Category();
-        $categories =   $category->getCategories();
+        $categories =   $category->getCategoriesFromSite($_SESSION['id_site']);
         $this->render("post", "back", ['categories'=>$categories]  );
         // $post->getOnePost($id_post);
         // $id = intval($_GET['id']);
@@ -53,6 +54,8 @@ class Post extends  Controller
                     $result[$name] =  "Le champs " . $name . " est vide.";
                 } else if (isset($verify_fields[$name]["min_size"])  and strlen($input) < $verify_fields[$name]["min_size"]) {
                     $result[$name] =  "Le champs " . $name . " est inférieur à " . $verify_fields[$name]["min_size"];
+                } else if (isset($verify_fields[$name]["max_size"])  and strlen($input) > $verify_fields[$name]["max_size"]) {
+                    $result[$name] =  "Le champs " . $name . " est supérieur à " . $verify_fields[$name]["max_size"];
                 }
             }
         }
@@ -62,9 +65,11 @@ class Post extends  Controller
 
     public function sendDataPost($id_post= null)
     {
+
         $verify_fields = [
             'title' => [
                 "min_size" => 9,
+                "max_size" => 30,
                 "required" => true,
             ],
             'body' => [
@@ -91,22 +96,20 @@ class Post extends  Controller
                         'status' => $status,
                         'category' => $category,
                         'body' => $body,
-                        'author' => $author,
                         'metadescription' => $metadescription,
                         'metatitle' => $metatitle, ] = $_POST;
 
                     if(isset($id_post)) $post->setIdPost($post->getId());
                     $post->setTitle($title);
-                    $post->setAuthor(((isset($fields['auteur']) && !empty($fields['auteur'])) ? $fields['author'] : (isset($post))) ? $post->getAuthor()->getId() : $_SESSION['id']);
+                    $post->setAuthor(isset($id_post) ? $post->getAuthor()->getId() : $_SESSION['id']);
                     $post->setCategory($category);
                     $post->setMetatitle($metatitle);
                     $post->setStatus($status);
                     $post->setBody($body);
                     $post->setMetadescription($metadescription);
-
-                    var_dump($_SESSION);
-                    die();
                     $post->save();
+
+                    if(isset($id_post)) Utils::redirect('admin.allPost');
             }
         }
 

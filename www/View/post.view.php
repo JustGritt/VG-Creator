@@ -14,8 +14,7 @@
         <br>
         <div class="bar-menu">
             <div class="bar-menu-head">
-               <?php if(isset($id_post)){ ?>
-                <span class="<?php if (!isset($_GET['published']) && !isset($_GET['drafts'])) echo ("active")  ?>" onclick="changeMenu('')">Modifier un article</span><?php } ?>
+             <?php if(isset($id_post)){ ?> <span class="<?php echo ("active")  ?>" onclick="changeMenu('')">Modifier un article</span><?php } ?>
                 <span class="<?php if(!isset($id_post)) echo ("active")  ?>" onclick="changeMenu('createPost')"><i class="fa-solid fa-plus"></i> Ajouter un article</span>
             </div>
             <hr>
@@ -37,10 +36,10 @@
                             <select id="category"  name="category">
                                 <?php
                                 foreach ($categories as $key => $value) {
-                                    $selected = isset($post) ? $post->getCategory() == $value->id_category : isset($fields['category']) && $fields['category'] == $value->id_category ;
+                                    $selected = isset($post) ? $post->getCategory() == $value->id : isset($fields['category']) && $fields['category'] == $value->id ;
                                     //$categorie_get = isset($post)? $categories[$post->getIdCategorie()]:null;
-                                    if ($selected) echo  '<option value='.'"'.$value->id_category.'"'.'selected >'.$value->name.'</option>';
-                                    else echo  '<option value='.'"'.$value->id_category.'"'.'>'.$value->name.'</option>';
+                                    if ($selected) echo  '<option value='.'"'.$value->id.'"'.'selected >'.$value->name.'</option>';
+                                    else echo  '<option value='.'"'.$value->id.'"'.'>'.$value->name.'</option>';
                                 }
                                 ?>
                             </select>
