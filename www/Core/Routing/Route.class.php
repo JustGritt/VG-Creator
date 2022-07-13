@@ -11,6 +11,7 @@ class Route{
     private  $callable;
     private $matches=[];
     private $params=[];
+    private $name;
 
 
     /**
@@ -50,6 +51,7 @@ class Route{
         }
         return '([^/]+)';
     }
+
 
     /**
      * Get url of a specific route name and concat with param to them
@@ -98,6 +100,7 @@ class Route{
         }
     }
 
+
     public function getPath(){
         return $this->path;
     }
@@ -115,8 +118,7 @@ class Route{
     {
         return $this->name;
     }
-
-
+    
 
 
 

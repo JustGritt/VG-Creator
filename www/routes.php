@@ -39,6 +39,8 @@ $router->group('/dashboard', function (Router $router) {
     if (Security::isVGdmin()) {
         $router->get('/clients', 'admin@dashboard');
         $router->post('/clients', 'admin@dashboard');
+        $router->get('/clients/add', 'admin@addClient');
+        $router->post('/clients/add', 'admin@addClient');
         $router->get('/sites', 'admin@getAllSite');
         $router->post('/sites', 'admin@getsite');
     }
@@ -59,13 +61,11 @@ $router->group('/dashboard', function (Router $router) {
     $router->post('/clients', 'admin@dashboard');
     $router->get('/clients/edit', 'admin@editClient');
     $router->post('/clients/edit', 'admin@editClient');
-    $router->get('/clients/delete', 'admin@deleteClient');
-    $router->post('/clients/delete', 'admin@deleteClient');
 
     
     $router->get('/comments', 'admin@getAllComments');
-    $router->get('/media', 'admin@dashboard');
-    $router->post('/media', 'admin@dashboard');
+    $router->get('/media', 'media@setuploadmediaview' , 'dashboard.media');
+    $router->post('/media', 'media@setuploadmediaview' , 'dashboard.media');
 
 });
 

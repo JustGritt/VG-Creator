@@ -19,7 +19,7 @@ class Route
      */
     private static $_instance = null;
 
-    /*
+
     public function __construct($path, $callable)
     {
 
@@ -95,5 +95,5 @@ class Route
         }
         return $path;
     }
-    */
+
 }

@@ -4,6 +4,7 @@ namespace  App\Core\Routing;
 
 use App\Core\Exceptions\Routing\RouterException;
 use App\Core\Exceptions\Routing\RouterNotFoundException;
+use App\Core\Routing\Route;
 use Closure;
 
 class Router{
@@ -19,6 +20,7 @@ class Router{
     public function __construct()
     {
         $this->url = $_GET['url'] ?? "";
+        var_dump($this->url);
     }
 
     /**
@@ -75,6 +77,7 @@ class Router{
         }
         $route = new Route($path, $callable);
         $this->routes[$method][] = $route;
+
         if (is_string($callable) && ($name === null)) {
             $name = $callable;
         }
@@ -108,6 +111,7 @@ class Router{
      */
     public function url(string $name, array $params = []):string
     {
+
         if (!isset($this->namedRoutes[$name])) {
             throw new RouterException("No route matches this name");
         }

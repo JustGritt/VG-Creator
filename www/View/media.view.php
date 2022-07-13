@@ -6,7 +6,7 @@
     <h2>Creer votre site et revenez voire cette page !</h2>
 <?php } else { ?>
 
-<form action= '' method="post" enctype="multipart/form-data">
+<form  method="post" enctype="multipart/form-data">
     Select image to upload:
     <input type="file" name="fileToUpload" id="fileToUpload">
     <input type="submit" value="Upload Image" name="submit">
@@ -22,6 +22,10 @@
     
         <img src="<?php echo DOMAIN . '/' . $value->getPath() ?>" alt="Image" width="300" height="200">
     <?php } ?>
+
+    <?php  echo $previous ?>
+
+    <?php echo $next ?>
 </div>
 <?php } ?>
 

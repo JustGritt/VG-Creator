@@ -3,13 +3,14 @@
 namespace App\Model;
 
 use App\Core\FlashMessage;
+use App\Core\PaginatedQuery;
 use App\Core\Sql;
 use App\Core\QueryBuilder;
 
 class Document extends Sql
 {
 
-    protected $id_document = null;
+    protected $id = null;
     protected $type = null;
     protected $path = null;
     protected $id_site = null;
@@ -25,12 +26,12 @@ class Document extends Sql
 
     public function getId(): ?int
     {
-        return $this->id_document;
+        return $this->id;
     }
 
     public function setId($id): int
     {
-        return $this->id_document = $id;
+        return $this->id = $id;
     }
 
     public function getType(): ?string
@@ -73,24 +74,9 @@ class Document extends Sql
         return $this->id_user = $id_user;
     }
 
-    public function sendUploadedFileToDB($filePath, $type, $id_user, $id_site)
+    /*
+    public function uploadFile()
     {
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
-            ->getQuery();
-        $result = Sql::getInstance()->prepare($query);
-
-        return $result->execute([
-            $filePath,
-            $type,
-            $id_user,
-            $id_site,
-        ]);
-    }
-
-    public function uploadFile() {
         $file = $_FILES['fileToUpload'];
         $fileName = $file['name'];
         $fileTmpName = $file['tmp_name'];
@@ -109,15 +95,11 @@ class Document extends Sql
                     $fileNameNew = uniqid('', true) . "." . $fileActualExt;
                     $fileDestination = 'uploads/' . $fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
-                    $this->setPath($fileDestination);
-                    $this->setType($fileActualExt);
-                    /*
                     $this->sendUploadedFileToDB(
                         $fileDestination,
                         $fileActualExt,
                         intval($_SESSION['id']),
                         intval($_SESSION['id_site']));
-                    */
                     FlashMessage::setFlash("success", "File uploaded successfully");
                     $_FILES = [];
                 } else {
@@ -130,6 +112,26 @@ class Document extends Sql
             FlashMessage::setFlash("errors", "You cannot upload files of this type {$fileActualExt}");
         }
     }
+
+    public function sendUploadedFileToDB($filePath, $type, $id_user, $id_site)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+
+        return $result->execute([
+            $filePath,
+            $type,
+            $id_user,
+            $id_site,
+        ]);
+    }
+
+    */
+
 
     public function getAllDocumentsForSite($id_site)
     {
