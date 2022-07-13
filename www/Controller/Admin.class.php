@@ -139,8 +139,8 @@ class Admin
                 $this->setSettingsView();
                 break;
             default:
-                //$view = new View("articles", "back");
-                //$view->assign('user', $user);
+                $view = new View("back_home", "back");
+                $view->assign('user', $user);
                 break;
         }
     }

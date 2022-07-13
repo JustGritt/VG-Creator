@@ -32,6 +32,7 @@ class Router
     public $action;
 
 
+    /*
     private function __construct()
     {
         die();
@@ -45,7 +46,7 @@ class Router
             self::$_instance = new Router();
         }
         return self::$_instance;
-    }
+    }*/
 
     /**
      * Get or set the middlewares attached to the route.
@@ -53,6 +54,8 @@ class Router
      * @param  array|string|null  $middleware
      * @return $this|array
      */
+
+    /*
     public function middleware($middleware = null)
     {
         if (is_null($middleware)) {
@@ -140,7 +143,7 @@ class Router
             throw new \RuntimeException("No route matches this name");
         }
         return $this->namedRoutes[$name]->getUrl($params);
-    }
+    }*/
 
 
 }
