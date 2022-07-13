@@ -9,6 +9,7 @@ use App\Core\Sql;
 use App\Core\Uploader;
 use App\Core\Verificator;
 use App\Core\View;
+use App\Core\PaginatedQuery;
 use App\Model\Site;
 use App\Model\User as UserModel;
 use App\Core\Mail;
@@ -68,13 +69,8 @@ class Admin
             return;
         }
 
-
-        // Else 
-        $user_role = new User_role();
         $site = new Site();
         $site = $site->getAllSiteByIdUser($_SESSION['id']);
-       // $_SESSION['choice'] = 'choice';
-        // $choice = true;
         if(isset($_SESSION['choice'])){
 
             $view2 = new View('login-step-2', 'back');
@@ -102,16 +98,15 @@ class Admin
     
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-
-        if (!empty($_POST['submit'])) {
-            if (!empty($_FILES)) {
-                $this->uploadFile();
-            }
-        }
-
+        $view = new View("back_home", "back");
+        $view->assign('user', $user);
+        /*
         $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
         $page = end($explode_url);
-        var_dump($page);
+
+        if (empty($page)) {
+            $page = $explode_url[count($explode_url) - 2];
+        }
         switch ($page) {
             case "clients":
                 $this->setClientsView();
@@ -134,12 +129,13 @@ class Admin
                 break;
             case "add":
                 $this->addClient();
-                die('  add');
                 break;
             default:
-                die("404");
+                $view = new View("back_home", "back");
+                $view->assign('user', $user);
                 break;
         }
+        */
     }
 
     public function setClientsView(){
@@ -174,7 +170,6 @@ class Admin
         if (Security::isVGdmin() || Security::isAdmin()) {
             $backlist = new Backlist();
             $user = new UserModel();
-            $user_role = new User_role();
             $user = $user->getUserById($_POST['id']);
 
             //Check if the user is already in the backlist and Update the user if he is
@@ -191,9 +186,10 @@ class Admin
                 $backlist->deleteUserFromBackList($_SESSION['id_site'], $user->getId());
             }
 
+            $user_role = new User_role();
             $role_post = ucfirst(htmlspecialchars($_POST['roles']));
             //Change the role for the user of the site
-            $roles_available = $this->getAvailableRolesForSite($_SESSION['id_site']);
+            $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
 
             $selected_role = 0;
             foreach ($roles_available as $role) {
@@ -208,13 +204,8 @@ class Admin
             $user_role->save();
 
             //$user->setUserRoleForSite($user->getId(), $role['id']);
-
-
         }
-
-
         //header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
-
     }
 
     public function getUserOfSite($id_site)
@@ -225,18 +216,6 @@ class Admin
             LEFT JOIN esgi_user_role ur on u.id = ur.id_user
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site ='.$id_site.'";
-
-        $request = Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function getAvailableRolesForSite($id_site)
-    {
-        $sql =
-            "SELECT id, name
-            FROM esgi_role_site
-            WHERE id_site = '".$id_site."'";
 
         $request = Sql::getInstance()->prepare($sql);
         $request->execute(array($id_site));
@@ -296,34 +275,32 @@ class Admin
         //header('Refresh: 3; '.DOMAIN.'/dashboard');
     }
 
-    /*
-    public function getAllComments($id_site){
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
-            ->where('id_site', ':id_site')
-            ->limit(0, 10)
-            ->getQuery();
-        $result = Sql::getInstance()->prepare($query);
-        $result->execute(["id_site" => $id_site]);
-        return $result->fetch() ?? null;
-    }*/
-
     public function setUploadMediaView()
     {
         var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-        $document = new Document();
-        $documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
+        $documents = new Document();
+        //$documents = $document->getPaginatedDocuments($_SESSION['id_site']);
+
+        $query = "SELECT * FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
+        $count = "SELECT COUNT(1) FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
+        $pagination = new PaginatedQuery($query, $count, Document::class, 2);
+        $pagination->getItems();
+
+
+        //var_dump($router->url('dashboard.media', ['page' => $pagination->previousLink('dashboard/media')]));
+
+        //$documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
         $view = new View("media", "back");
         $view->assign('user', $user);
-        $view->assign('documents', $documents);
+        $view->assign('documents',  $pagination->getItems());
+        $view->assign('previous', $pagination->previousLink('media'));
+        $view->assign('next', $pagination->nextLink('media'));
 
         if(!empty($_POST['submit']) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_POST['csrf_token']);
-            if(!empty($_FILES)) {
+            if (!empty($_FILES)) {
                 $document = new Document();
                 $upload = new Uploader($_FILES);
                 if ($upload->upload()) {
@@ -332,33 +309,24 @@ class Admin
                     $document->setIdSite($_SESSION['id_site']);
                     $document->setIdUser($_SESSION['id']);
                     $document->save();
-                    $_FILES = [];
+                    //$_FILES = [];
+                    header('Refresh:  3' . DOMAIN . '/dashboard/media');
+                    return;
+
                 }
                 $_FILES = [];
+                //return;
+                header('Refresh:  3' . DOMAIN . '/dashboard/media');
+                //exit();
             }
         }
     }
 
-    public function setOauthUser($user){
-        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
-            if(!$user->is_unique_pseudo($_POST['pseudo'])){
-                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
-                header('Refresh: 3; '.DOMAIN.'/dashboard');
-                return;
-            }
-            $user->save();
-            Handler::setMemberRole($user->getId());
-            header("Location: " . DOMAIN . "/dashboard");
-        }
-    }
     public function setSettingsView()
     {
         $view = new View('settings', 'back');
-
         $user = new UserModel();
         $user = $user->getUserById($_SESSION['id']);
-
-        echo 'Le champ apparait lorsque vous auriez un site enregistré';
         $view->assign("user", $user);
 
         if(!empty($_POST)) {
@@ -379,17 +347,6 @@ class Admin
             $newpw = password_hash(htmlspecialchars($_POST['newpwd']), PASSWORD_DEFAULT);
             $newpwconfirm = $_POST['newpwdconfirm'];
 
-            var_dump($_POST);
-            var_dump(isset($_POST['oldpwd']));
-            var_dump(Verificator::checkPassword($_POST['newpwd']));
-            var_dump(Verificator::checkPassword($_POST['newpwdconfirm']));
-            var_dump(isset($_POST['oldpwd'])
-            && Verificator::checkPassword($_POST['newpwd']) 
-            && Verificator::checkPassword($_POST['newpwdconfirm'])
-            && password_verify($_POST['oldpwd'], $user->getPassword()) 
-            && password_verify($_POST['newpwdconfirm'], $newpw));
-
-            // Google 
             if(!isset($_POST['oldpwd']) 
             && Verificator::checkPassword($_POST['newpwd']) 
             && Verificator::checkPassword($_POST['newpwdconfirm'])
@@ -418,16 +375,8 @@ class Admin
             FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
             
         }
-        var_dump($_POST);
 
         return $view;
-    }
-
-    public function setEditorView()
-    {
-        $view = new View('editor', 'back');
-        // $result = $this->getUserOfSite();
-        //  $view->assign("result", $result);
     }
 
     public function getAllArticles()
@@ -466,43 +415,73 @@ class Admin
         }
     }
 
-    public function selectAllUserOfBlog(QueryBuilder $queryBuilder, $id)
+    public function addClient() 
     {
+        $user = new UserModel();
+        $view = new View('add_clients', 'Templates/back');
+        $view->assign("user", $user);
+
+
+        return $view;
+    }
+
+    public function setClientOfSite()
+    {
+        $view = new View('settings', 'back');
+        $result = $this->getClientsOfSite();
+        $view->assign("result", $result);
+    }
+
+    public function getClientsOfSite()
+    {
+        $id_site = $_SESSION['id_site'];
+
+        $sql =
+            "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name FROM `esgi_user` u
+        LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+        LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+        LEFT Join esgi_site s on s.id = rs.id_site WHERE s.id = ?";
+
+        $request =  Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll();
+    }
+
+    public function client()
+    {
+        $view = new View('front_template', 'front');
+    }
+
+    public function test()
+    {
+        $user = new User();
+        $view = new View('test', 'back');
+        //$view->assign('user', $user);
+
+
+    }
+
+    public function comment() {
+        $view = new View('front_template', 'front');  
+    }
+
+
+//TODO TEST
+/*
+  public function articles($builder = BUILDER){
+        $queryBuilder = new $builder();
         $query = $queryBuilder
             ->select('esgi_user', ['*'])
-            ->where('id', $id)
-            ->limit(0, 1)
-            ->getQuery();
-
-        return $query;
-    }
-
-    /*
-    public function updateUser($colmuns, $values, $builder = BUILDER)
-    {
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->update('esgi_user', $colmuns, $values)
+            ->limit(0, 10)
             ->getQuery();
         $result = Sql::getInstance()
-            ->query($query);
-        return $result;
+            ->query($query)
+            ->fetchAll();
+
+        $view = new View('succes', 'back');
+        $view->assign('result', $result);
     }
-
-    public function deleteUserById($id, $builder = BUILDER)
-    {
-
-        $queryBuilder = new $builder();
-        $sql = $queryBuilder
-            ->delete('esgi_user')
-            ->where('id', $id)
-            ->getQuery();
-        $result = Sql::getInstance()
-            ->query($sql);
-        return $result;
-    }*/
-
-    public function uploadFile()
+   public function uploadFile()
     {
         $file = $_FILES['fileToUpload'];
         $fileName = $file['name'];
@@ -548,7 +527,7 @@ class Admin
             ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
             ->getQuery();
         $result = Sql::getInstance()->prepare($query);
-        
+
         return $result->execute([
             $filePath,
             $type,
@@ -556,75 +535,87 @@ class Admin
             $id_site,
         ]);
     }
-
-    public function addClient() 
+ public function updateUser($colmuns, $values, $builder = BUILDER)
     {
-        $user = new UserModel();
-        $view = new View('add_clients', 'Templates/back');
-        $view->assign("user", $user);
-
-
-        return $view;
-    }
-
-    public function setClientOfSite()
-    {
-        $view = new View('settings', 'back');
-        $result = $this->getClientsOfSite();
-        $view->assign("result", $result);
-    }
-
-    public function getClientsOfSite()
-    {
-        $id_site = $_SESSION['id_site'];
-
-        $sql =
-            "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name FROM `esgi_user` u
-        LEFT JOIN esgi_user_role ur on u.id = ur.id_user
-        LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
-        LEFT Join esgi_site s on s.id = rs.id_site WHERE s.id = ?";
-
-$request =  Sql::getInstance()->prepare($sql);
-$request->execute(array($id_site));
-return $request->fetchAll();
-}
-
-    
-
-    public function client()
-    {
-        $view = new View('front_template', 'front');
-    }
-
-    /*
-    public function articles($builder = BUILDER){
         $queryBuilder = new $builder();
         $query = $queryBuilder
-            ->select('esgi_user', ['*'])
-            ->limit(0, 10)
+            ->update('esgi_user', $colmuns, $values)
             ->getQuery();
         $result = Sql::getInstance()
-            ->query($query)
-            ->fetchAll();
-
-        $view = new View('succes', 'back');
-        $view->assign('result', $result);
+            ->query($query);
+        return $result;
     }
-    */
 
-    public function test()
+    public function deleteUserById($id, $builder = BUILDER)
     {
-        $user = new User();
-        $view = new View('test', 'back');
-        //$view->assign('user', $user);
 
-
+        $queryBuilder = new $builder();
+        $sql = $queryBuilder
+            ->delete('esgi_user')
+            ->where('id', $id)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($sql);
+        return $result;
     }
 
-    public function comment() {
-        $view = new View('front_template', 'front');  
+
+    public function selectAllUserOfBlog(QueryBuilder $queryBuilder, $id)
+    {
+        $query = $queryBuilder
+            ->select('esgi_user', ['*'])
+            ->where('id', $id)
+            ->limit(0, 1)
+            ->getQuery();
+
+        return $query;
+    }
+
+    public function setOauthUser($user){
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            if(!$user->is_unique_pseudo($_POST['pseudo'])){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                header('Refresh: 3; '.DOMAIN.'/dashboard');
+                return;
+            }
+            $user->save();
+            Handler::setMemberRole($user->getId());
+            header("Location: " . DOMAIN . "/dashboard");
+        }
     }
 
 
+    public function getAllComments($id_site){
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
+            ->where('id_site', ':id_site')
+            ->limit(0, 10)
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_site" => $id_site]);
+        return $result->fetch() ?? null;
+    }
 
+ public function getAvailableRolesForSite($id_site)
+    {
+        $sql =
+            "SELECT id, name
+            FROM esgi_role_site
+            WHERE id_site = '".$id_site."'";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+  public function setEditorView()
+    {
+        $view = new View('editor', 'back');
+        // $result = $this->getUserOfSite();
+        //  $view->assign("result", $result);
+    }
+
+ */
 }

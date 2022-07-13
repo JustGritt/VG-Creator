@@ -48,4 +48,25 @@ class Handler
             copy('./View/client.tpl.php', $pseudo_site);
         }
     }
+
+    public static function getInt($name, $default = null){
+        if (!isset($_GET[$name])) return $default;
+        if ($_GET[$name] === '0') return 0;
+
+        $page = $_GET['page'] ?? 1;
+
+        if (!filter_var($page, FILTER_VALIDATE_INT)){
+            throw new \Exception('Numero de page invalide');
+        }
+
+        return (int)$_GET[$name];
+    }
+
+    public static function getPostiveInt($name, $default = null){
+        $param = self::getInt($name, $default);
+        if ($param !== null && $param < 0){
+            throw new \Exception('Le parametre doit être positif');
+        }
+        return $param;
+    }
 }

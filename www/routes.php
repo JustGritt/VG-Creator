@@ -38,35 +38,37 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/', 'admin@dashboard');
     $router->post('/', 'admin@dashboard');
     if (Security::isVGdmin()) {
-        $router->get('/clients', 'admin@setClientOfSite');
-        $router->post('/clients', 'admin@setClientOfSite');
         $router->get('/sites', 'admin@getAllSite');
         $router->post('/sites', 'admin@getsite');
     }
     $router->get('/subscribe', 'admin@dashboard');
     $router->post('/subscribe', 'admin@dashboard');
-    $router->get('/settings', 'admin@dashboard');
-    $router->post('/settings', 'admin@dashboard');
+
+    $router->get('/settings', 'admin@setSettingsView');
+    $router->post('/settings', 'admin@setSettingsView');
+
     $router->get('/history', 'admin@dashboard');
+
     // $router->get('/articles', 'admin@getAllArticles');
     $router->get('/articles', 'admin@getAllArticles', 'admin.allPost');
-    $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
-
+    $router->get('/articles/:id', 'post@createPost')
+        ->with('id', '[0-9]+');
     $router->get('/articles/create', 'post@createPost', 'post.createPost');
     $router->post('/articles/create', 'post@createPost', 'post.createPost');
+    $router->get('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')
+        ->with('id_post', '[0-9]+');
+    $router->post('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')
+        ->with('id_post', '[0-9]+');
 
-    $router->get('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')->with('id_post', '[0-9]+');
-    $router->post('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')->with('id_post', '[0-9]+');
-
-    $router->get('/clients', 'admin@dashboard');
-    $router->post('/clients', 'admin@dashboard');
+    $router->get('/clients', 'admin@setClientsView');
+    $router->post('/clients', 'admin@setClientsView');
     $router->get('/clients/add', 'admin@dashboard');
     $router->post('/clients/add', 'admin@dashboard');
 
-    
     $router->get('/comments', 'admin@getAllComments');
-    $router->get('/media', 'admin@dashboard');
-    $router->post('/media', 'admin@dashboard');
+
+    $router->get('/media', 'admin@setUploadMediaView');
+    $router->post('/media', 'admin@setUploadMediaView');
 
 });
 
@@ -103,6 +105,5 @@ $router->get('/@:author/:slug/:pages/:id', 'main@initContent')
     ->with('id', '[0-9]+'); //TEST PRUPOSE ONLY
 
 
-
-    $router->run();
+$router->run();
 
