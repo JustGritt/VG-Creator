@@ -19,8 +19,8 @@ namespace App\Core;
     {
         $this->view =  new View($view, $template, $path);
         foreach ($params as $key => $value){
-          $this->view->assign($key, $value);
-      }
+            $this->view->assign($key, $value);
+        }
     }
 
 }

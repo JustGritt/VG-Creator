@@ -26,13 +26,15 @@ class Main {
         $user = new UserModel();
 
         $id_site = $this->getSite($site_title);
-        $containt = $this->getSiteContaint($id_site, $site_title);
+        $content = $this->getSiteContaint($id_site, $site_title);
+        $user_info = $user->getUserByPseudo($author);
+        $user_role = $user->getRoleOfUser($user_info->getId(), $id_site);
 
-        if($user->getUserByPseudo($author) && !is_null($id_site) && !is_null($containt)){
+        if(($user_role['role'] == 'Admin')  && !is_null($id_site) && !is_null($content)){
             //GET THE SITE
             //$view = new View("front_template", "client");
             echo 'OK';
-            echo $containt;
+            echo $content;
         }
         return header('HTTP/1.1 404 Not Found');
     }
@@ -41,12 +43,12 @@ class Main {
         $builder = BUILDER;
         $queryBuilder = new $builder();
         $query = $queryBuilder
-            ->select('esgi_site', ['id_site'])
+            ->select('esgi_site', ['id'])
             ->where("name",  ":slug")
             ->getQuery();
         $result = Sql::getInstance()->prepare($query);
         $result->execute(["slug" => $slug]);
-        return $result->fetch()['id_site'] ?? null;
+        return $result->fetch()['id'] ?? null;
     }
 
     public function getSiteContaint($id_site, $site_title){

@@ -9,22 +9,25 @@ use App\Core\Sql;
 use App\Core\Uploader;
 use App\Core\Verificator;
 use App\Core\View;
+use App\Model\Site;
 use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Core\QueryBuilder;
 use App\Core\Handler;
 use App\Model\Document;
+use App\Model\Backlist;
+use App\Model\User_role;
 
 class Admin
 {
 
     public function dashboard()
     {
-        var_dump($_SESSION);
-
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
+
+        var_dump($_SESSION);
         if (isset($_SESSION['NOT-SET'])) {
             $user = new UserModel();
             $user->setFirstname($_SESSION['firstname']);
@@ -35,25 +38,68 @@ class Admin
             $user->setOauthId($_SESSION['oauth_id']);
             $user->setOauthProvider($_SESSION['oauth_provider']);
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
-            $view2 = new View('register-step-2', 'back');
+            $view2 = new View('register-step-2', 'blank');
             $view2->assign('user', $user);
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+                $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            
+                if(!$pseudotocheck) {
+                    FlashMessage::setFlash('errors', 'Pseudo invalide');
+                    header("Refresh: 3; ".DOMAIN."/register ");
+                    return;
+                } else {
+                    $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+                }
+
                 if (!$user->is_unique_pseudo($_POST['pseudo'])) {
                     echo "Ce pseudo est déjà utilisé";
                     header('Refresh: 3; ' . DOMAIN . '/dashboard');
                     return;
                 }
-                $user->setPseudo($_POST['pseudo']);
                 $user->save();
                 Handler::setMemberRole($user->getIdFromEmail($_SESSION['email']));
 
+                $_SESSION['id'] = $user->getId();
                 $_SESSION['pseudo'] = $_POST['pseudo'];
                 unset($_SESSION['NOT-SET']);
                 header('Refresh: 3; ' . DOMAIN . '/dashboard');
                 return;
             }
+            return;
         }
 
+
+        // Else 
+        $user_role = new User_role();
+        $site = new Site();
+        $site = $site->getAllSiteByIdUser($_SESSION['id']);
+       // $_SESSION['choice'] = 'choice';
+        // $choice = true;
+        if(isset($_SESSION['choice'])){
+
+            $view2 = new View('login-step-2', 'back');
+            $view2->assign('site', $site);
+            
+            if(!empty($_POST )) {
+
+                var_dump($_POST['site']);
+                if($_POST['site'] == 'vg-creator')  {
+                    unset($_SESSION['choice']);
+                    header('Location: ' . DOMAIN . '/dashboard');
+                    return;
+                }
+                
+                $_SESSION['id_site'] = $_POST['id_site'];
+                $_SESSION['role'] = $_POST['role'];
+                $_SESSION[strtoupper($_POST['site'])] = $_POST['role'];
+                
+                unset($_SESSION['choice']);
+                header('Location: ' . DOMAIN . '/dashboard');
+                return;
+            }
+            return;
+        }
+    
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
 
@@ -79,11 +125,10 @@ class Admin
                 $view->assign('user', $user);
                 break;
             case "media":
-                $view = new View("dashboard", "back");
+                // $view = new View("dashboard", "back");
                 $this->setUploadMediaView();
                 break;
             case "settings":
-                $view = new View("dashboard", "back");
                 $this->setSettingsView();
                 break;
             default:
@@ -96,61 +141,102 @@ class Admin
     public function setClientsView(){
 
         $view = new View('clients', 'back');
-        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == '1') || !($_SESSION['VGCREATOR'] == VGCREATORADMIN)) {
+
+        if (isset($_SESSION['VGCREATOR']) && (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == '1'))) {
             FlashMessage::setFlash("errors", "Le champ apparait lorsque vous auriez un site enregistré");
-            return ;
+            exit();
         }
         $user = new UserModel();
+        $backlist = new Backlist();
+        $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
         $result = $this->getUserOfSite($_SESSION['id_site']);
         $view->assign("result", $result);
         $view->assign('user', $user);
+        $view->assign('backlist', $backlist);
 
-
-        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
-            unset($_POST['csrf_token']);
-            $this->addUser();
+        if (!empty($_POST)) {
+            $this->updateUser();
         }
         return $view;
     }
 
-    //Hard ban on level of VGCREATOR (admin)
-    public function banUserVG(){
-        $user = new UserModel();
-        $user->setId($_POST['id']);
-        $user->setStatus(0);
-        $user->save();
-        FlashMessage::setFlash("success", "Utilisateur banni");
-        header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
-    }
+    public function updateUser(){
 
-    // This function is used to ban a user from the site (admin only)
-    public function deleteClient(){
-        if (Security::isVGdmin()) {
-           var_dump('VG admin');
-           var_dump($_POST);
-           //$this->banUserVG();
-           die();
-        }
-        if (!Security::isAdmin()) {
+        if (!Security::isVGdmin() || !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
         }
-        $user = new UserModel();
-        $user->setId($_POST['id']);
-        $user->delete();
-        header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+
+        if (Security::isVGdmin() || Security::isAdmin()) {
+            $backlist = new Backlist();
+            $user = new UserModel();
+            $user_role = new User_role();
+            $user = $user->getUserById($_POST['id']);
+
+            //Check if the user is already in the backlist and Update the user if he is
+            if ($backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Active') {
+                FlashMessage::setFlash("errors", "Utilisateur déjà banni");
+                exit();
+            }
+            if (!$backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Active') {
+                $backlist->setIdUser($_POST['id']);
+                $backlist->setIdSite($_SESSION['id_site']);
+                //$backlist->setReason($_POST['reason']);
+                $backlist->save();
+            }elseif ($backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Inactive') {
+                $backlist->deleteUserFromBackList($_SESSION['id_site'], $user->getId());
+            }
+
+            $role_post = ucfirst(htmlspecialchars($_POST['roles']));
+            //Change the role for the user of the site
+            $roles_available = $this->getAvailableRolesForSite($_SESSION['id_site']);
+
+            $selected_role = 0;
+            foreach ($roles_available as $role) {
+                if ($role['name'] == $role_post) {
+                    $selected_role = $role['id'];
+                }
+            }
+
+            $user_role = $user_role->getAllUserRoleForSite($user->getId());
+            $user_role->setIdUser($user->getId());
+            $user_role->setIdRoleSite($selected_role);
+            $user_role->save();
+
+            //$user->setUserRoleForSite($user->getId(), $role['id']);
+
+
+        }
+
+
+        //header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+
     }
 
     public function getUserOfSite($id_site)
     {
         $sql =
-            "SELECT * FROM `esgi_user` u
+            "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
+            FROM `esgi_user` u
             LEFT JOIN esgi_user_role ur on u.id = ur.id_user
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site ='.$id_site.'";
 
-        $result = Sql::getInstance()->query($sql)->fetchAll();
-        return $result;
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getAvailableRolesForSite($id_site)
+    {
+        $sql =
+            "SELECT id, name
+            FROM esgi_role_site
+            WHERE id_site = '".$id_site."'";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     private function addUser(){
@@ -222,10 +308,14 @@ class Admin
 
     public function setUploadMediaView()
     {
+        var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
+        $document = new Document();
+        $documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
         $view = new View("media", "back");
         $view->assign('user', $user);
+        $view->assign('documents', $documents);
 
         if(!empty($_POST['submit']) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_POST['csrf_token']);
@@ -260,12 +350,35 @@ class Admin
     public function setSettingsView()
     {
         $view = new View('settings', 'back');
-        if (($_SESSION['VGCREATOR'] == VGCREATORMEMBER) && $_SESSION['id_site'] != 1) {
-            $result = $this->getUserOfSite($_SESSION['id_site']);
-        }
-        $result = 0;
+
+        $user = new UserModel();
+        $user = $user->getUserById($_SESSION['id']);
+
         echo 'Le champ apparait lorsque vous auriez un site enregistré';
-        $view->assign("result", $result);
+        $view->assign("user", $user);
+
+        if(!empty($_POST)) {
+            
+            if(empty($_POST['newpwdconfirm']) && empty($_POST['newpwd']) && empty($_POST['newpwdconfirm']) ){
+                $user->setFirstname($_POST['firstname']);
+                $user->setLastname($_POST['lastname']);
+                
+                if(isset($_POST['pseudo']) && $user->getPseudo() == $_POST['pseudo'] && ($user->is_unique_pseudo($_POST['pseudo']))){
+                    FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                } 
+                $user->setPseudo($_POST['pseudo']);
+
+                $user->setEmail($_POST['email']);
+                var_dump($user->save());
+
+                $user->save();
+                FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
+            }
+        }
+        var_dump($_POST);
+
         return $view;
     }
 
@@ -394,7 +507,7 @@ class Admin
             ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
             ->getQuery();
         $result = Sql::getInstance()->prepare($query);
-        var_dump($query);
+        
         return $result->execute([
             $filePath,
             $type,

@@ -97,4 +97,27 @@ class Route{
             return call_user_func_array($this->callable, $this->matches);
         }
     }
+
+    public function getPath(){
+        return $this->path;
+    }
+
+    public function name(string $name)
+    {
+        if (isset($this->name)) {
+            throw new \App\Core\Exceptions\RouteNameRedefinedException();
+        }
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
+
+
+
 }
