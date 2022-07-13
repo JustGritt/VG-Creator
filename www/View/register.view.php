@@ -3,7 +3,7 @@
 <main>
     <section id="register">
 
-        <div class="wrapper flex center-transform">
+        <div class="wrapper flex">
 
             <h1 class="title">S'inscrire</h1>
             <p class="sub-title">

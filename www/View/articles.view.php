@@ -1,11 +1,9 @@
 <section class="articles-container">
     <style>
         <?php
-
         use App\Helpers\Utils;
-
+        use \App\Core\Routing\Router;
         include "dist/css/articles.css";
-
         ?>
     </style>
     <div class="articles-content">
@@ -29,8 +27,8 @@
                 $status = $value['status'] == 0 ?  'tag-status-draft' : 'tag-status-publish';
                 $status_name = $value['status'] == 0 ?  'Brouillon' : 'Publiée';
 
-                echo '<a href=/'. \App\Core\Routing\Router::getInstance()->url("post.editPost",["id_post"=> $value['id_post'] ]).'>'.
-                    '<article class="card-article" onClick="navigate(' . $value['id_post'] . ')"}" >
+                echo '<a href=/'. Router::getInstance()->url("post.editShowPost",["id_post"=> $value['id'] ]).'>'.
+                    '<article class="card-article" onClick="navigate(' . $value['id'] . ')"}" >
                 <div class="card-article__image">
                     <img src="https://via.placeholder.com/300.png/09f/fff" alt="" />
                  <!--   <a href="#"></a>  -->
@@ -47,6 +45,8 @@
             }
             ?>
         </div>
+
+        <a href="/<?php echo Router::getInstance()->url("post.createPost",[]) ?>" class="btm-btn">Créer un article</a>
     </div>
 </section>
 <!-- <span> 23%</span> -->

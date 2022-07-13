@@ -14,10 +14,8 @@ body main {
 
     display: block;
     width: 100%;
-    height: 100vh;
 
     section#login {
-        height: 100vh;
         width: 100vw;
     
         .hero-container {
@@ -43,6 +41,7 @@ body main {
         min-width: 420px;
         max-width: 768px;
         border-radius: 31px;
+        margin: 0 auto;
 
         a.link {
             color: var(--color-text);
@@ -52,7 +51,6 @@ body main {
             width: 100%;
             height: 100%;
             border-radius: 0;
-            margin-top: 70px;
         }
 
         form {
@@ -65,7 +63,7 @@ body main {
                 margin: 0;
                 &:nth-child(1) { margin-top: 25px; }
                 &[type="submit"] {
-                    margin-top: 75px;
+                    margin-top: 50px;
                     color: var(--color-text);
                     border: 1px solid var(--color-border);
                     &:hover {

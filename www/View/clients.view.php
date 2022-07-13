@@ -73,7 +73,7 @@
     </div>
 
     <section>
-        <button onclick="console.log('add user')">Add more</button>
+        <a href="clients/add" class="button--primary">Add more</a>
 
     </section>
 

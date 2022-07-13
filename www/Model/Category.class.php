@@ -6,10 +6,10 @@ use App\Core\Sql;
 
 class Category extends Sql{
 
-    public $id_category = null;
+    public $id = null;
     public $name = null;
     public $id_site = null;
-
+    private $builder = BUILDER;
 
     public function __construct($name= '',$id_site='', $id_category='' ){
         $calledClassExploded = explode("\\",get_called_class());
@@ -24,12 +24,28 @@ class Category extends Sql{
      */
     public function getCategories():array
     {
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
+
+        $queryBuilder = new $this->builder();
         $request = $queryBuilder->select('esgi_category', ['*'])->getQuery();
         $result = Sql::getInstance()->query($request)->fetchAll();
         return array_map(function ($v){
-            return new Category($v['name'], $v['id_site'], $v['id_category']);
+            return new Category($v['name'], $v['id_site'], $v['id']);
+        }, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCategoriesFromSite($id_site):array
+    {
+        $queryBuilder =  new $this->builder();
+        $request = $queryBuilder->select('esgi_category', ['*'])
+            ->where("id_site",$id_site )
+            ->getQuery();
+        $result = Sql::getInstance()->query($request)->fetchAll();
+
+        return array_map(function ($v){
+            return new Category($v['name'], $v['id_site'], $v['id']);
         }, $result);
     }
 
@@ -70,15 +86,15 @@ class Category extends Sql{
      */
     public function setIdCategory($id_category): void
     {
-        $this->id_category = $id_category;
+        $this->id = $id_category;
     }
 
     /**
      * @param string
      */
-    public function getIdCategory($id_category): string
+    public function getIdCategory(): string
     {
-       return $this->id_category ;
+       return $this->id ;
     }
     
 

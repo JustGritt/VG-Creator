@@ -4,48 +4,59 @@
 
     <h1 class="title">Settings</h1>
 
-    <form method="POST">
-        <label for="firstname">Firstname</label>
-        <input type="text" id="firstname" name="firstname" value="<?php echo $user->getFirstname(); ?>">
-        
-        <label for="lastname">Lastname</label>
-        <input type="text" id="lastname" name="lastname" value="<?php echo $user->getLastname(); ?>">
-        
-        <label for="pseudo">Pseudo</label>
-        <input type="text" id="pseudo" name="pseudo" value="<?php echo $user->getPseudo(); ?>">
-        
-        <label for="email">Email</label>
-        <input type="mail" id="email" name="email" value="<?php echo $user->getEmail(); ?>">
-        
+    <form method="POST" class="form-group flex">
+        <label class='input'>
+            <input type="text" id="firstname" name="firstname" class="input__field" placeholder=" " value="<?php echo $user->getFirstname(); ?>">
+            <span class='input__label'>Prénom</span>
+        </label>
+    
+        <label class='input'> 
+            <input type="text" id="lastname" name="lastname" class="input__field" placeholder=" " value="<?php echo $user->getLastname(); ?>">
+            <span class='input__label'>Nom</span>
+        </label>
+
+        <label class='input'> 
+            <input type="text" id="pseudo" name="pseudo" class="input__field" placeholder=" " value="<?php echo $user->getPseudo(); ?>">
+            <span class='input__label'>Pseudo</span>
+        </label>
+
+        <label class='input'> 
+            <input type="mail" id="email" name="email" class="input__field" placeholder=" " value="<?php echo $user->getEmail(); ?>">
+            <span class='input__label'>Adresse mail</span>
+        </label>
         <!-- Display more filters -->
-        <label for="more-options">
-            Change password
-                <svg fill="#000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
-                    <path d="M0-.75h24v24H0z" fill="none" />
-                </svg>
-            </label>
-            <input type="checkbox" name="more-options" id="more-options">
+        <label for="more-options"> Modifier Mot de passe
+            <svg fill="#000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
+                <path d="M0-.75h24v24H0z" fill="none" />
+            </svg>
+        </label>
+        <input type="checkbox" name="more-options" id="more-options">
             
-            <div class="toggle-filters">
-                <div class="filter-parameter">
-                    <div class="filter-checkboxes">
-                        
-                        <label for="oldpwd">Current Password</label>
-                        <input type="password" name="oldpwd" id="old-password">
+        <div class="toggle-filters">
+            <div class="filter-checkboxes flex">
+                <?php if(($user->getPassword())) : ?>
+                <label class='input' for="oldpwd"> 
+                    <input type="password" id="oldpwd" name="oldpwd" class="input__field" placeholder=" " value="">
+                    <span class='input__label'>Mot de passe actuel</span>
+                </label>
+                <?php endif ?>
 
-                        <label for="oldpwd">New password</label>
-                        <input type="password" name="newpwd" id="new-password">
-
-                        <label for="oldpwd">Confirm new password</label>
-                        <input type="password" name="newpwdconfirm" id="new-password-confirm">
-
-                    </div>
-                </div>
+                <label class='input' for="newpwd"> 
+                    <input type="password" id="newpwd" name="newpwd" class="input__field" placeholder=" ">
+                    <span class='input__label'>Nouveau Mot de passe</span>
+                </label>
                 
+                <label class='input' for="newpwdconfirm"> 
+                    <input type="password" id="newpwdconfirm" name="newpwdconfirm" class="input__field" placeholder=" ">
+                    <span class='input__label'>Confirmer Mot de passe</span>
+                </label>
             </div>
-            <input type="submit" value="confirm">
         </div>
+
+        <input type="submit" value="Confirmer">
+    </form>
+
 
     </form>
 
