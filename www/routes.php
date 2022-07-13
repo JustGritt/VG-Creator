@@ -110,7 +110,7 @@ try {
     //http_redirect();
 } catch (Core\Exceptions\Routing\RouterNotFoundException $e) {
     $router = Router::getInstance();
-
+    $router->get('/error-404', 'error@show404', "error.404");
     header("Location: /error-404",FALSE, 302);
     die();
 }
