@@ -14,10 +14,12 @@ use App\Model\PasswordRecovery;
 use App\Model\OauthUser;
 use App\Core\Facebook;
 use App\Core\Security;
+use App\Model\Backlist;
+use App\Model\Site;
+use App\Model\User_role;
 
 class User
 {
-
     public function loginwithfb()
     {
         $user = new UserModel();
@@ -62,6 +64,7 @@ class User
     public function login()
     {
         $user = new UserModel();
+        $backlist = new Backlist();
 
         $view = new View("login");
         $view->assign("user", $user);
@@ -70,10 +73,14 @@ class User
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_SESSION['csrf_token']);
 
+
             $getPwd = $_POST['password'];
             $user->setEmail($_POST['email']);
             $user->setPassword($getPwd);
             $userverify = $user->connexion($user->getEmail(), $getPwd);
+
+            //Check if user is backlisted
+            $this->checkIfUserIsBaned($userverify['id']);
 
             if (is_null($userverify)) {
                 //echo 'Utilisateur non retouvé dans la bdd';
@@ -83,7 +90,7 @@ class User
 
             }elseif (empty($userverify['status'])) {
                 //echo "Veuillez confirmé votre email";
-                FlashMessage::setFlash('errors', "Veuillez confirmé votre email");
+                FlashMessage::setFlash('errors', "Veuillez confirmer votre email");
                 //header("Location: ".DOMAIN."/login" );
                 return;
             }
@@ -97,8 +104,15 @@ class User
             //Check if user role for URI
             if ($_GET['url'] == 'login') {
                 $userRoleForVG = $user->getRoleOfUser($userverify['id'], VGCREATORID);
-                $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
-                $_SESSION['id_site'] = $userRoleForVG[0]['id'];
+                $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+                $_SESSION['id_site'] = $userRoleForVG['id'];
+
+                $site = new Site();
+                $site = $site->getAllSiteByIdUser($userverify['id']);
+                
+                if(count($site) >= 2) {
+                    $_SESSION['choice'] = 'choice';
+                }
             }
 
             $_SESSION['email'] = $user->getEmail();
@@ -111,17 +125,19 @@ class User
             header("Location: ".DOMAIN."/dashboard" );
         }
         
+
         //Logins with Oauth
         if (!empty($_GET) && !empty($_GET['state'])) {
             switch ($_GET['state']) {
                 case 'VG-CREATOR-FACEBOOK':
                     $this->loginFacebook();
                     break;
-                    case 'VG-CREATOR-GOOGLE':
-                        $this->loginwithGoogle();
-                        break;
-                        default:
-                        header("Location: ".DOMAIN."/login" );
+                case 'VG-CREATOR-GOOGLE':
+                    $this->loginwithGoogle();
+                    unset($_SESSION['csrf_token']);
+                    break;
+                default:
+                    header("Location: ".DOMAIN."/login" );
                     break;
                 }
         }
@@ -132,6 +148,7 @@ class User
     {
 
         $user = new UserModel();
+
         //$view = new View("login");
         //$view->assign("user", $user);
 
@@ -140,7 +157,7 @@ class User
         $data = $this->GetAccessToken(GOOGLE_ID, $redirect_uri, GOOGLE_SECRET, $_GET['code']);
         //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
         $access_token = $data['access_token'];
-        $user_info = $this->GetUserProfileInfo($access_token);
+        $user_info = $this->GetUserProfileInfo($access_token);;
 
         if (!$user_info['verified_email']) {
             echo "OOps sorry something went wrong with google";
@@ -153,18 +170,27 @@ class User
         }
         $id = $user->getIdFromEmail($user_info['email']);
 
-        $_SESSION['id'] =  $id['id'];
+        //Check if user is backlisted
+        $this->checkIfUserIsBaned($id);
+
+        $_SESSION['id'] =  $id;
         $_SESSION['email'] = $user_info['email'];
         $_SESSION['firstname'] = $user_info['given_name'];
         $_SESSION['lastname'] = $user_info['family_name'];
 
         //Check if user role for URI
         if ($_GET['url'] == 'login') {
-            $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
-            $_SESSION['VGCREATOR'] = ($userRoleForVG[0]['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
-            $_SESSION['id_site'] = $userRoleForVG[0]['id'];
-        }
+            $userRoleForVG = $user->getRoleOfUser( $id, VGCREATORID);
+            $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+            $_SESSION['id_site'] = $userRoleForVG['id'];
 
+            $site = new Site();
+            $site = $site->getAllSiteByIdUser($id);
+
+            if(count($site) >= 2) {
+                $_SESSION['choice'] = 'choice';
+            }
+        }
 
         if (!$user->getUserByEmail($user_info['email'])) {
             $_SESSION['NOT-SET'] = 'NOT-SET';
@@ -174,8 +200,10 @@ class User
             $_SESSION['token'] = $user->generateToken();
             $_SESSION['oauth_provider'] = 'google_api';
             $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['id'] =  hash('sha256', $user_info['id']);
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
+
         header("Location: " . DOMAIN . "/dashboard");
     }
 
@@ -192,7 +220,7 @@ class User
             $result = Verificator::checkForm($user->getRegisterForm(), $_POST);
 
             if ($user->isUserExist($_POST['email'])) {
-                FlashMessage::setFlash('errors', 'Vous avez deja un compte');
+                FlashMessage::setFlash('errors', 'Vous avez dejà un compte');
                 header("Refresh: 5; ".DOMAIN."/login ");
                 return;
             }
@@ -201,7 +229,16 @@ class User
             $user->setLastname(htmlspecialchars($_POST['lastname']));
             $user->setEmail(htmlspecialchars($_POST['email']));
             $user->setPassword(htmlspecialchars($_POST['password']));
-            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            
+            if(!$pseudotocheck) {
+                FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+                // header("Refresh: 3; ".DOMAIN."/register ");
+                return;
+            } else {
+                $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            }
+            
             $user->generateToken();
             //$user->setIdRole(1); // 1 = Admin, 2 = User
             $user->setStatus(0);
@@ -338,5 +375,26 @@ class User
             echo 'Error : Failed to revoke access token';
 
         return $data;
+    }
+
+    public function checkIfUserIsBaned($id_user)
+    {
+        //Check if user is backlisted
+        $backlist = new Backlist();
+        $site = new Site();
+        if ($_GET['url'] == 'login') {
+            $site->getSiteByName('vg-creator');
+        }
+        //TODO check the site name via url
+        $site->getSiteByName($_GET['url']);
+        $is_banned = $backlist->isUserBacklisted($id_user);
+        if ($is_banned) {
+            //send 404 header
+            //new View("404", 'error', 'Errors');
+            header("HTTP/1.0 403 Forbidden");
+            FlashMessage::setFlash('errors', "Vous êtes banni de ce site");
+            header("Refresh: 3; " . DOMAIN . "/");
+            die();
+        }
     }
 }

@@ -90,8 +90,6 @@ class Confirmation {
                 header("Refresh: 3; ".DOMAIN."/forget" );
             }
 
-            // !TODO : check if the password is identical to the confirm password 
-
             $user_recovery->setId($id);
             $user_recovery->setEmail($email);
             $user_recovery->setTokenExpiry(0);

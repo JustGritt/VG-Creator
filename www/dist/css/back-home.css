@@ -5,49 +5,54 @@
 /* DARK MODE VARIABLES
  ========== */
 :root {
-  --color-white: #f2f2f2;
-  --color-black: #333333;
+  --color-white: #ffffff;
+  --color-black: #000000;
   --color-accent: #82ccdd;
   --color-danger: #ED4C67;
-  --color-background: #f2f2f2;
+  --color-grey-dark: #ADADAD;
+  --color-blue-dark:#7E86A5;
+  --color-red:#ED4C67;
+  --color-real-green:#BCF682;
+  --color-background: #ffffff;
   --color-background-alt: #EFF3FE;
-  --color-border: #333333;
-  --color-text: #333333;
-  --color-pseudo: #333333;
+  --color-border: #000000;
+  --color-text: #000000;
+  --color-pseudo: #000000;
   --color-link: #1538B5;
-  --color-shadow: #f2f2f2;
+  --color-main-blue: #2D4291;
+  --color-shadow: #ffffff;
   --color-nav-link: #ED4C67;
-  --color-button-background: #333333;
-  --color-button-text: #f2f2f2;
-  --color-button-hover-background: #f2f2f2;
-  --color-button-hover-text: #333333;
+  --color-button-background: #000000;
+  --color-button-text: #ffffff;
+  --color-button-hover-background: #ffffff;
+  --color-button-hover-text: #000000;
   --color-button-link: #82ccdd;
-  --color-footer-background: #f2f2f2;
-  --color-border-invert: #f2f2f2;
-  --color-hover-text: #f2f2f2;
-  --color-hover-background: #333333;
+  --color-footer-background: #ffffff;
+  --color-border-invert: #ffffff;
+  --color-hover-text: #ffffff;
+  --color-hover-background: #000000;
 }
 
 .dark {
-  --color-white: #f2f2f2;
-  --color-black: #333333;
-  --color-background: #333333;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-background: #000000;
   --color-background-alt: #CBCBCB;
-  --color-border: #f2f2f2;
-  --color-text: #f2f2f2;
-  --color-pseudo: #f2f2f2;
+  --color-border: #ffffff;
+  --color-text: #ffffff;
+  --color-pseudo: #ffffff;
   --color-link: #1538B5;
-  --color-shadow: #333333;
+  --color-shadow: #000000;
   --color-nav-link: #ED4C67;
-  --color-button-background: #f2f2f2;
-  --color-button-text: #333333;
-  --color-button-hover-background: #333333;
-  --color-button-hover-text: #f2f2f2;
+  --color-button-background: #ffffff;
+  --color-button-text: #000000;
+  --color-button-hover-background: #000000;
+  --color-button-hover-text: #ffffff;
   --color-button-link: #82ccdd;
-  --color-footer-background: #333333;
-  --color-border-invert: #333333;
-  --color-hover-text: #333333;
-  --color-hover-background: #f2f2f2;
+  --color-footer-background: #000000;
+  --color-border-invert: #000000;
+  --color-hover-text: #000000;
+  --color-hover-background: #ffffff;
 }
 
 *,
@@ -56,16 +61,43 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+p {
   margin: 0;
   padding: 0;
 }
 
+.tag-status-draft {
+  background-color: var(--color-grey-dark);
+  padding: 6px 18px 7px 18px;
+  border-radius: 6px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  color: #FFFFFF;
+}
+
+.tag-status-publish {
+  background-color: var(--color-real-green);
+  padding: 6px 18px 7px 18px;
+  border-radius: 6px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  color: #FFFFFF;
+}
+
 .body-container-dashboard {
+  display: flex;
   background-color: #f5f5f5;
   border-radius: 5px;
   box-shadow: 0px 0px 10px #ccc;
-  display: flex;
+}
+.body-container-dashboard section:nth-of-type(2) {
+  overflow: scroll;
+  width: calc(100% - 300px);
 }
 
 .left-panel-dasboard {
@@ -151,7 +183,7 @@ h6 {
   font-size: 2.5em;
 }
 .all-card-info-dasboard .card-info-dasboard > div:nth-child(1) div > h4 {
-  color: #333333;
+  color: #000000;
   font-weight: 400;
   font-size: 1.1em;
 }
@@ -190,7 +222,7 @@ h6 {
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info .left-part-card > div > h4 {
   font-size: 1.2em;
-  color: #f2f2f2;
+  color: #ffffff;
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info .left-part-card > div > h5 {
   font-size: 1em;
@@ -199,7 +231,7 @@ h6 {
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info .left-part-card > h6 {
   font-size: 2.6em;
-  color: #f2f2f2;
+  color: #ffffff;
 }
 .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info > div {
   max-width: 344.49px;

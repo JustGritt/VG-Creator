@@ -62,5 +62,12 @@ class Verificator
             ;
     }
 
+    public static function checkPseudo($pseudo): bool
+    {
+        $pattern = '/^@([A-Za-z-0-9]+)/';
+        $pseudotocheck = htmlspecialchars($pseudo);
+        return strlen($pseudotocheck)>=4 && preg_match($pattern, $pseudotocheck, $matches) == 1;
+    }
+
 
 }

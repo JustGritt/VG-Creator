@@ -45,7 +45,7 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/subscribe', 'admin@dashboard');
     $router->post('/subscribe', 'admin@dashboard');
     $router->get('/settings', 'admin@dashboard');
-    $router->get('/settings/profile', 'admin@dashboard');
+    $router->post('/settings', 'admin@dashboard');
     $router->get('/history', 'admin@dashboard');
     $router->get('/articles', 'admin@getAllArticles');
     $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
@@ -77,30 +77,33 @@ $router->get('/test2', 'admin@client');
 
 
 //TEST CLIENT WEBSITE
-$router->get('/blog/:id/', 'Blog@show')->with('id', '[0-9]+');
+$router->get('/blog/:id/', 'Blog@show')
+    ->with('id', '[0-9]+');
 $router->get('/blog/:id/:article', 'Blog@show')
     ->with('id', '[0-9]+')
     ->with('article', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)'); //TEST PRUPOSE ONLY
+    ->with('author', '([A-Za-z\-0-9]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author/:slug', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)')
+    ->with('author', '([A-Za-z\-0-9]+)')
     ->with('slug',  '([A-Za-z]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author/:slug/:pages', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)')
+    ->with('author', '([A-Za-z\-0-9]+)')
     ->with('slug',  '([A-Za-z]+)')
     ->with('pages', '([A-Za-z]+)'); //TEST PRUPOSE ONLY
 
 $router->get('/@:author/:slug/:pages/:id', 'main@initContent')
-    ->with('author', '([a-z\-0-9]+)')
+    ->with('author', '([A-Za-z\-0-9]+)')
     ->with('slug',  '([A-Za-z]+)')
     ->with('pages', '([A-Za-z]+)')
     ->with('id', '[0-9]+'); //TEST PRUPOSE ONLY
 
-
+//$router->get('/error-404', 'error@show404', "error.404");
+$router->run();
+/*
 try {
     $router->run();
 } catch (Core\Exceptions\Routing\RouterException $e) {
@@ -111,4 +114,5 @@ try {
     header("Location: /error-404",FALSE, 302);
     die();
 }
+*/
 

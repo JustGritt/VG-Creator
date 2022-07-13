@@ -89,7 +89,6 @@ class PasswordRecovery extends Sql {
         ];
     }
 
-
     public function recovery_password($selector, $email, $token, $token_recovery)
     {
         $sql = "INSERT INTO ".$this->table." (selector, email, token, token_expiry) VALUES (?,?,?,?)";

@@ -1,47 +1,54 @@
+<link rel="stylesheet" href="../dist/css/settings.css">
+
 <section id="parametres">
 
     <h1 class="title">Settings</h1>
-    <section id="parametres">
 
-        <h1 class="title">Clients</h1>
-        <div id="wrapper" style='margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 60%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);'></div>
-        <script>
-            new gridjs.Grid({
-                columns: ["firstname", "lastname" , "email", "pseudo", "role",
-                    {
-                        name: 'Actions',
-                        formatter: (cell) => html(`<a href='/'>Email</a>`)
-                    },
-                ],
+    <form method="POST">
+        <label for="firstname">Firstname</label>
+        <input type="text" id="firstname" name="firstname" value="<?php echo $user->getFirstname(); ?>">
+        
+        <label for="lastname">Lastname</label>
+        <input type="text" id="lastname" name="lastname" value="<?php echo $user->getLastname(); ?>">
+        
+        <label for="pseudo">Pseudo</label>
+        <input type="text" id="pseudo" name="pseudo" value="<?php echo $user->getPseudo(); ?>">
+        
+        <label for="email">Email</label>
+        <input type="mail" id="email" name="email" value="<?php echo $user->getEmail(); ?>">
+        
+        <!-- Display more filters -->
+        <label for="more-options">
+            Change password
+                <svg fill="#000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
+                    <path d="M0-.75h24v24H0z" fill="none" />
+                </svg>
+            </label>
+            <input type="checkbox" name="more-options" id="more-options">
+            
+            <div class="toggle-filters">
+                <div class="filter-parameter">
+                    <div class="filter-checkboxes">
+                        
+                        <label for="oldpwd">Current Password</label>
+                        <input type="password" name="oldpwd" id="old-password">
 
-                data: [
-                    <?php foreach ($result as $key => $value) { ?>
-                    [
-                        <?php echo "'".$value['firstname']."'";?>,
-                        <?php  echo "'".$value['lastname']."'"; ?>,
-                        <?php  echo "'".$value['email']."'"; ?>,
-                        <?php  echo "'".$value['pseudo']."'"; ?>,
-                        <?php  echo "'".$value['name']."'"; ?>,
+                        <label for="oldpwd">New password</label>
+                        <input type="password" name="newpwd" id="new-password">
 
-                    ],
-                    <?php }  ?>
-                ],
+                        <label for="oldpwd">Confirm new password</label>
+                        <input type="password" name="newpwdconfirm" id="new-password-confirm">
 
-                search: {
-                    enabled: true
-                },
-                pagination: {
-                    enabled: true,
-                    limit: 5,
-                    summary: false
-                }
-            }).render(document.getElementById("wrapper"));
-        </script>
-    </section>
+                    </div>
+                </div>
+                
+            </div>
+            <input type="submit" value="confirm">
+        </div>
 
+    </form>
+
+    
+    
 </section>

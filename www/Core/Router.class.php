@@ -8,6 +8,7 @@ use App\Utils\Utils as UtilsUtils;
 class Router
 {
 
+
     private $url;
     private $routes = [];
     private $namedRoutes = [];
@@ -30,8 +31,10 @@ class Router
      */
     public $action;
 
+
     private function __construct()
     {
+        die();
         //echo $_GET['url'] ?? "";
         $this->url = $_GET['url'] ?? "";
     }
