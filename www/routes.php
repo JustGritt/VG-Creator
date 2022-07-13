@@ -5,6 +5,7 @@ namespace App;
 //use App\Core\Router;
 use App\Core\Routing\Router;
 use App\Core\Security;
+use App\Core\View;
 
 //Réussir à récupérer l'URI
 //$router =  Router::getInstance();
@@ -37,8 +38,8 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/', 'admin@dashboard');
     $router->post('/', 'admin@dashboard');
     if (Security::isVGdmin()) {
-        $router->get('/clients', 'admin@dashboard');
-        $router->post('/clients', 'admin@dashboard');
+        $router->get('/clients', 'admin@setClientOfSite');
+        $router->post('/clients', 'admin@setClientOfSite');
         $router->get('/sites', 'admin@getAllSite');
         $router->post('/sites', 'admin@getsite');
     }
@@ -50,10 +51,11 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/articles', 'admin@getAllArticles');
     $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
 
-    $router->get('/articles-edit/:id_post', 'post@editPost', 'post.editPost')->with('id_post', '[0-9]+');
-    $router->post('/articles-edit/:id_post', 'post@editPost', 'post.editPost')->with('id_post', '[0-9]+');
+    $router->get('/articles/create', 'post@createPost', 'post.createPost');
+    $router->post('/articles/create', 'post@createPost', 'post.createPost');
 
-    $router->post('/articles/:id', 'post@sendPost')->with('id', '[0-9]+');
+    $router->get('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')->with('id_post', '[0-9]+');
+    $router->post('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')->with('id_post', '[0-9]+');
 
     $router->get('/clients', 'admin@dashboard');
     $router->post('/clients', 'admin@dashboard');
@@ -101,14 +103,6 @@ $router->get('/@:author/:slug/:pages/:id', 'main@initContent')
     ->with('id', '[0-9]+'); //TEST PRUPOSE ONLY
 
 
-try {
+
     $router->run();
-} catch (Core\Exceptions\Routing\RouterException $e) {
-    //http_redirect();
-} catch (Core\Exceptions\Routing\RouterNotFoundException $e) {
-    $router = Router::getInstance();
-    $router->get('/error-404', 'error@show404', "error.404");
-    header("Location: /error-404",FALSE, 302);
-    die();
-}
 

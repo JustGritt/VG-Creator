@@ -3,7 +3,7 @@
         <?php
 
         include "dist/css/articles.css";
-
+        use \App\Core\Routing\Router;
         include "dist/css/post.css";
 
         ?>
@@ -14,8 +14,9 @@
         <br>
         <div class="bar-menu">
             <div class="bar-menu-head">
-                <span class="<?php if (!isset($_GET['published']) && !isset($_GET['drafts'])) echo ("active")  ?>" onclick="changeMenu('')">Modifier un article</span>
-                <span class="<?php if (isset($_GET['published'])) echo ("active")  ?>" onclick="changeMenu('?published')"><i class="fa-solid fa-plus"></i> Ajouter un article</span>
+               <?php if(isset($id_post)){ ?>
+                <span class="<?php if (!isset($_GET['published']) && !isset($_GET['drafts'])) echo ("active")  ?>" onclick="changeMenu('')">Modifier un article</span><?php } ?>
+                <span class="<?php if(!isset($id_post)) echo ("active")  ?>" onclick="changeMenu('createPost')"><i class="fa-solid fa-plus"></i> Ajouter un article</span>
             </div>
             <hr>
         </div>
@@ -36,7 +37,7 @@
                             <select id="category"  name="category">
                                 <?php
                                 foreach ($categories as $key => $value) {
-                                    $selected = isset($post) && $post->getCategory() == $value->id_category;
+                                    $selected = isset($post) ? $post->getCategory() == $value->id_category : isset($fields['category']) && $fields['category'] == $value->id_category ;
                                     //$categorie_get = isset($post)? $categories[$post->getIdCategorie()]:null;
                                     if ($selected) echo  '<option value='.'"'.$value->id_category.'"'.'selected >'.$value->name.'</option>';
                                     else echo  '<option value='.'"'.$value->id_category.'"'.'>'.$value->name.'</option>';
@@ -47,10 +48,10 @@
                         <div class="space-bar2"></div>
                         <div class="input-post flex-05">
                             <label for="auteur">Auteur</label>
-                            <input readonly type="text" name="auteur" id="auteur" placeholder="Auteur" value=<?php if(isset($fields['auteur'])) echo'"'. $fields['auteur'] .'"';  else if(isset($post)) echo '"'.$post->getAuthor()->getFirstname().' '.$post->getAuthor()->getLastname().'"'?>>
+                            <input readonly type="text" name="auteur" id="auteur" placeholder="Auteur" value="<?php if(isset($fields['auteur']) && !empty($fields['auteur'])) echo $fields['auteur'] ;  else if(isset($post)) echo $post->getAuthor()->getFirstname().' '.$post->getAuthor()->getLastname(); else echo $_SESSION['firstname'].' '.$_SESSION['lastname']  ?>">
                         </div>
 
-                        <input  type="hidden" name="author" id="author" value=<?php if(isset($fields['auteur'])) echo'"'. $fields['author'] .'"'; if(isset($post)) echo '"'.$post->getAuthor()->getId().'"'?>>
+                        <input type="hidden" name="author" id="author" value="<?php if(isset($fields['auteur']) && !empty($fields['auteur'])) echo $fields['author'] ; elseif(isset($post)) echo $post->getAuthor()->getId() ; else echo $_SESSION['id'] ?>">
                     </div>
                     <br />
                     <div class="input-post">
@@ -79,7 +80,7 @@
                             <input value="<?php if (isset($fields['metadescription'])) echo  $fields['metadescription']; else if(isset($post)) echo $post->getMetadescription() ?>" type="text" name="metadescription" id="metadescription" >
                             <span>Saisissez la description de la page.</span>
                             <?php if (isset($errors['metadata'])) echo '<span class="err-txt">' . $errors['metadata'] . '</span>'; ?>
-                        </div>·
+                        </div>
 
                         <div class="input-post w-300">
                             <label for="status">Status</label>
@@ -123,13 +124,16 @@
     document.getElementById('output').innerHTML = location.search;
     document.getElementsById('chosen-select').chosen();
     //console.log($)
-
-    function changeMenu(type) {
-        window.location.href = 'http://localhost/dashboard/articles' + type
-    }
 </script>
 
 <script async>
+    function changeMenu(type) {
+        if(type === "createPost"){
+            window.location.href = "/<?php echo Router::getInstance()->url("post.createPost") ?>";
+            return;
+        }
+        window.location.href = 'http://localhost/dashboard/articles' + type
+    }
      var getUrl = window.location;
     var baseUrl = window.location.href;
     document.querySelector('#form-post').setAttribute('action', baseUrl)

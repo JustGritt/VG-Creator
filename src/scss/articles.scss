@@ -43,6 +43,9 @@
     // margin-bottom: 20px;
     .articles-content {
         margin: clamp(2rem, 5vw, 23px) clamp(2rem, 5vw, 53px);
+        .btm-btn{
+
+        }
         p {
             display: block;
             max-width: 499px;

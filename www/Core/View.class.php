@@ -52,6 +52,11 @@ class View
         $this->data[$key]=$value;
     }
 
+    public function un_assign($key):void
+    {
+        if(isset($this->data[$key])) unset($this->data[$key]);
+    }
+
     public function __destruct()
     {
         extract($this->data);

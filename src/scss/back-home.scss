@@ -12,6 +12,7 @@ p {
     padding: 0;
 }
 
+
 $status: (('draft', var(--color-grey-dark)), ('publish', var(--color-real-green)));
 @each $property,
 $value in $status {

@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-abstract class Controller
+ class Controller
 {
 
     public $view;
@@ -22,4 +22,5 @@ abstract class Controller
           $this->view->assign($key, $value);
       }
     }
+
 }
