@@ -57,9 +57,4 @@
         <input type="submit" value="Confirmer">
     </form>
 
-
-    </form>
-
-    
-    
 </section>

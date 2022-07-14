@@ -102,7 +102,6 @@ abstract class Sql
     
     protected function __construct($database, $connect = true)
     {
-       
         $this->database = $database;
       if ($connect) {
         $this->connect();

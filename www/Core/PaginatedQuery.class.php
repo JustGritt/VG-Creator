@@ -28,18 +28,28 @@ class PaginatedQuery extends Sql
     {
         $currentPage = $this->getCurrentPage();
         $pages = $this->getPages();
-        if ($currentPage > $pages) {
+
+        if (($pages == 0 && $currentPage == 1) || ($currentPage <= $pages && $currentPage !== 0)) 
+        {
+            $offset = $this->perPage * ($currentPage - 1);
+            $request = $this->query . " LIMIT {$this->perPage} OFFSET {$offset}";
+            $sql = $this->pdo->prepare($request);
+            $sql->execute();
+            if ($this->mappingClass == null) {
+                return $sql->fetchAll(\PDO::FETCH_ASSOC);
+            }
+            return $sql->fetchAll(\PDO::FETCH_CLASS, $this->mappingClass);
+            
+        } 
+        elseif($currentPage == 0)  
+        {
+            echo "fzefzeg";
+            header('Location: ./media');
+            exit();
+        }
+        else {
             throw  new \Exception('Page not found');
         }
-
-        $offset = $this->perPage * ($currentPage - 1);
-        $request = $this->query . " LIMIT {$this->perPage} OFFSET {$offset}";
-        $sql = $this->pdo->prepare($request);
-        $sql->execute();
-        if ($this->mappingClass == null) {
-            return $sql->fetchAll(\PDO::FETCH_ASSOC);
-        }
-        return $sql->fetchAll(\PDO::FETCH_CLASS, $this->mappingClass);
     }
 
     private function getCurrentPage()

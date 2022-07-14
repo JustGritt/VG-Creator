@@ -179,18 +179,22 @@ class User extends Sql{
         } else {
             $email = null;
         }
+
+        echo "<div class='form-container'>";
+
         return [
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
                 "submit"=>"S'inscrire",
-                "id"=>"formulaire"
+                "id"=>"formulaire",
+                "class"=>"form-group flex"
             ],
             'inputs'=>[
                 "firstname"=>[
                     "type"=>"text",
                     "placeholder"=>"Prénom",
-                    "class"=>"inputForm tmp",
+                    "class"=>"inputForm input__field",
                     "id"=>"firstnameForm",
                     "min"=>2,
                     "max"=>50,
@@ -199,7 +203,7 @@ class User extends Sql{
                 "lastname"=>[
                     "type"=>"text",
                     "placeholder"=>"Nom",
-                    "class"=>"inputForm tmp",
+                    "class"=>"inputForm input__field",
                     "id"=>"lastnameForm",
                     "min"=>2,
                     "max"=>100,
@@ -210,7 +214,7 @@ class User extends Sql{
                     "placeholder"=>"Email",
                     "required"=>true,
                     "value"=>$email,
-                    "class"=>"inputForm",
+                    "class"=>"inputForm input__field",
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
                 ],
@@ -218,7 +222,7 @@ class User extends Sql{
                     "type"=>"text",
                     "placeholder"=>"@Pseudo",
                     "required"=>true,
-                    "class"=>"inputForm",
+                    "class"=>"inputForm input__field",
                     "id"=>"pseudoForm",
                     "error"=>"@Pseudo incorrect",
                     "unicity"=>"true",
@@ -228,15 +232,16 @@ class User extends Sql{
                     "type"=>"password",
                     "placeholder"=>"Mot de passe",
                     "required"=>true,
-                    "class"=>"inputForm",
+                    "class"=>"inputForm input__field",
                     "id"=>"pwdForm",
                     "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
-                    ],
+                    "autocomplete"=> "on",
+                ],
                 "passwordConfirm"=>[
                     "type"=>"password",
                     "placeholder"=>"Confirmation du mot de passe",
                     "required"=>true,
-                    "class"=>"inputForm",
+                    "class"=>"inputForm input__field",
                     "id"=>"pwdConfirmForm",
                     "confirm"=>"password",
                     "error"=>"Votre mot de passe de confirmation ne correspond pas",
@@ -249,6 +254,8 @@ class User extends Sql{
                 ]
             ]
         ];
+
+        echo "</div>";
     }
 
     public function getRegisterFormStep2(): array

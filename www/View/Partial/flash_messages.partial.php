@@ -1,5 +1,6 @@
 
-<link rel="stylesheet" href="/dist/css/login.css">
+<!-- <link rel="stylesheet" href="/dist/css/login.css"> -->
+
 <?php
     if (isset($data['errors']) && !empty($data['errors'])) {
         foreach($data['errors'] as $message) {
