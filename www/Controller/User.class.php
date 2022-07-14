@@ -298,7 +298,8 @@ class User
             $mail->sendMail($_POST['email'], $body, $subject);
             echo 'Merci pour votre inscription, confirmez votre email';
 
-            header("Refresh: 5; " . DOMAIN . "/");
+            die();
+            // header("Refresh: 5; " . DOMAIN . "/");
         }
 
         $view->assign("errors", $errors);

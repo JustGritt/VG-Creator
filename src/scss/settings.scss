@@ -163,7 +163,8 @@
             white-space: nowrap;
             transform: translate(0, 0);
             transform-origin: 0 0;
-            background: var(--color-white);
+            background: var(--color-background);
+            border-radius: 8px;
             transition: transform 120ms ease-in;
             font-weight: bold;
             font-size: 16px;
@@ -182,7 +183,7 @@
         .input__field:not(:placeholder-shown)+.input__label {
             transform: translate(0.25rem, -65%) scale(0.8);
             color: var(--color-danger);
-            background: var(--color-white);
+            background: var(--color-background);
             padding: auto 8px;
             
         }

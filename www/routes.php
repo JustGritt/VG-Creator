@@ -62,8 +62,9 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->get('/clients', 'admin@setClientsView');
     $router->post('/clients', 'admin@setClientsView');
-    $router->get('/clients/add', 'admin@dashboard');
-    $router->post('/clients/add', 'admin@dashboard');
+    $router->get('/clients/add', 'admin@addClient');
+    $router->post('/clients/add', 'admin@addClient
+    ');
 
     $router->get('/comments', 'admin@getAllComments');
 

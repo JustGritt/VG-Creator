@@ -1,11 +1,10 @@
 /* IMPORTS
  ========== */
 
-@use './partials/inputs.scss';
+// @use './partials/inputs.scss';
 @use './partials/buttons.scss';
 
-@use './mixins/global' as g;
-@use './mixins/colors' as c;
+@use './mixins/global';
 
 /* CLASSES MAIN
  ========== */
@@ -17,7 +16,7 @@ body main {
 
     section#register {
         width: 100vw;
-    
+
     }
 
     section#register-step-2 {
@@ -41,30 +40,53 @@ body main {
     .wrapper {
     
         flex-direction: column;
-        color: c.$black;
+        color: var(--black);
         // background: rgba(255, 255, 255, 0.71);
         // box-shadow: 0px 4px 4px rgba(159, 159, 159, 0.25);
         backdrop-filter: blur(4px);
         
         width: 75vw;
         margin: 0 auto;
+        padding: 100px 0;
         max-width: 768px;
         border-radius: 31px;
 
     
         @media only screen and (max-width: 768px) {
-            width: 100%;
+            width: 80%;
             height: 100%;
             border-radius: 0;
-            margin-top: 70px;
+
+            .input,
+            .input__field {
+                margin: 0 auto;
+                width: 100%;
+            }
+        }
+    
+        .title {
+            font-weight: bold;
+            font-size: em(10px, 6px);
+            line-height: 52px;
+            color: var(--color-text);
+        }
+
+        .inputForm {
+            width: 100%;
         }
 
         .sub-title {
+            color: var(--color-text);
             margin-top: 35px;
+            @media only screen and (max-width: 768px)  {
+                margin: 0 50px;
+                word-wrap: break-word;
+                text-align: center;
+            }
         }
-    
+
         .form-container {
-            width: 80%;
+            width: 100%;
             margin: 0 auto;
 
             form {
@@ -79,6 +101,9 @@ body main {
                     &:nth-child(1) { margin-top: 25px; }
                     &[type="submit"] {
                         margin-top: 50px;
+                        border: none;
+                        background: var(--color-button-background);
+                        color: var(--color-button-text);
                     }
                 }
     
@@ -90,19 +115,8 @@ body main {
                 }
             }
         }
-    
-        .title {
-            font-weight: bold;
-            font-size: em(1px, 6px);
-            line-height: 52px;
-            margin-top: 80px;
-        }
 
-        .inputForm {
-            width: 100%;
-        }
-    
+        
     }
 }
-
 
