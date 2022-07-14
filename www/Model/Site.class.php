@@ -72,6 +72,18 @@ class Site extends Sql
         return $sql->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getRolesOfSite($id_site){
+        $request = "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
+        $sql = $this->pdo->prepare($request);
+        $sql->execute(array($id_site));
+        return $sql->fetchAll(\PDO::FETCH_ASSOC);
+
+    }
+
 
 
 }

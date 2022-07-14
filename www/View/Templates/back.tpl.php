@@ -33,6 +33,14 @@
             <?php include "View/Partial/Back/right-panel.partial.php" ?>
 
             <?php  include "View/" . $this->view . ".view.php"; ?>
+
+            <?php
+            use App\Core\FlashMessage;
+            $flash = new FlashMessage();
+            $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
+            //$this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
+            //TODO : add success message /Partial/flash_messages.partial.php
+            ?>
         </div>
     </main>
 </body>

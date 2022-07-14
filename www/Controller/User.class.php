@@ -393,7 +393,7 @@ class User
             //new View("404", 'error', 'Errors');
             header("HTTP/1.0 403 Forbidden");
             FlashMessage::setFlash('errors', "Vous êtes banni de ce site");
-            header("Refresh: 3; " . DOMAIN . "/");
+            header("Refresh: 1; " . DOMAIN . "/");
             die();
         }
     }

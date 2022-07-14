@@ -15,7 +15,7 @@ class PaginatedQuery extends Sql
     protected $perPage;
     protected $count;
 
-    public function __construct(string $query, string $queryCount, string $mappingClass, int $perPage = 10)
+    public function __construct(string $query, string $queryCount, int $perPage = 10, string $mappingClass=null)
     {
         $this->pdo = Sql::getInstance();
         $this->query = $query;
@@ -36,7 +36,9 @@ class PaginatedQuery extends Sql
         $request = $this->query . " LIMIT {$this->perPage} OFFSET {$offset}";
         $sql = $this->pdo->prepare($request);
         $sql->execute();
-
+        if ($this->mappingClass == null) {
+            return $sql->fetchAll(\PDO::FETCH_ASSOC);
+        }
         return $sql->fetchAll(\PDO::FETCH_CLASS, $this->mappingClass);
     }
 

@@ -149,10 +149,27 @@ class Admin
         $user = new UserModel();
         $backlist = new Backlist();
         $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
-        $result = $this->getUserOfSite($_SESSION['id_site']);
+
+        $count = "SELECT COUNT(*)
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ={$_SESSION['id_site']}";
+        $sql =
+            "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ={$_SESSION['id_site']}";
+
+        $paginatedQuery = new PaginatedQuery($sql, $count, 4);
+        $result = $paginatedQuery->getItems();
         $view->assign("result", $result);
         $view->assign('user', $user);
         $view->assign('backlist', $backlist);
+        $view->assign('previous', $paginatedQuery->previousLink('clients'));
+        $view->assign('next', $paginatedQuery->nextLink('clients'));
+
 
         if (!empty($_POST)) {
             $this->updateUser();
@@ -162,7 +179,7 @@ class Admin
 
     public function updateUser(){
 
-        if (!Security::isVGdmin() || !Security::isAdmin()) {
+        if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
         }
@@ -170,6 +187,8 @@ class Admin
         if (Security::isVGdmin() || Security::isAdmin()) {
             $backlist = new Backlist();
             $user = new UserModel();
+            var_dump($_POST);
+
             $user = $user->getUserById($_POST['id']);
 
             //Check if the user is already in the backlist and Update the user if he is
@@ -210,6 +229,11 @@ class Admin
 
     public function getUserOfSite($id_site)
     {
+        $count = "SELECT COUNT(*)
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
         $sql =
             "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
             FROM `esgi_user` u
@@ -217,9 +241,12 @@ class Admin
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site ='.$id_site.'";
 
-        $request = Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll(\PDO::FETCH_ASSOC);
+        $paginatedQuery = new PaginatedQuery($sql, $count, 4);
+        $result = $paginatedQuery->getItems();
+        //$request = Sql::getInstance()->prepare($sql);
+        //$request->execute(array($id_site));
+        //$request->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
     private function addUser(){
@@ -281,17 +308,12 @@ class Admin
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
         $documents = new Document();
-        //$documents = $document->getPaginatedDocuments($_SESSION['id_site']);
 
         $query = "SELECT * FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
         $count = "SELECT COUNT(1) FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
-        $pagination = new PaginatedQuery($query, $count, Document::class, 2);
+        $pagination = new PaginatedQuery($query, $count,2, Document::class);
         $pagination->getItems();
 
-
-        //var_dump($router->url('dashboard.media', ['page' => $pagination->previousLink('dashboard/media')]));
-
-        //$documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
         $view = new View("media", "back");
         $view->assign('user', $user);
         $view->assign('documents',  $pagination->getItems());

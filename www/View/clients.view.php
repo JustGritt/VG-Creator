@@ -17,7 +17,7 @@
             <?php foreach ($result as $key => $value) { ?>
             <tr>
                 <form class="test" method="POST">
-                    <td><input type="text" id="firstname"disabled name="firstname" value="<?php echo $value['firstname']; ?>"</td>
+                    <td><input type="text" id="firstname"disabled name="firstname" value="<?php  echo $value['firstname']; ?>"</td>
                     <td><input type="text" id="lastname"disabled name="lastname" value="<?php echo $value['lastname']; ?>"</td>
                     <td><input type="email" id="email"  disabled name="email" value="<?php echo $value['email']; ?>"</td>
                     <td><input type="text" id="pseudo" disabled name="pseudo" value="<?php echo $value['pseudo']; ?>"</td>
@@ -53,6 +53,9 @@
 
             </tr>
             <?php }  ?>
+
+            <?php  echo $previous ?>
+            <?php echo $next ?>
 
         </table>
         <h3>Blacklist</h3>
