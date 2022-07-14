@@ -9,4 +9,9 @@
             
         </form>
     <?php } ?>
+
+
+    <?php if (isset($previous))  echo $previous ?>
+    <?php if (isset($next))  echo $next ?>
+
 </section>

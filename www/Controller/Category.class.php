@@ -32,15 +32,15 @@ class Category
         $view = new View("category", "back");
         $view->assign("category", $category);
 
-        $result = Verificator::checkForm($category->getRegisterForm(), $_POST);
-        var_dump($_POST);
-        die();
+        var_dump($category);
+        $result = Verificator::checkForm($category->getAddCategorieFrom(), $_POST);
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+
             $category->setName($_POST['name']);
             $category->setIdSite($_SESSION['id_site']);
-            $category->save();
+            var_dump($category->save());
         }
 
     }
