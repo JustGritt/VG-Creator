@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Core\Handler;
 use App\Core\Sql;
+use http\Env\Url;
 
 class PaginatedQuery extends Sql
 {
@@ -43,8 +44,9 @@ class PaginatedQuery extends Sql
         } 
         elseif($currentPage == 0)  
         {
-            echo "fzefzeg";
-            header('Location: ./media');
+            $url = explode('/', $_GET['url']);
+            $url = end( $url );
+            header("Location: ./{$url}");
             exit();
         }
         else {

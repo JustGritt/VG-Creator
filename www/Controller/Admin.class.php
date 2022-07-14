@@ -138,6 +138,34 @@ class Admin
         */
     }
 
+    public function chooseMySite(){
+        $site = new Site();
+        $pagination = new PaginatedQuery(
+            $site->getQueryAllsiteByIdUser($_SESSION['id']),
+            $site->getCountAllSiteByIdUser($_SESSION['id']),
+            10);
+
+        $result = $pagination->getItems();
+
+        //$site = $site->getAllSiteByIdUser($_SESSION['id']);
+
+        $view = new View('login-step-2', 'back');
+        //$view2->assign('site', $site);
+        $view->assign('site', $result);
+        $view->assign('previous', $pagination->previousLink('sites'));
+        $view->assign('next', $pagination->nextLink('sites'));
+
+        if(!empty($_POST )) {
+
+            $_SESSION['id_site'] = $_POST['id_site'];
+            $_SESSION['role'] = $_POST['role'];
+            $_SESSION[strtoupper($_POST['site'])] = $_POST['role'];
+
+            header('Location: ' . DOMAIN . '/dashboard');
+            return;
+        }
+    }
+
     public function setClientsView(){
 
         $view = new View('clients', 'back');
