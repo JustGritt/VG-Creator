@@ -38,6 +38,16 @@ class Post extends  Controller
         $this->sendDataPost();
     }
 
+    /**
+     * @param $id_post
+     * Delete a post
+     */
+    public function deletePost(int $id_post): bool
+    {
+        $post = new \App\Model\Post();
+        return $post->delete($id_post);
+    }
+
 
 
     /**
@@ -98,18 +108,16 @@ class Post extends  Controller
                         'body' => $body,
                         'metadescription' => $metadescription,
                         'metatitle' => $metatitle, ] = $_POST;
-
                     if(isset($id_post)) $post->setIdPost($post->getId());
                     $post->setTitle($title);
                     $post->setAuthor(isset($id_post) ? $post->getAuthor()->getId() : $_SESSION['id']);
                     $post->setCategory($category);
                     $post->setMetatitle($metatitle);
                     $post->setStatus($status);
-                    $post->setBody($body);
+                    $post->setBody(htmlspecialchars($body));
                     $post->setMetadescription($metadescription);
                     $post->save();
-
-                    if(isset($id_post)) Utils::redirect('admin.allPost');
+                    if(!isset($id_post)) Utils::redirect('admin.allPost');
             }
         }
 

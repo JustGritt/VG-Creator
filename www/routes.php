@@ -50,6 +50,7 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/history', 'admin@dashboard');
     $router->get('/articles', 'admin@getAllArticles', 'admin.allPost');
     $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
+    $router->delete('/articles/:id', 'post@deletePost', 'post.deletePost')->with('id', '[0-9]+');
 
     $router->get('/articles/create', 'post@createPost', 'post.createPost');
     $router->post('/articles/create', 'post@createPost', 'post.createPost');

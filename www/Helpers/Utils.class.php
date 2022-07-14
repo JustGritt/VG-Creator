@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Core\Exceptions\Routing\RouterException;
 use App\Core\Routing\Router;
 
 
@@ -19,10 +20,16 @@ class Utils
         return $text;
     }
 
+    /**
+     */
     public static function redirect($where = null): void
     {
         if (isset($where)) {
-            header('Location: /' . Router::getInstance()->url($where));
+            try {
+                header('Location: /' . Router::getInstance()->url($where));
+            } catch (RouterException $e) {
+                header('Location: /' . $where);
+            }
             Exit();
         }
     }
@@ -36,5 +43,17 @@ class Utils
     public static function abort(int $code):void
     {
         header("HTTP/1.1 ".$code);
+    }
+
+    /**
+     * Get DB name of a model class
+     *
+     * @param object $class
+     * @return string
+     */
+    public static function getDBNameFromClass(object $class):string
+    {
+        $reflect = new \ReflectionClass($class);
+        return DBPREFIXE.strtolower($reflect->getShortName());
     }
 }

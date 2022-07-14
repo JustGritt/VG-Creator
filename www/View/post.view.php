@@ -97,7 +97,7 @@
 
                 </aside> -->
 
-                <button class="btm-btn">Enregistrer</button>
+                <button style="position: relative" class="btm-btn">Enregistrer</button>
             </form>
         </section>
 
@@ -111,7 +111,7 @@
             <?php
                 if (isset($fields['body'])){
                 echo " editor.setData("."'".  $fields['body']."'" . ")";}
-                else if(isset($post)) echo " editor.setData("."'".  $post->getBody()."'" . ")";
+                else if(isset($post)) echo " editor.setData("."'". htmlspecialchars_decode($post->getBody())  ."'" . ")";
             ?>
             //  console.log(editor.setData('dsssd'));
         })

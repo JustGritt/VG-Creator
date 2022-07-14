@@ -27,13 +27,13 @@
                 $status = $value['status'] == 0 ?  'tag-status-draft' : 'tag-status-publish';
                 $status_name = $value['status'] == 0 ?  'Brouillon' : 'Publiée';
 
-                echo '<a href=/'. Router::getInstance()->url("post.editShowPost",["id_post"=> $value['id'] ]).'>'.
-                    '<article class="card-article" onClick="navigate(' . $value['id'] . ')"}" >
+                echo '<article class="card-article"  >
                 <div class="card-article__image">
-                    <img src="https://via.placeholder.com/300.png/09f/fff" alt="" />
+                    <img src="https://via.placeholder.com/300.png/09f/fff" alt=""  onClick="navigate(' . $value['id'] . ')"}"/>
+                    <button onClick="confirmDelete('.$value['id'].')" class="btm-delete"><i class="fa-solid fa-xmark"></i></button>
                  <!--   <a href="#"></a>  -->
                 </div>
-                <div class="card-article-body">
+                <div class="card-article-body" onClick="navigate(' . $value['id'] . ')"}">
                     <h4>' . Utils::truncate($value['title']) . '</h4>
                     <p>' . Utils::truncate($value['body'], 40) . '</p>
 
@@ -41,7 +41,7 @@
                         <span class="' . $status . '">'.$status_name.'</span>
                     </div>
                 </div>
-            </article></a>';
+            </article>';
             }
             ?>
         </div>
@@ -55,9 +55,23 @@
         window.location.href = 'http://localhost/dashboard/articles' + type
     }
 
+    function confirmDelete(id){
+        console.log('Thing was saved to the database.');
+        if (window.confirm('Êtes-vous sur de vouloir supprimer cet article?')) {
+            fetch('/<?php echo Router::getInstance()->url("post.deletePost") ?>'.replace(':id', '') +id, {
+                method: 'DELETE',
+            }).then(async res => {
+                if(res.status === 200){
+                    window.location.reload();
+                }
+                console.log("Request complete! response:", await res.text());
+            });
+        }
+    }
+
     function navigate(route) {
         var getUrl = window.location;
         var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
-        location.href = baseUrl+ "/articles/"+route
+        location.href = "/<?php echo Router::getInstance()->url('post.editShowPost') ?>".replace(':id_post', '')+route
     }
 </script>

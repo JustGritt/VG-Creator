@@ -13,6 +13,17 @@ class MysqlBuilder implements QueryBuilder
         return $this;
     }
 
+    /**
+     * @param $table
+     * @return QueryBuilder
+     */
+    public function delete($table) : QueryBuilder
+    {
+        $this->reset();
+        $this->query->base = "DELETE FROM " . $table;
+        return $this;
+    }
+
     public function reset()
     {
         $this->query = new \stdClass();
@@ -27,7 +38,7 @@ class MysqlBuilder implements QueryBuilder
     */
     public function where($column, $value, $operator = "="): QueryBuilder
     {
-        $this->query->where[] = "  " . $column . " " . $operator .  " " . $value ;
+        $this->query->where[] = " " . $column . " " . $operator .  " " . $value ;
         return $this;
     }
 
@@ -85,24 +96,14 @@ class MysqlBuilder implements QueryBuilder
     {
         $this->reset();
         $this->query->base = "INSERT INTO " . $table . " (" . implode(", ", $columns) . ") VALUES (";
-
         for ($i = 0; $i < count($columns) ; $i++) {
-
             if($i == 0) {
                 $this->query->base .= '?';
             } else {
                 $this->query->base .= ', ?';
             }
-
         }
         $this->query->base .= ')';
-        return $this;
-    }
-
-    public function delete($table) : QueryBuilder
-    {
-        $this->reset();
-        $this->query->base = "DELETE FROM " . $table;
         return $this;
     }
 

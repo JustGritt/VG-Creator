@@ -14,12 +14,9 @@
     <link rel="stylesheet" href="/dist/css/utils/grid.css">
     <link rel="stylesheet" href="/dist/css/back-right-panel.css">
     <link rel="stylesheet" href="/dist/css/back-home.css">
-    <link rel="stylesheet" href="/dist/fontawesome/css/all.css">
-    <link rel="stylesheet" href="/dist/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="/dist/fontawesome-pro-master/css/all.css">
     <link rel="stylesheet" href="https://harvesthq.github.io/chosen/chosen.css">
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js" ></script>
-
-
 
 </head>
 

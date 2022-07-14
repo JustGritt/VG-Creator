@@ -361,6 +361,10 @@ p {
   }
 }
 @media screen and (max-width: 1068px) {
+  .body-container-dashboard section:nth-of-type(2) {
+    width: 100% !important;
+  }
+
   .card-publications-dasboard > .all-articles-publications-dasboard article {
     width: 100% !important;
   }

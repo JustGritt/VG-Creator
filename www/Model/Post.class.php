@@ -2,10 +2,11 @@
 namespace App\Model;
 
 use App\Core\Sql;
-use App\Core\SqlPDO;
 use App\Core\MySqlBuilder;
+use App\Core\SqlPDO;
 use App\Core\QueryBuilder;
 use App\Core\Security;
+use App\Helpers\Utils;
 
 
 class Post extends Sql{
@@ -36,10 +37,20 @@ class Post extends Sql{
      */
     public function getOnePost(string $id_post): Post
     {
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $request = $queryBuilder->select('esgi_post', ['*'])->where('id', $id_post)->getQuery();
+        $queryBuilder = new MySqlBuilder();
+        $request = $queryBuilder->select(Utils::getDBNameFromClass($this), ['*'])->where('id', $id_post)->getQuery();
         return $this->pdo->query($request)->fetchObject(Post::class);
+    }
+
+    /**
+     * @param string $id_post
+     * @return bool
+     */
+    public function delete(string $id_post): bool
+    {
+        $queryBuilder = new MySqlBuilder();
+        $request = $queryBuilder->delete(Utils::getDBNameFromClass($this))->where('id', $id_post)->getQuery();
+        return $this->pdo->query($request)->execute();
     }
 
     /**
