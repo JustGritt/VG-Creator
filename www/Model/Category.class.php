@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+use App\Core\Security;
 use App\Core\Sql;
 
 
@@ -96,7 +97,35 @@ class Category extends Sql{
     {
        return $this->id ;
     }
-    
+
+
+    public function getAddCategorieFrom(){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"./categorie/create",
+                "submit"=>"Create",
+
+            ],
+            'inputs'=>[
+                "Name"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Creer une categorie",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"categoryForm",
+                    "error"=>"Category incorrect"
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ]
+        ];
+
+    }
 
    
 

@@ -70,6 +70,10 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/media', 'admin@setUploadMediaView');
     $router->post('/media', 'admin@setUploadMediaView');
 
+    $router->get('/categorie', 'category@show');
+    $router->get('/categorie/create', 'category@createCategory');
+    $router->post('/categorie/create', 'category@createCategory');
+
 });
 
 

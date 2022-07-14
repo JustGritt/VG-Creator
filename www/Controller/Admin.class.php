@@ -312,6 +312,7 @@ class Admin
         $query = "SELECT * FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
         $count = "SELECT COUNT(1) FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
         $pagination = new PaginatedQuery($query, $count,2, Document::class);
+
         $pagination->getItems();
         var_dump($pagination);
 
