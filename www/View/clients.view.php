@@ -47,9 +47,9 @@
                         <?php } else { ?>
                         <td>
                             <select name="roles" id="roles">
-                                <option value="Admin">Admin</option>
-                                <option value="Member">Admin</option>
-                                <option value="Editor">Admin</option>
+                                <option value="Admin" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id'] )? $_POST['roles'] : $value['name']) == 'Admin')) { ?> selected <?php } ?>>Admin</option>
+                                <option value="Moderator" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id']) ? $_POST['roles'] : $value['name']) == 'Moderator')) { ?> selected <?php } ?>>Moderator</option>
+                                <option value="Editor" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id']) ? $_POST['roles'] : $value['name']) == 'Editor')) { ?> selected <?php } ?>>Editor</option>
                             </select>
                         </td>
                         <?php }  ?>

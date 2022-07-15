@@ -42,6 +42,7 @@ class Admin
             $view2 = new View('register-step-2', 'blank');
             $view2->assign('user', $user);
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+                unset($_SESSION['csrf_token']);
                 $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
             
                 if(!$pseudotocheck) {
@@ -76,7 +77,7 @@ class Admin
             $view2 = new View('login-step-2', 'back');
             $view2->assign('site', $site);
             
-            if(!empty($_POST )) {
+            if(!empty($_POST)) {
 
                 var_dump($_POST['site']);
                 if($_POST['site'] == 'vg-creator')  {
@@ -84,11 +85,12 @@ class Admin
                     header('Location: ' . DOMAIN . '/dashboard');
                     return;
                 }
-                
+
                 $_SESSION['id_site'] = $_POST['id_site'];
                 $_SESSION['role'] = $_POST['role'];
                 $_SESSION[strtoupper($_POST['site'])] = $_POST['role'];
-                
+
+                unset($_SESSION['csrf_token']);
                 unset($_SESSION['choice']);
                 header('Location: ' . DOMAIN . '/dashboard');
                 return;
@@ -100,45 +102,11 @@ class Admin
         $user->setFirstname($_SESSION['firstname']);
         $view = new View("back_home", "back");
         $view->assign('user', $user);
-        /*
-        $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
-        $page = end($explode_url);
 
-        if (empty($page)) {
-            $page = $explode_url[count($explode_url) - 2];
-        }
-        switch ($page) {
-            case "clients":
-                $this->setClientsView();
-                break;
-            case "subscribe":
-                $view = new View("dashboard", "back");
-                $view->assign('user', $user);
-                break;
-            case "comments":
-                $view = new View("dashboard", "back");
-                var_dump($this->getAllComments(2));
-                $view->assign('user', $user);
-                break;
-            case "media":
-                // $view = new View("dashboard", "back");
-                $this->setUploadMediaView();
-                break;
-            case "settings":
-                $this->setSettingsView();
-                break;
-            case "add":
-                $this->addClient();
-                break;
-            default:
-                $view = new View("back_home", "back");
-                $view->assign('user', $user);
-                break;
-        }
-        */
     }
 
     public function chooseMySite(){
+        var_dump($_SESSION);
         $site = new Site();
         $pagination = new PaginatedQuery(
             $site->getQueryAllsiteByIdUser($_SESSION['id']),
@@ -147,10 +115,8 @@ class Admin
 
         $result = $pagination->getItems();
 
-        //$site = $site->getAllSiteByIdUser($_SESSION['id']);
-
         $view = new View('login-step-2', 'back');
-        //$view2->assign('site', $site);
+
         $view->assign('site', $result);
         $view->assign('previous', $pagination->previousLink('sites'));
         $view->assign('next', $pagination->nextLink('sites'));
@@ -167,6 +133,7 @@ class Admin
     }
 
     public function setClientsView(){
+        var_dump($_SESSION);
 
         $view = new View('clients', 'back');
 
@@ -198,24 +165,25 @@ class Admin
         $view->assign('previous', $paginatedQuery->previousLink('clients'));
         $view->assign('next', $paginatedQuery->nextLink('clients'));
 
-
-        if (!empty($_POST)) {
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token_update'])) {
+            unset($_SESSION['csrf_token']);
             $this->updateUser();
         }
+
         return $view;
     }
 
     public function updateUser(){
-
+        var_dump($_SESSION);
         if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
         }
 
         if (Security::isVGdmin() || Security::isAdmin()) {
+            unset($_SESSION['csrf_token']);
             $backlist = new Backlist();
             $user = new UserModel();
-            var_dump($_POST);
 
             $user = $user->getUserById($_POST['id']);
 
@@ -237,6 +205,7 @@ class Admin
             $role_post = ucfirst(htmlspecialchars($_POST['roles']));
             //Change the role for the user of the site
             $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
+            var_dump($roles_available);
 
             $selected_role = 0;
             foreach ($roles_available as $role) {
@@ -278,6 +247,7 @@ class Admin
     }
 
     private function addUser(){
+        var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_POST['firstname']);
         $user->setLastname($_POST['lastname']);
@@ -332,46 +302,51 @@ class Admin
 
     public function setUploadMediaView()
     {
-        var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-        $documents = new Document();
 
         $query = "SELECT * FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
         $count = "SELECT COUNT(1) FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
         $pagination = new PaginatedQuery($query, $count,2, Document::class);
 
         $pagination->getItems();
-        var_dump($pagination);
-
+        //$document = new Document();
         $view = new View("media", "back");
         $view->assign('user', $user);
+        //$view->assign('document', $document);
         $view->assign('documents',  $pagination->getItems());
         $view->assign('previous', $pagination->previousLink('media'));
         $view->assign('next', $pagination->nextLink('media'));
 
-        if(!empty($_POST['submit']) && Security::checkCsrfToken($_POST['csrf_token'])) {
-            unset($_POST['csrf_token']);
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
             if (!empty($_FILES)) {
-                $document = new Document();
+                $media = new Document();
                 $upload = new Uploader($_FILES);
                 if ($upload->upload()) {
-                    $document->setPath($upload->getFilePath());
-                    $document->setType($upload->getFileType());
-                    $document->setIdSite($_SESSION['id_site']);
-                    $document->setIdUser($_SESSION['id']);
-                    $document->save();
-                    //$_FILES = [];
-                    header('Refresh:  3' . DOMAIN . '/dashboard/media');
+                    unset($_SESSION['csrf_token']);
+                    $media->setPath($upload->getFilePath());
+                    $media->setType($upload->getFileType());
+                    $media->setIdSite($_SESSION['id_site']);
+                    $media->setIdUser($_SESSION['id']);
+                    $media->save();
+                    echo 'OKkkkkk';
+                    var_dump($_SESSION);
+                    header('Location:' . DOMAIN . $_SERVER['REQUEST_URI']);
                     return;
-
                 }
                 $_FILES = [];
-                //return;
-                header('Refresh:  3' . DOMAIN . '/dashboard/media');
-                //exit();
+                unset($_SESSION['csrf_token']);
+                var_dump($_SESSION);
+                echo 'LOL';
+                header('Location:' . DOMAIN . '/dashboard/media');
+                return;
             }
+            unset($_SESSION['csrf_token']);
         }
+        unset($_SESSION['csrf_token']);
+        var_dump($_SESSION);
     }
 
     public function setSettingsView()

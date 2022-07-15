@@ -9,7 +9,7 @@
         Select image to upload:
         <input type="file" name="fileToUpload" id="fileToUpload">
         <input type="submit" value="Upload Image" name="submit">
-        <input type="hidden" id="csrf_token"  name="csrf_token" value="<?php echo Security::generateCsfrToken() ?>">
+        <input type="hidden" id="csrf_token"  name="csrf_token" value="<?php echo Security::generateCsfrToken()?>">
     </form>
 
     <div class="img-ctn">

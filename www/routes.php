@@ -78,8 +78,9 @@ $router->group('/dashboard', function (Router $router) {
     $router->post('/sites', 'admin@chooseMySite');
 
     $router->get('/categorie', 'category@show');
-    $router->get('/categorie/create', 'category@createCategory');
-    $router->post('/categorie/create', 'category@createCategory');
+    $router->post('/categorie', 'category@createCategory');
+    //$router->get('/categorie/create', 'category@createCategory');
+    //$router->post('/categorie/create', 'category@createCategory');
 
 });
 
@@ -88,6 +89,8 @@ $router->get('/payment', 'payment@payment');
 $router->get('/test', 'admin@test');
 $router->post('/test', 'admin@test');
 $router->get('/test2', 'admin@client');
+$router->get('/comment', 'comment@comment');
+
 
 
 //TEST CLIENT WEBSITE
