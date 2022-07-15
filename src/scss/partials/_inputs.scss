@@ -94,6 +94,7 @@ input {
             transition: transform 120ms ease-in;
             font-weight: bold;
             font-size: 16px;
+            width: 25%;
         }
         
         .input__field {
@@ -111,6 +112,7 @@ input {
             color: var(--color-danger);
             background: var(--color-white);
             padding: auto 8px;
+            width: fit-content;
             
         }
     }

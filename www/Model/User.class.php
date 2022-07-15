@@ -219,7 +219,7 @@ class User extends Sql{
                 ],
                 "pseudo"=>[
                     "type"=>"text",
-                    "placeholder"=>" ",
+                    "placeholder"=>"@Pseudo",
                     "required"=>true,
                     "class"=>"inputForm input__field",
                     "id"=>"pseudoForm",
