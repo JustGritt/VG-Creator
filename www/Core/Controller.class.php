@@ -15,7 +15,7 @@ namespace App\Core;
      * @param string|null $path
      * @return void
      */
-    public function render($view, $template,array $params, ?string $path= ""):void
+    public function render($view, $template,array $params=[], ?string $path= ""):void
     {
         $this->view =  new View($view, $template, $path);
         foreach ($params as $key => $value){
