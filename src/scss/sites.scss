@@ -1,0 +1,137 @@
+.articles-content{
+  button {
+    border: 1px solid var(--color-background-alt);
+    border-radius: 6px;
+    background-color: transparent;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--color-derived-grey);
+    cursor: pointer;
+    transition: .2s all ease-in-out;
+    height: 33px;
+    padding: 0 12px;
+    min-width: 130px;
+
+    &:hover {
+      background-color: var(--color-background-alt);
+      color: var(--color-grey-dark);
+    }
+  }
+  .articles-content-head{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .switcher {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 23.5px;
+    margin: 0;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    input:checked + .slider-switcher {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider-switcher {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider-switcher:before {
+      -webkit-transform: translateX(21px);
+      -ms-transform: translateX(21px);
+      transform: translateX(21px);
+    }
+  }
+
+
+  /* The slider */
+  .slider-switcher {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 1.8px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+
+    /* Rounded sliders */
+    &.round {
+      border-radius: 34px;
+
+      &:before {
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .site-card {
+    border: 1px solid var(--color-background-alt);
+    border-radius: 7px;
+    overflow: hidden;
+
+    .card-header {
+      position: relative;
+      padding: 12px 20px 20px 20px;
+      border-bottom: 1px solid var(--color-background-alt);
+      color: var(--color-derived-grey);
+
+      .title-site-card {
+        font-size: 18px;
+        color: var(--color-black);
+        font-weight: bold;
+      }
+
+      span {
+        font-size: 15px;
+      }
+
+      .description-card-site {
+        font-size: 15px;
+        line-height: 18px;
+      }
+
+      img {
+        height: 50px;
+        width: 80px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        border-left: 1px solid var(--color-background-alt);
+        border-bottom: 1px solid var(--color-background-alt);
+        border-radius: 6px;
+      }
+    }
+
+    .card-site-footer {
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+    }
+  }
+
+}

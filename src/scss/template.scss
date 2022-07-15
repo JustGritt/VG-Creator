@@ -12,10 +12,8 @@
  ========== */
 
 body {
-    background: c.$black-abs;
-    main {
-        
-        section#home {
+    //background: c.$black-abs;
+    main {       section#home {
             background-image: linear-gradient(to top, #000000, #140004, #200106, #280104, #310000);
 
             .hero-container {

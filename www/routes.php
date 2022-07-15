@@ -32,7 +32,7 @@ $router->group('/', function (Router $router) {
 });
 
 //$router->get('/template', 'main@template');
-$router->get('/client_website', 'admin@client');
+
 
 $router->group('/dashboard', function (Router $router) {
     $router->get('/', 'admin@dashboard');
@@ -50,7 +50,7 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/settings', 'admin@dashboard');
     $router->post('/settings', 'admin@dashboard');
     $router->get('/history', 'admin@dashboard');
-    $router->get('/articles', 'admin@getAllArticles', 'admin.allPost');
+    $router->get('/articles', 'post@getAllArticles', 'admin.allPost');
     $router->get('/articles/:id', 'post@createPost')->with('id', '[0-9]+');
     $router->delete('/articles/:id', 'post@deletePost', 'post.deletePost')->with('id', '[0-9]+');
 
@@ -65,11 +65,14 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/clients/edit', 'admin@editClient');
     $router->post('/clients/edit', 'admin@editClient');
 
-    
+    // sites
+    $router->get('/sites', 'site@showAll', 'post.showAll');
+    $router->get('/client_website', 'site@client');
+
+
     $router->get('/comments', 'admin@getAllComments');
     $router->get('/media', 'media@setuploadmediaview' , 'dashboard.media');
     $router->post('/media', 'media@setuploadmediaview' , 'dashboard.media');
-
 });
 
 

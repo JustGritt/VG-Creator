@@ -55,7 +55,7 @@
                 <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "history" ? "active" : "") : null ?>><a href="/dashboard/history"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Historique</span> </a></li>
             <?php endif; ?>
 
-            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "sites" ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("sites", "dark"); ?> <span>Mes Sites</span> </a></li>
+            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "sites" ) ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("sites", "dark"); ?> <span>Mes Sites</span> </a></li>
                 
 
             <!-- <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>

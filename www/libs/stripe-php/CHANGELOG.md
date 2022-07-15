@@ -4,8 +4,8 @@
 * [#1243](https://github.com/stripe/stripe-php/pull/1243) Add test
 * [#1240](https://github.com/stripe/stripe-php/pull/1240) API Updates
   * Add support for `verify_microdeposits` method on resources `PaymentIntent` and `SetupIntent`
-  
-  
+
+
 * [#1241](https://github.com/stripe/stripe-php/pull/1241) Add generic parameter to \Stripe\Collection usages
 
 ## 7.113.0 - 2022-02-03
@@ -16,7 +16,7 @@
 * [#1235](https://github.com/stripe/stripe-php/pull/1235) API Updates
   * Add support for `phone_number_collection` on `PaymentLink`
   * Add support for new value `is_vat` on enum `TaxId.type`
-  
+
 
 ## 7.111.0 - 2022-01-20
 * [#1233](https://github.com/stripe/stripe-php/pull/1233) API Updates
@@ -1226,7 +1226,7 @@ Pull requests included in this release:
 
 ## 3.17.0 - 2016-07-14
 
--   Add field annotations to model classes for better editor hinting
+-   Add field annotations to model classes for better editorCustom hinting
 
 ## 3.16.0 - 2016-07-12
 

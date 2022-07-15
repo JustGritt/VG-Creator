@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\Controller;
+use App\Core\Sql;
 use App\Core\View;
 use App\Helpers\Utils;
 use App\Model\Category;
@@ -16,17 +17,44 @@ class Post extends  Controller
         $category=  new Category();
         $categories =   $category->getCategoriesFromSite($_SESSION['id_site']);
         $this->render("post", "back", ['categories'=>$categories]  );
-        // $post->getOnePost($id_post);
-        // $id = intval($_GET['id']);
     }
 
-    public function showAll()
+    public function getAllArticles()
     {
-        $category=  new Category();
-        $categories =   $category->getCategories();
-      //  $this->render("articles", "back", []);
+        $this->render("articles", "back"  );
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->limit(0, 10)
+            ->getQuery();
 
+        $query_drafts = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('status', 0)
+            ->getQuery();
+
+        $query_published = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('status', 1)
+            ->getQuery();
+
+        $result = Sql::getInstance()
+            ->query($query)
+            ->fetchAll();
+
+        $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
+        $result_published = Sql::getInstance()->query($query_published)->fetchAll();
+
+        if (isset($_GET['published'])) {
+            $this->view->assign("result", $result_published);
+        } else if (isset($_GET['drafts'])) {
+            $this->view->assign("result", $result_draft);
+        } else {
+            $this->view->assign("result", $result);
+        }
     }
+
 
     public function editShowPost($id_post){
         $this->sendDataPost($id_post);

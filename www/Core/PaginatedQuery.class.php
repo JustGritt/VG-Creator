@@ -24,6 +24,9 @@ class PaginatedQuery extends Sql
         $this->perPage = $perPage;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getItems(): array
     {
         $currentPage = $this->getCurrentPage();
@@ -40,6 +43,9 @@ class PaginatedQuery extends Sql
         return $sql->fetchAll(\PDO::FETCH_CLASS, $this->mappingClass);
     }
 
+    /**
+     * @throws \Exception
+     */
     private function getCurrentPage()
     {
         return Handler::getPostiveInt('page', 1);
