@@ -18,6 +18,7 @@ use App\Core\Handler;
 use App\Model\Document;
 use App\Model\Backlist;
 use App\Model\User_role;
+use Stripe\Radar\ValueList;
 
 class Admin
 {
@@ -362,41 +363,53 @@ class Admin
             $user->setLastname(htmlspecialchars($_POST['lastname']));
             
             $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
-            if(!$pseudotocheck) return FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
-            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
-            
-            if(isset($_POST['pseudo']) && $user->getPseudo() == $_POST['pseudo'] && ($user->is_unique_pseudo($_POST['pseudo']))){
-                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
-                header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+            if(!$pseudotocheck) {
+                FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
                 return;
-            } 
+            }
 
-            $newpw = password_hash(htmlspecialchars($_POST['newpwd']), PASSWORD_DEFAULT);
-            $newpwconfirm = $_POST['newpwdconfirm'];
-
-            if(!isset($_POST['oldpwd']) 
-            && Verificator::checkPassword($_POST['newpwd']) 
-            && Verificator::checkPassword($_POST['newpwdconfirm'])
-            && password_verify($newpwconfirm, $newpw)) 
-            {
-                $user->setPassword($newpw);
-            } 
-            elseif(isset($_POST['oldpwd'])
-            && Verificator::checkPassword($_POST['newpwd']) 
-            && Verificator::checkPassword($_POST['newpwdconfirm'])
-            && password_verify($_POST['oldpwd'], $user->getPassword()) 
-            && password_verify($_POST['newpwdconfirm'], $newpw)) 
-            {
-                $user->setPassword($_POST['newpwd']);
-            } 
-            else {
-                FlashMessage::setFlash("errors", "Votre mot de passe n'est pas valide");
+            if(isset($_POST['pseudo']) && $user->getPseudo() != $_POST['pseudo'] && (!$user->is_unique_pseudo($_POST['pseudo']))){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
                 header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
                 return;
             }
 
+
+            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            $newpw = password_hash(htmlspecialchars($_POST['newpwd']), PASSWORD_DEFAULT);
+
+            /*
+            if(!isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) {
+                if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
+                    $user->setPassword($newpw);
+                }else {
+                    FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }
+            }
+            if(isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) {
+                if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
+                    $user->setPassword($newpw);
+                }else {
+                    FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }
+            }*/
+
+            if((!isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) ||
+                (isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm']))) {
+                if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
+                    $user->setPassword($newpw);
+                }else {
+                    FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }
+            }
+
             $user->setEmail($_POST['email']);
-            var_dump($user->save());
 
             $user->save();
             FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
@@ -406,41 +419,41 @@ class Admin
         return $view;
     }
 
-    // public function getAllArticles()
-    // {
-    //     $view = new View('articles', 'back');
-    //     $builder = BUILDER;
-    //     $queryBuilder = new $builder();
-    //     $query = $queryBuilder
-    //         ->select('esgi_post', ['*'])
-    //         ->limit(0, 10)
-    //         ->getQuery();
+     public function getAllArticles()
+     {
+        $view = new View('articles', 'back');
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->limit(0, 10)
+            ->getQuery();
 
-    //     $query_drafts = $queryBuilder
-    //         ->select('esgi_post', ['*'])
-    //         ->where('status', 0)
-    //         ->getQuery();
+        $query_drafts = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('status', 0)
+            ->getQuery();
 
-    //     $query_published = $queryBuilder
-    //         ->select('esgi_post', ['*'])
-    //         ->where('status', 1)
-    //         ->getQuery();
+        $query_published = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('status', 1)
+            ->getQuery();
 
-    //     $result = Sql::getInstance()
-    //         ->query($query)
-    //         ->fetchAll();
+        $result = Sql::getInstance()
+            ->query($query)
+            ->fetchAll();
 
-    //     $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
-    //     $result_published = Sql::getInstance()->query($query_published)->fetchAll();
+        $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
+        $result_published = Sql::getInstance()->query($query_published)->fetchAll();
 
-    //     if (isset($_GET['published'])) {
-    //         $view->assign("result", $result_published);
-    //     } else if (isset($_GET['drafts'])) {
-    //         $view->assign("result", $result_draft);
-    //     } else {
-    //         $view->assign("result", $result);
-    //     }
-    // }
+        if (isset($_GET['published'])) {
+            $view->assign("result", $result_published);
+        } else if (isset($_GET['drafts'])) {
+            $view->assign("result", $result_draft);
+        } else {
+            $view->assign("result", $result);
+        }
+    }
 
     public function addClient() 
     {
