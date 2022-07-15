@@ -66,5 +66,17 @@ class User_role extends Sql
         return $sql->fetchAll(\PDO::FETCH_CLASS, User_role::class);
     }
 
+    public function getAvailableRolesForSite($id_site)
+    {
+        $sql =
+            "SELECT id, name
+            FROM esgi_role_site
+            WHERE id_site = '".$id_site."'";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 
 }
