@@ -66,9 +66,10 @@ $router->group('/dashboard', function (Router $router) {
     $router->post('/clients/add', 'admin@addClient');
 
     $router->get('/comments', 'comment@showComments', 'comment.showComments');
-    $router->post('/comments', 'comment@showComments', 'comment.showComments');
-    $router->get('/comments-edit/:id', 'comment@editComment', 'comment.editComment')->with('id', '[0-9]+');
-    $router->get('/comments', 'admin@getAllComments');
+    // $router->get('/comments-edit/:id', 'comment@editComment', 'comment.editComment')->with('id', '[0-9]+');
+    $router->get('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
+    $router->post('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
+    // $router->get('/comments', 'admin@getAllComments');
 
     $router->get('/media', 'admin@setUploadMediaView');
     $router->post('/media', 'admin@setUploadMediaView');
