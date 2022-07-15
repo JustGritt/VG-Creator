@@ -9,7 +9,7 @@ use App\Core\QueryBuilder;
 use App\Core\Security;
 use App\Core\View;
 
-class Comment
+class Comment extends Sql
 {
 
     protected $id = null;
@@ -157,4 +157,6 @@ class Comment
         
         return $query->fetchObject(Comment::class);
     }
+
+    
 }
