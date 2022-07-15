@@ -32,9 +32,9 @@
                     <?php } else { ?>
                         <td>
                             <select name="roles" id="roles">
-                                <option value="Admin">Admin</option>
-                                <option value="Member">Admin</option>
-                                <option value="Editor">Admin</option>
+                                <option value="Admin" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id'] )? $_POST['roles'] : $value['name']) == 'Admin')) { ?> selected <?php } ?>>Admin</option>
+                                <option value="Moderator" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id']) ? $_POST['roles'] : $value['name']) == 'Moderator')) { ?> selected <?php } ?>>Moderator</option>
+                                <option value="Editor" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id']) ? $_POST['roles'] : $value['name']) == 'Editor')) { ?> selected <?php } ?>>Editor</option>
                             </select>
                         </td>
                     <?php }  ?>
@@ -58,26 +58,32 @@
             <?php echo $next ?>
 
         </table>
+
         <h3>Blacklist</h3>
-        <table>
-            <tr>
-                <th>Firstname</th>
-                <th>Pseudo</th>
-                <th>Role</th>
-            </tr>
-            <?php foreach ($backlist as $key => $value) { ?>
-            <tr>
-                <td><input type="text" id="firstname"disabled name="firstname" value="<?php echo $value['firstname']; ?>"</td>
-                <td><input type="text" id="pseudo" disabled name="pseudo" value="<?php echo $value['pseudo']; ?>"</td>
-                <td><input type="text" id="role" disabled name="role" value="<?php echo $value['name']; ?>"</td>
-            </tr>
-            <?php }  ?>
+        <?php if(empty($backlist)) { ?>
+            <h4>Aucun utilisateur dans la blacklist</h4>
+        <?php } else { ?>
+            <table>
+                <tr>
+                    <th>Firstname</th>
+                    <th>Pseudo</th>
+                    <th>Role</th>
+                </tr>
+                <?php foreach ($backlist as $key => $value) { ?>
+                <tr>
+                    <td><input type="text" id="firstname"disabled name="firstname" value="<?php echo $value['firstname']; ?>"</td>
+                    <td><input type="text" id="pseudo" disabled name="pseudo" value="<?php echo $value['pseudo']; ?>"</td>
+                    <td><input type="text" id="role" disabled name="role" value="<?php echo $value['name']; ?>"</td>
+                </tr>
+                <?php }  ?>
+            </table>
+        <?php } ?>
+        <section>
+            <a href="clients/add" class="button--primary">Add more</a>
+        </section>
+
 
     </div>
 
-    <section>
-        <a href="clients/add" class="button--primary">Add more</a>
-
-    </section>
 
 <?php } ?>

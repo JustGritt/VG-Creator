@@ -12,12 +12,10 @@ class Category extends Sql{
     public $id_site = null;
     private $builder = BUILDER;
 
-    public function __construct($name= '',$id_site='', $id_category='' ){
+    public function __construct(){
+        $this->pdo = Sql::getInstance();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
-        $this->setName($name);
-        $this->setIdSite($id_site);
-        $this->setIdCategory($id_category);
     }
 
     /**
@@ -93,7 +91,7 @@ class Category extends Sql{
     /**
      * @param string
      */
-    public function getIdCategory(): string
+    public function getId()
     {
        return $this->id ;
     }
@@ -103,12 +101,12 @@ class Category extends Sql{
         return [
             "config"=>[
                 "method"=>"POST",
-                "action"=>"./categorie/create",
+                "action"=>"",
                 "submit"=>"Create",
 
             ],
             'inputs'=>[
-                "Name"=>[
+                "name"=>[
                     "type"=>"text",
                     "placeholder"=>"Creer une categorie",
                     "required"=>true,

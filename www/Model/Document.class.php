@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Core\FlashMessage;
 use App\Core\PaginatedQuery;
+use App\Core\Security;
 use App\Core\Sql;
 use App\Core\QueryBuilder;
 
@@ -72,6 +73,34 @@ class Document extends Sql
     public function setIdUser($id_user): int
     {
         return $this->id_user = $id_user;
+    }
+
+
+    public function getUploadForm(){
+
+        return [
+            "config"=>[
+                "method"=>"POST",
+                'id' => 'uploadForm',
+                "submit"=>"submit",
+                "value"=>"Upload Image",
+                "name"=>"submit",
+                "enctype"=>"multipart/form-data"
+            ],
+            'inputs'=>[
+                "fileToUpload"=>[
+                    "type"=>"file",
+                    "id"=>"fileToUpload",
+                    "name"=>"fileToUpload",
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ]
+        ];
     }
 
     /*

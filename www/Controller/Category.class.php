@@ -20,6 +20,7 @@ class Category
 
     public function show()
     {
+        var_dump($_SESSION);
         $category = new CategoryModel();
         $categories = $category->getCategoriesFromSite($_SESSION['id_site']);
         $view = new View("category", "back");
@@ -28,18 +29,24 @@ class Category
 
     public function createCategory()
     {
+        var_dump($_SESSION);
+        var_dump($_POST);
         $category = new CategoryModel();
-        $view = new View("category", "back");
-        $view->assign("category", $category);
+        $category->setName($_POST['name']);
+        $category->setIdSite($_SESSION['id_site']);
+        var_dump($category->save());
 
-        var_dump($category);
+
         $result = Verificator::checkForm($category->getAddCategorieFrom(), $_POST);
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
-
-            $category->setName($_POST['name']);
-            $category->setIdSite($_SESSION['id_site']);
+            unset($_POST['csrf_token']);
+            var_dump($_POST);
+            $category = new CategoryModel($_POST['name'],$_SESSION['id_site'] );
+            //$category->setName($_POST['name']);
+            //$category->setIdSite($_SESSION['id_site']);
+            //var_dump($category);
             var_dump($category->save());
         }
 

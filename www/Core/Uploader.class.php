@@ -53,6 +53,11 @@ class Uploader
     }
 
     public function upload() : bool {
+
+        if( isset($_SESSION['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
+        }
+
         $fileName = $this->fileName;
         $fileTmpName = $this->fileTmpName;
         $fileSize = $this->fileSize;
@@ -90,31 +95,5 @@ class Uploader
     }
 
 
-    public function getUploadForm(){
-
-        return [
-            "config"=>[
-                "method"=>"POST",
-                "action"=>"",
-                "submit"=>"submit",
-                "value"=>"Upload Image",
-                "name"=>"submit",
-                "enctype"=>"multipart/form-data"
-            ],
-            'inputs'=>[
-                "file"=>[
-                    "type"=>"file",
-                    "id"=>"fileToUpload",
-                    "name"=>"fileToUpload",
-                ],
-                'csrf_token'=>[
-                    "type"=>"hidden",
-                    "class"=>"inputForm",
-                    "value"=> Security::generateCsfrToken(),
-                    "id"=>"csrf_token"
-                ]
-            ]
-        ];
-    }
 
 }
