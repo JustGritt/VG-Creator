@@ -18,7 +18,6 @@ class PasswordRecovery {
     public function pwdforget()
     {
         // var_dump($_SESSION);
-        echo "Mot de passe oublié"."<br>";
         $user = new UserModel();
         $password_recovery = new Recovery();
         

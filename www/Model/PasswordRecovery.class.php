@@ -59,20 +59,20 @@ class PasswordRecovery extends Sql {
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"S'inscrire"
+                "submit"=>"Valider le mot de passe"
             ],
             'inputs'=>[
                 "password"=>[
                     "type"=>"password",
-                    "placeholder"=>"Votre mot de passe ...",
+                    "placeholder"=>"Nouveau mot de passe ...",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
-                    "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
+                    "error"=>"Votre mot de passe doit contenir 8 caractères alphanumérique minimum et un caractère spécial",
                     ],
                 "passwordConfirm"=>[
                     "type"=>"password",
-                    "placeholder"=>"Confirmation ...",
+                    "placeholder"=>"Confirmation du mot de passe",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"pwdConfirmForm",
@@ -96,7 +96,7 @@ class PasswordRecovery extends Sql {
         $insert->execute(array($selector, $email, $token, $token_recovery));
         
     }
-  
+
     public function isExpiryResetToken($selector, $currentDate): bool
     {
         $result = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE selector = ? AND token_expiry >= ? ");

@@ -112,6 +112,14 @@ header {
     }
 }
 
+section#chooseAccount {
+    flex-direction: column;
+    form {
+        margin: 25px auto;
+        text-align: center;
+    }
+}
+
 
 /* TEMP
 ========== */

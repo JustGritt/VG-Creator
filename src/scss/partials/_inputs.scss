@@ -47,7 +47,9 @@ input {
 
 
 
-.form-group {
+
+.form-group, 
+.form-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -55,11 +57,9 @@ input {
     width: 100%;
 
     &:nth-last-child(1) {
-        flex-direction: row;
         justify-content: flex-start;
         align-items: center;
         margin-bottom: 10px;
-        width: 75%;
     }
 
     input[type=text],
@@ -75,11 +75,12 @@ input {
         font-size: 1.1rem;
         filter: none;
     }
+    
     .input {
         position: relative;
         width: 75%;
         margin: 0 auto;
-
+    
         .input__label {
             position: absolute;
             left: 0;
@@ -93,6 +94,7 @@ input {
             transition: transform 120ms ease-in;
             font-weight: bold;
             font-size: 16px;
+            width: 25%;
         }
         
         .input__field {
@@ -110,11 +112,18 @@ input {
             color: var(--color-danger);
             background: var(--color-white);
             padding: auto 8px;
+            width: fit-content;
             
         }
     }
-
+    
     input[type=submit] {
         margin-bottom: 50px;
     }
+}
+
+#register .input__label {
+    top: 25px;
+    background: var(--color-background);
+    color: var(--color-text);
 }

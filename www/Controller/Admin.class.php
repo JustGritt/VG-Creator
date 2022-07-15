@@ -406,41 +406,41 @@ class Admin
         return $view;
     }
 
-    public function getAllArticles()
-    {
-        $view = new View('articles', 'back');
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->select('esgi_post', ['*'])
-            ->limit(0, 10)
-            ->getQuery();
+    // public function getAllArticles()
+    // {
+    //     $view = new View('articles', 'back');
+    //     $builder = BUILDER;
+    //     $queryBuilder = new $builder();
+    //     $query = $queryBuilder
+    //         ->select('esgi_post', ['*'])
+    //         ->limit(0, 10)
+    //         ->getQuery();
 
-        $query_drafts = $queryBuilder
-            ->select('esgi_post', ['*'])
-            ->where('status', 0)
-            ->getQuery();
+    //     $query_drafts = $queryBuilder
+    //         ->select('esgi_post', ['*'])
+    //         ->where('status', 0)
+    //         ->getQuery();
 
-        $query_published = $queryBuilder
-            ->select('esgi_post', ['*'])
-            ->where('status', 1)
-            ->getQuery();
+    //     $query_published = $queryBuilder
+    //         ->select('esgi_post', ['*'])
+    //         ->where('status', 1)
+    //         ->getQuery();
 
-        $result = Sql::getInstance()
-            ->query($query)
-            ->fetchAll();
+    //     $result = Sql::getInstance()
+    //         ->query($query)
+    //         ->fetchAll();
 
-        $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
-        $result_published = Sql::getInstance()->query($query_published)->fetchAll();
+    //     $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
+    //     $result_published = Sql::getInstance()->query($query_published)->fetchAll();
 
-        if (isset($_GET['published'])) {
-            $view->assign("result", $result_published);
-        } else if (isset($_GET['drafts'])) {
-            $view->assign("result", $result_draft);
-        } else {
-            $view->assign("result", $result);
-        }
-    }
+    //     if (isset($_GET['published'])) {
+    //         $view->assign("result", $result_published);
+    //     } else if (isset($_GET['drafts'])) {
+    //         $view->assign("result", $result_draft);
+    //     } else {
+    //         $view->assign("result", $result);
+    //     }
+    // }
 
     public function addClient() 
     {

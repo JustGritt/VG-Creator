@@ -1,0 +1,124 @@
+/* IMPORTS
+ ========== */
+
+@use './partials/buttons.scss';
+
+@use './mixins/global' as g;
+
+/* CLASSES MAIN
+ ========== */
+
+section#clients {
+    width: 100%;
+    margin: 0 auto;
+    padding: 50px;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+
+    .table-container {
+        margin-bottom: 50px;
+
+        .title-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            a.button--primary {
+                margin-left: auto;
+                margin-right: 0;
+            }
+        }
+
+
+        table {
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+            border-radius: 8px;
+    
+            tr {
+                background-color: #f8f8f8;
+                border: 1px solid #ddd;
+                padding: .35em;
+                th, td {
+                    padding: 10px 10px;
+                    text-align: center;
+                    input {
+                        width: 100%;
+    
+                        &[type="text"],
+                        &[type="email"] {
+                            filter: none;
+                            border: 1px solid #333;
+                        }
+    
+                        &:disabled {
+                            background-color: #f8f8f8;
+                            border: 1px solid #ddd;
+                            color: #333;
+                        }
+                    }
+    
+                    select {
+                        width: 100%;
+                        padding: 10px;
+                        margin: 12px 0;
+                        height: 55px;
+                        border-radius: 6px;
+                        text-align: center;
+                        border: none;
+                        border-right: 10px solid transparent;
+                        font-weight: bold;
+                    }
+                }
+                th {
+                    color: var(--color-text);
+                    text-transform: uppercase;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: g.$tablet) {
+        
+        table {
+            border: 0;
+            thead {
+                border: none;
+                height: 0px;
+                overflow: hidden;
+                position: absolute;
+            }
+
+            tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: 25px;
+                td {
+                    border-bottom: 1px solid #ddd;
+                    display: block;
+                    font-size: .8em;
+                    text-align: right;
+                    &::before {
+                        content: attr(data-label);
+                        float: left;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+                
+                    &:last-child {
+                        border-bottom: 0;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+
