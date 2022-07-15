@@ -376,34 +376,44 @@ class Admin
 
 
             $user->setPseudo(htmlspecialchars($_POST['pseudo']));
-            $newpw = password_hash(htmlspecialchars($_POST['newpwd']), PASSWORD_DEFAULT);
+            $newpw = htmlspecialchars($_POST['newpwd']);
 
-            /*
             if(!isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) {
                 if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
                     $user->setPassword($newpw);
-                }else {
+                    if (!password_verify($_POST['newpwdconfirm'], $user->getPassword())) {
+                        FlashMessage::setFlash("errors", "Votre mot de passe ne corresponds pas.");
+                        header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                        return;
+                    }
+                }elseif (!Verificator::checkPassword($_POST['newpwd']) && !Verificator::checkPassword($_POST['newpwdconfirm'])) {
                     FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }else{
+                    FlashMessage::setFlash("errors", "Votre mot de passe ne corresponds pas.");
                     header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
                     return;
                 }
             }
-            if(isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) {
-                if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
+
+            if(isset($_POST['oldpwd']) && !empty($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm']) ) {
+
+                var_dump(password_verify($_POST['oldpwd'], $user->getPassword()));
+                if (Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])
+                    && password_verify($_POST['oldpwd'], $user->getPassword())){
                     $user->setPassword($newpw);
-                }else {
+                    if (!password_verify($_POST['newpwdconfirm'], $user->getPassword())) {
+                        FlashMessage::setFlash("errors", "Votre mot de passe ne corresponds pas");
+                        header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                        return;
+                    }
+                }elseif (!Verificator::checkPassword($_POST['newpwd']) && !Verificator::checkPassword($_POST['newpwdconfirm'])) {
                     FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
                     header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
                     return;
-                }
-            }*/
-
-            if((!isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) ||
-                (isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm']))) {
-                if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
-                    $user->setPassword($newpw);
-                }else {
-                    FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
+                }elseif(!password_verify($_POST['oldpwd'], $user->getPassword()))  {
+                    FlashMessage::setFlash("errors", "Mot de passe incorrect.");
                     header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
                     return;
                 }
