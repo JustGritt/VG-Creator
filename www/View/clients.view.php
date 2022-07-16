@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/dist/css/clients.css">
 
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <section id="clients">
     <?php if (!\App\Core\Security::isVGdmin() && !\App\Core\Security::isAdmin()) { ?>
     <h2>Creer votre site et revenez voir cette page !</h2>
@@ -11,8 +12,9 @@
             <a href="clients/add" class="button--primary">+ New user</a>
         </div>
     
+        
 
-        <table>
+        <table id="user-content">
             <thead>
                 <tr>
                     <th scope="col">Firstname</th>
@@ -26,12 +28,12 @@
             </thead>
             <tbody>
                 <?php foreach ($result as $key => $value) { ?>
-                <tr>
                     <form method="POST">
-                        <td data-label="firstname"> <input type="text" id="firstname" disabled name="firstname" value="<?php  echo $value['firstname']; ?>" </td> 
-                        <td data-label="lastname"> <input type="text" id="lastname" disabled name="lastname" value="<?php echo $value['lastname']; ?>" </td> 
-                        <td data-label="email"> <input type="email" id="email" disabled name="email" value="<?php echo $value['email']; ?>" </td>
-                        <td data-label="pseudo"> <input type="text" id="pseudo" disabled name="pseudo" value="<?php echo $value['pseudo']; ?>" </td> 
+                    <tr>
+                        <td data-label="firstname"> <input type="text" id="firstname" disabled name="firstname" value="<?php  echo $value['firstname']; ?>"> </td> 
+                        <td data-label="lastname"> <input type="text" id="lastname" disabled name="lastname" value="<?php echo $value['lastname']; ?>"> </td> 
+                        <td data-label="email"> <input type="email" id="email" disabled name="email" value="<?php echo $value['email']; ?>"> </td>
+                        <td data-label="pseudo"> <input type="text" id="pseudo" disabled name="pseudo" value="<?php echo $value['pseudo']; ?>"> </td> 
                         <input type="hidden" name="id" value="<?php echo $value['id']; ?>">
                         <?php  if ($_SESSION['VGCREATOR'] == 1) { ?>
                         <td>
@@ -63,9 +65,9 @@
 
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="csrf_token_update" id="csrf_token_update" value="<?php echo \App\Core\Security::generateCsfrToken()?>">
-                        <td><input type="submit" name="submit" value="Update"></td>
-                    </form>
-                </tr>
+                        <td><button id="<?php echo 'btn-' . $value['id']?>" class="button--primary" name="submit">Update </button></td>
+                        </form>
+                    </tr>
                 <?php }  ?>
             </tbody>
             <?php  echo $previous ?>
@@ -95,4 +97,24 @@
         </table>
     </div> 
     <?php } ?>
+    
 <section>
+
+<script>
+    
+    console.log('Ready');
+    // const userList = document.querySelectorAll('#user-content tbody tr td');
+    // console.log('userList', userList);
+
+
+    $(".button--primary").on("click", function(e){;
+        e.preventDefault();
+        var row = $(this).parents("tr");
+        $.post("/dashboard/clients", row.find("input, select, radio").serialize(), function(data){ window.location.reload(); });
+
+    });
+
+
+
+
+</script>

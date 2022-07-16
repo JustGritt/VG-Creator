@@ -133,7 +133,7 @@ class Admin
     }
 
     public function setClientsView(){
-        var_dump($_SESSION);
+        // var_dump($_SESSION);
 
         $view = new View('clients', 'back');
 
@@ -144,7 +144,7 @@ class Admin
         $user = new UserModel();
         $backlist = new Backlist();
         $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
-
+        
         $count = "SELECT COUNT(*)
             FROM `esgi_user` u
             LEFT JOIN esgi_user_role ur on u.id = ur.id_user
@@ -165,16 +165,17 @@ class Admin
         $view->assign('previous', $paginatedQuery->previousLink('clients'));
         $view->assign('next', $paginatedQuery->nextLink('clients'));
 
-        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token_update'])) {
+        if (!empty($_POST) ) {
             unset($_SESSION['csrf_token']);
+            var_dump($_POST);
             $this->updateUser();
         }
 
         return $view;
     }
-
+    
     public function updateUser(){
-        var_dump($_SESSION);
+        var_dump($_POST);
         if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
@@ -247,7 +248,13 @@ class Admin
     }
 
     private function addUser(){
+
+        // !TODO: Add the user to the site getAvailableRolesForSite($_SESSION['id_site'])
+        // Check if the role is available for the site
+        // If it is, add the user to the site else return an error message and redirect to the page with the form
+        var_dump($_POST);
         var_dump($_SESSION);
+        die();
         $user = new UserModel();
         $user->setFirstname($_POST['firstname']);
         $user->setLastname($_POST['lastname']);
@@ -262,6 +269,9 @@ class Admin
         $user->save();
 
         $id = $user->getIdFromEmail($user->getEmail());
+
+        // TODO: Add role to the user role table
+        // role site = new role site -> save();
         $toanchor = DOMAIN.'/invitation?id='.$id.'&token='.$user->getToken();
 
         $template_var = array(
