@@ -27,7 +27,7 @@ class FlashMessage
 
     public function getFlash($key)
     {
-      return $_SESSION[self::FLASH_MESSAGE_KEY][$key]['value'] ?? false;
+        return $_SESSION[self::FLASH_MESSAGE_KEY][$key]['value'] ?? false;
     }
 
 
@@ -37,7 +37,7 @@ class FlashMessage
         foreach ($flash_messages as $key => &$flash_message) {
             if ($flash_message['remove']) {
                 unset($flash_messages[$key]);
-           }
+            }
         }
 
         $_SESSION[self::FLASH_MESSAGE_KEY] = $flash_messages;

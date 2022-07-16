@@ -11,8 +11,6 @@
             <h3>Utilisateurs</h3>
             <a href="clients/add" class="button--primary">+ New user</a>
         </div>
-    
-        
 
         <table id="user-content">
             <thead>
@@ -27,7 +25,10 @@
                 </tr>
             </thead>
             <tbody>
+                
+                <?php print_r($result); ?>
                 <?php foreach ($result as $key => $value) { ?>
+
                     <form method="POST">
                     <tr>
                         <td data-label="firstname"> <input type="text" id="firstname" disabled name="firstname" value="<?php  echo $value['firstname']; ?>"> </td> 
@@ -65,7 +66,7 @@
 
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="csrf_token_update" id="csrf_token_update" value="<?php echo \App\Core\Security::generateCsfrToken()?>">
-                        <td><button id="<?php echo 'btn-' . $value['id']?>" class="button--primary" name="submit">Update </button></td>
+                        <td><a id="<?php echo 'btn-' . $value['id']?>" class="button--secondary" name="submit">Update </a></td>
                         </form>
                     </tr>
                 <?php }  ?>
@@ -101,20 +102,9 @@
 <section>
 
 <script>
-    
-    console.log('Ready');
-    // const userList = document.querySelectorAll('#user-content tbody tr td');
-    // console.log('userList', userList);
-
-
-    $(".button--primary").on("click", function(e){;
+    $(".button--secondary").on("click", function(e){;
         e.preventDefault();
-        var row = $(this).parents("tr");
+        const row = $(this).parents("tr");
         $.post("/dashboard/clients", row.find("input, select, radio").serialize(), function(data){ window.location.reload(); });
-
     });
-
-
-
-
 </script>

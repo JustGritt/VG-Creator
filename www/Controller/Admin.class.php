@@ -146,11 +146,12 @@ class Admin
         $backlist = new Backlist();
         $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
         
-        $count = "SELECT COUNT(*)
+        $count = "SELECT COUNT(1)
             FROM `esgi_user` u
             LEFT JOIN esgi_user_role ur on u.id = ur.id_user
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site ={$_SESSION['id_site']}";
+
         $sql =
             "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
             FROM `esgi_user` u
@@ -439,8 +440,8 @@ class Admin
         return $view;
     }
 
-     public function getAllArticles()
-     {
+    public function getAllArticles()
+    {
         $view = new View('articles', 'back');
         $builder = BUILDER;
         $queryBuilder = new $builder();
@@ -477,10 +478,86 @@ class Admin
 
     public function addClient() 
     {
-        $user = new UserModel();
         $view = new View('add_clients', 'Templates/back');
+        $user = new UserModel();
         $view->assign("user", $user);
 
+        if(!empty($_POST)) {
+            
+            $user_role = new User_role();
+            $role_post = ucfirst(htmlspecialchars($_POST['roles']));
+            $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
+
+            foreach($roles_available as $role) {
+                if($role['name'] == $role_post) {
+                    $role_id = $role['id'];
+                }
+            }
+
+            if(!isset($role_id)) {
+                FlashMessage::setFlash("errors", "Ce rôle n'existe pas.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            // Add client data
+            $user->setFirstname(htmlspecialchars($_POST['firstname']));
+            $user->setLastname(htmlspecialchars($_POST['lastname']));
+            $user->setEmail(htmlspecialchars($_POST['email']));
+            $user->setStatus(0);
+            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            $user->setPassword(htmlspecialchars($_POST['password']));
+            $user->generateToken();
+            
+            if($user->save()) {
+                $user_info = $user->getUserByPseudo($_POST['pseudo']);
+                $user_role->setIdUser($user_info->getId());
+                $user_role->setIdRoleSite($role_id);
+                $user_role->save();
+            } else {
+                FlashMessage::setFlash("errors", "Une erreur est survenue lors de l'ajout du client.");
+                // header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $toanchor = DOMAIN.'/invitation?id='.$user->getId().'&token='.$user->getToken();
+
+            $template_var = array(
+                "{{product_url}}" => "".DOMAIN."/",
+                "{{product_name}}" => "VG-CREATOR",
+                "{{name}}" => $user->getFirstname(),
+                "{{action_url}}" => $toanchor,
+                "{{login_url}}" => $toanchor,
+                "{{username}}" =>  $user->getEmail(),
+                "{{support_email}}" => "contact@vgcreator.fr",
+                "{{sender_name}}" => "VG-CREATOR",
+                "{{help_url}}" => "https://github.com/popokola/VG-CREATOR-SERVER.git",
+                "{{company_name}}" => "VG-CREATOR",
+            );
+
+            $template_file = "/var/www/html/Templates/confirmation_email.php";
+            if(file_exists($template_file)){
+                $body = file_get_contents($template_file);
+            }else{
+                FlashMessage::setFlash("errors", "Impossible de trouver le template");
+                return;
+            }
+
+            //swapping the variable into the templates
+            foreach(array_keys($template_var) as $key){
+                if (strlen($key) > 2 && trim($key) != "") {
+                    $body = str_replace($key, $template_var[$key], $body);
+                }
+            }
+
+            $mail = new Mail();
+            $subject = "Veuillez confirmée votre email";
+            // $mail->sendMail($user->getEmail() , $body, $subject);
+            var_dump($roles_available);
+
+            FlashMessage::setFlash("success", "Le client a bien été ajouté");
+            // header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+        }
 
         return $view;
     }
@@ -496,11 +573,12 @@ class Admin
     {
         $id_site = $_SESSION['id_site'];
 
-        $sql =
-            "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name FROM `esgi_user` u
-        LEFT JOIN esgi_user_role ur on u.id = ur.id_user
-        LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
-        LEFT Join esgi_site s on s.id = rs.id_site WHERE s.id = ?";
+        $sql = "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name 
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            LEFT Join esgi_site s on s.id = rs.id_site 
+            WHERE s.id = ?";
 
         $request =  Sql::getInstance()->prepare($sql);
         $request->execute(array($id_site));
@@ -517,14 +595,11 @@ class Admin
         $user = new User();
         $view = new View('test', 'back');
         //$view->assign('user', $user);
-
-
     }
 
     public function comment() {
         $view = new View('front_template', 'front');  
     }
-
 
 //TODO TEST
 /*

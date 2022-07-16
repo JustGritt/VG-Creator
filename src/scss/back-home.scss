@@ -40,6 +40,13 @@ $value in $status {
     }
 }
 
+@media screen and (max-width: 1068px) {
+    .body-container-dashboard section:nth-of-type(2) {
+        width: 100vw;
+        min-height: 100vh;
+    }
+}
+
 .left-panel-dasboard {
     width: 100%;
     padding: 29px 32px;
@@ -338,7 +345,6 @@ $value in $status {
 }
 
 section#comments {
-
 
     .comment-card {
         

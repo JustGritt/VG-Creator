@@ -31,9 +31,6 @@ class User extends Sql{
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
 
-
-
-    
     /**
      * @return null|int
      */
@@ -332,18 +329,11 @@ class User extends Sql{
                 "submit"=>"Inviter",
                 "id"=>"formulaire"
             ],
-            'select'=>[
-                "options"=>[
-                    "1"=>"Administrateur",
-                    "2"=>"Modérateur",
-                    "3"=>"Membre"
-                ],
-            ],
             'inputs'=>[
                 "firstname"=>[
                     "type"=>"text",
                     "placeholder"=>"Prénom",
-                    "class"=>"inputForm tmp",
+                    "class"=>"inputForm input__field",
                     "id"=>"firstnameForm",
                     "min"=>2,
                     "max"=>50,
@@ -352,7 +342,7 @@ class User extends Sql{
                 "lastname"=>[
                     "type"=>"text",
                     "placeholder"=>"Nom",
-                    "class"=>"inputForm tmp",
+                    "class"=>"inputForm input__field",
                     "id"=>"lastnameForm",
                     "min"=>2,
                     "max"=>100,
@@ -366,10 +356,10 @@ class User extends Sql{
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
                 ],
-                "role"=>[
-                    "type"=>"checkbox",
+                "roles"=>[
+                    "type"=>"hidden",
                     "name"=>"role",
-                    "value"=>"admin",
+                    "value"=>"Admin",
                     "label" => "Admin",
                     "class"=>"inputForm",
                     "id"=>"emailForm",

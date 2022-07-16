@@ -20,7 +20,7 @@
             if(isset($message) && !empty($message)) {
                 echo '
                     <div class="success-card flex">
-                        <span class="error-close">X</span>
+                        <span class="success-close">X</span>
                         <p class="success-message">'.$message.'</p>
                     </div>
                 ';
@@ -30,10 +30,17 @@
 
     echo '
         <script>
-            let errorCard = document.querySelectorAll(".error-card");
+            const errorCards = document.querySelectorAll(".error-card");
+            const successCards = document.querySelectorAll(".success-card");
             
-            errorCard.forEach(function(card) {
+            errorCards.forEach(function(card) {
                 card.querySelector(".error-close").addEventListener("click", function() {
+                    card.remove();
+                });
+            });
+
+            successCards.forEach(function(card) {
+                card.querySelector(".success-close").addEventListener("click", function() {
                     card.remove();
                 });
             });

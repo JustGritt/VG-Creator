@@ -9,6 +9,7 @@
   --color-black: #333333;
   --color-accent: #82ccdd;
   --color-danger: #ED4C67;
+  --color-success: #16a085;
   --color-grey-dark: #ADADAD;
   --color-blue-dark:#7E86A5;
   --color-red:#ED4C67;
@@ -111,6 +112,12 @@ p {
   width: calc(100% - 300px);
 }
 
+@media screen and (max-width: 1068px) {
+  .body-container-dashboard section:nth-of-type(2) {
+    width: 100vw;
+    min-height: 100vh;
+  }
+}
 .left-panel-dasboard {
   width: 100%;
   padding: 29px 32px;
