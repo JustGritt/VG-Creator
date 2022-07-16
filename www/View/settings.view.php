@@ -36,10 +36,10 @@
         <div class="toggle-filters">
             <div class="filter-checkboxes flex">
                 <?php if(($user->getPassword())) : ?>
-                <label class='input' for="oldpwd"> 
-                    <input type="password" id="oldpwd" name="oldpwd" class="input__field" placeholder=" " value="">
-                    <span class='input__label'>Mot de passe actuel</span>
-                </label>
+                    <label class='input' for="oldpwd">
+                        <input type="password" id="oldpwd" name="oldpwd" class="input__field" placeholder=" " value="">
+                        <span class='input__label'>Mot de passe actuel</span>
+                    </label>
                 <?php endif ?>
 
                 <label class='input' for="newpwd"> 
