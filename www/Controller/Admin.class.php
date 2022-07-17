@@ -591,14 +591,6 @@ class Admin
                 return;
             }
             if(isset($_POST['pseudo']) && (!$user->is_unique_pseudo($_POST['pseudo']))){
-                /*
-                $user_exists2 = $user->getUserByPseudo($_POST['pseudo']);
-                $user_exists2->generateToken();
-                $user_exists2->save();
-                $user_info = $user->getUserByPseudo($_POST['pseudo']);
-                $user_role->setIdUser($user_info->getId());
-                $user_role->setIdRoleSite($role_id);
-                $user_role->save();*/
                 FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé.");
                 header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
                 return;
@@ -623,6 +615,7 @@ class Admin
             $user_info = $user->getUserByPseudo($_POST['pseudo']);
             $user_role->setIdUser($user_info->getId());
             $user_role->setIdRoleSite($role_id);
+            $user_role->setStatus(1);
             $user_role->save();
             Handler::setMemberRole($user_info->getId());
 
@@ -657,10 +650,10 @@ class Admin
 
             $mail = new Mail();
             $subject = "Veuillez valideez votre compte sur ".$site->getName();
-            // $mail->sendMail($user->getEmail() , $body, $subject);
+            $mail->sendMail($user->getEmail() , $body, $subject);
 
             FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
-            // header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
 
         }
     }
