@@ -305,7 +305,6 @@ class User
         if (!empty($_SESSION['code'])) {
             $this->revokeToken($_SESSION['code']);
         }
-
         unset($_SESSION['session_token']);
         unset($_SESSION['id']);
         unset($_SESSION['email']);

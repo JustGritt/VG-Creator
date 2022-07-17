@@ -77,6 +77,12 @@
     <!-- <script src="../dist/css/main.css"></script> -->
     <script src="/dist/js/dark-mode.js"></script>
     <script src="/dist/js/global.js"></script>
-    
+
+    <?php
+    use App\Core\FlashMessage;
+    $flash = new FlashMessage();
+    $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
+    $this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
+    ?>
 </body>
 </html>

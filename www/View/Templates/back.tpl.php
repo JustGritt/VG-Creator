@@ -38,7 +38,6 @@
             $flash = new FlashMessage();
             $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
             $this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
-            //TODO : add success message /Partial/flash_messages.partial.php
             ?>
         </div>
     </main>
