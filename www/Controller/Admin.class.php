@@ -302,6 +302,12 @@ class Admin
                 $user_info  = $user->getUserByEmail($to_check->getEmail());
             }
 
+            if($user_info['email'] == $_SESSION['email']) {
+                FlashMessage::setFlash("errors", "Vous ne pourrez pas vous inviter vous-même.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
             $id = $user_info['id'];
             $user_verify = $user->getUserById($id) ?? null;
             
