@@ -42,6 +42,7 @@
                     </label>
                 <?php endif ?>
 
+                <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo \App\Core\Security::generateCsfrToken()?>">
                 <label class='input' for="newpwd"> 
                     <input type="password" id="newpwd" name="newpwd" class="input__field" placeholder=" ">
                     <span class='input__label'>Nouveau Mot de passe</span>

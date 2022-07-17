@@ -80,7 +80,6 @@ class Admin
             
             if(!empty($_POST)) {
 
-                var_dump($_POST['site']);
                 if($_POST['site'] == 'vg-creator')  {
                     unset($_SESSION['choice']);
                     header('Location: ' . DOMAIN . '/dashboard');
@@ -169,7 +168,6 @@ class Admin
 
         if (!empty($_POST) ) {
             unset($_SESSION['csrf_token']);
-            var_dump($_POST);
             $this->updateUser();
         }
 
@@ -177,7 +175,6 @@ class Admin
     }
     
     public function updateUser(){
-        var_dump($_POST);
         if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
@@ -208,7 +205,6 @@ class Admin
             $role_post = ucfirst(htmlspecialchars($_POST['roles']));
             //Change the role for the user of the site
             $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
-            var_dump($roles_available);
 
             $selected_role = 0;
             foreach ($roles_available as $role) {
@@ -249,6 +245,7 @@ class Admin
         return $result;
     }
 
+    /*
     private function addUser(){
 
         // !TODO: Add the user to the site getAvailableRolesForSite($_SESSION['id_site'])
@@ -310,7 +307,7 @@ class Admin
         //Handler::setRoleForUser($user->getId(), $_SESSION['id_site'],  $_POST['role']);
         FlashMessage::setFlash("success", "L'utilisateur a bien été ajouté");
         //header('Refresh: 3; '.DOMAIN.'/dashboard');
-    }
+    }*/
 
     public function setUploadMediaView()
     {
@@ -368,7 +365,8 @@ class Admin
         $user = $user->getUserById($_SESSION['id']);
         $view->assign("user", $user);
 
-        if(!empty($_POST)) {
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
             
             $user->setFirstname(htmlspecialchars($_POST['firstname']));
             $user->setLastname(htmlspecialchars($_POST['lastname']));
@@ -376,6 +374,7 @@ class Admin
             $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
             if(!$pseudotocheck) {
                 FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+                header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
                 return;
             }
 
@@ -410,7 +409,6 @@ class Admin
 
             if(isset($_POST['oldpwd']) && !empty($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm']) ) {
 
-                var_dump(password_verify($_POST['oldpwd'], $user->getPassword()));
                 if (Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])
                     && password_verify($_POST['oldpwd'], $user->getPassword())){
                     $user->setPassword($newpw);
@@ -433,11 +431,10 @@ class Admin
             $user->setEmail($_POST['email']);
 
             $user->save();
-            FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
+            FlashMessage::setFlash("success", "Votre modifications ont bien été enregistrées.");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
             
         }
-
-        return $view;
     }
 
     public function getAllArticles()
@@ -482,7 +479,8 @@ class Admin
         $user = new UserModel();
         $view->assign("user", $user);
 
-        if(!empty($_POST)) {
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
             
             $user_role = new User_role();
             $role_post = ucfirst(htmlspecialchars($_POST['roles']));

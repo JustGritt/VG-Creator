@@ -25,8 +25,6 @@
                 </tr>
             </thead>
             <tbody>
-                
-                <?php print_r($result); ?>
                 <?php foreach ($result as $key => $value) { ?>
 
                     <form method="POST">
