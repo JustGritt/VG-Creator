@@ -500,6 +500,34 @@ class Admin
                 return;
             }
 
+            // check if user already exists
+            $user_exists2 = $user->getUserByEmail($_POST['email']);
+            if (isset($user_exists2) && !empty($user_exists2)) {
+                FlashMessage::setFlash("errors", "Cet utilisateur existe déjà.");
+                header("Refresh: 2; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            if(!$pseudotocheck) {
+                FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+                return;
+            }
+            if(isset($_POST['pseudo']) && (!$user->is_unique_pseudo($_POST['pseudo']))){
+                /*
+                $user_exists2 = $user->getUserByPseudo($_POST['pseudo']);
+                $user_exists2->generateToken();
+                $user_exists2->save();
+                $user_info = $user->getUserByPseudo($_POST['pseudo']);
+                $user_role->setIdUser($user_info->getId());
+                $user_role->setIdRoleSite($role_id);
+                $user_role->save();*/
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $password = $_POST['password'];
             // Add client data
             $user->setFirstname(htmlspecialchars($_POST['firstname']));
             $user->setLastname(htmlspecialchars($_POST['lastname']));
@@ -508,34 +536,36 @@ class Admin
             $user->setPseudo(htmlspecialchars($_POST['pseudo']));
             $user->setPassword(htmlspecialchars($_POST['password']));
             $user->generateToken();
-            
-            if($user->save()) {
-                $user_info = $user->getUserByPseudo($_POST['pseudo']);
-                $user_role->setIdUser($user_info->getId());
-                $user_role->setIdRoleSite($role_id);
-                $user_role->save();
-            } else {
+
+            if(!$user->save()) {
                 FlashMessage::setFlash("errors", "Une erreur est survenue lors de l'ajout du client.");
-                // header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
                 return;
             }
 
-            $toanchor = DOMAIN.'/invitation?id='.$user->getId().'&token='.$user->getToken();
+            $user_info = $user->getUserByPseudo($_POST['pseudo']);
+            $user_role->setIdUser($user_info->getId());
+            $user_role->setIdRoleSite($role_id);
+            $user_role->save();
+            Handler::setMemberRole($user_info->getId());
+
+
+            //$toanchor = DOMAIN.'/invitation?id='.$user_info->getId().'&token='.$user->getToken();
+            $toanchor = DOMAIN.'/confirmation?id='.$user_info->getId().'&token='.$user->getToken();
+
+            $site = new Site();
+            $site = $site->getSiteById($_SESSION['id_site']);
 
             $template_var = array(
-                "{{product_url}}" => "".DOMAIN."/",
-                "{{product_name}}" => "VG-CREATOR",
                 "{{name}}" => $user->getFirstname(),
+                "{{sender_name}}" => $_SESSION['firstname'],
+                "{{sender_site}}" =>  $site->getName(),
                 "{{action_url}}" => $toanchor,
-                "{{login_url}}" => $toanchor,
-                "{{username}}" =>  $user->getEmail(),
-                "{{support_email}}" => "contact@vgcreator.fr",
-                "{{sender_name}}" => "VG-CREATOR",
-                "{{help_url}}" => "https://github.com/popokola/VG-CREATOR-SERVER.git",
-                "{{company_name}}" => "VG-CREATOR",
+                "{{sender_email}}" => $_SESSION['email'],
+                "{{password}}" =>  $password,
             );
 
-            $template_file = "/var/www/html/Templates/confirmation_email.php";
+            $template_file = "/var/www/html/Templates/invitation_email.php";
             if(file_exists($template_file)){
                 $body = file_get_contents($template_file);
             }else{
@@ -551,12 +581,12 @@ class Admin
             }
 
             $mail = new Mail();
-            $subject = "Veuillez confirmée votre email";
-            // $mail->sendMail($user->getEmail() , $body, $subject);
-            var_dump($roles_available);
+            $subject = "Veuillez valideez votre compte sur ".$site->getName();
+            $mail->sendMail($user->getEmail() , $body, $subject);
 
-            FlashMessage::setFlash("success", "Le client a bien été ajouté");
-            // header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+            FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+
         }
 
         return $view;

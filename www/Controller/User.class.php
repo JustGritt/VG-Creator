@@ -212,7 +212,6 @@ class User
         $user = new UserModel();
         $view = new View("register");
         $view->assign("user", $user);
-        $errors = [];
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
@@ -233,7 +232,7 @@ class User
             
             if(!$pseudotocheck) {
                 FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
-                // header("Refresh: 3; ".DOMAIN."/register ");
+                header("Refresh: 3; ".DOMAIN."/register ");
                 return;
             } else {
                 $user->setPseudo(htmlspecialchars($_POST['pseudo']));
@@ -246,14 +245,14 @@ class User
             $verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
 
             if (!$verifyPassword) {
-                echo 'Mot de passe different..';
-                header("Refresh: 5; " . DOMAIN . "/register ");
+                FlashMessage::setFlash('errors', 'Mot de passe different..');
+                header("Refresh: 3; " . DOMAIN . "/register ");
                 return;
             }
 
             if (!$user->is_unique_pseudo($_POST['pseudo'])) {
-                echo 'Pseudo deja utilisé';
-                header("Refresh: 5; " . DOMAIN . "/register ");
+                FlashMessage::setFlash('errors', 'Pseudo deja utilisé');
+                header("Refresh: 3; " . DOMAIN . "/register ");
                 return;
             }
 
@@ -296,13 +295,9 @@ class User
             $mail = new Mail();
             $subject = "Veuillez confirmée votre email";
             $mail->sendMail($_POST['email'], $body, $subject);
-            echo 'Merci pour votre inscription, confirmez votre email';
-
-            die();
-            // header("Refresh: 5; " . DOMAIN . "/");
+            FlashMessage::setFlash('success', 'Merci pour votre inscription, confirmez votre email');
+            header("Refresh: 3; " . DOMAIN . "/");
         }
-
-        $view->assign("errors", $errors);
     }
 
     public function logout(): void
@@ -390,8 +385,6 @@ class User
         $site->getSiteByName($_GET['url']);
         $is_banned = $backlist->isUserBacklisted($id_user);
         if ($is_banned) {
-            //send 404 header
-            //new View("404", 'error', 'Errors');
             header("HTTP/1.0 403 Forbidden");
             FlashMessage::setFlash('errors', "Vous êtes banni de ce site");
             header("Refresh: 1; " . DOMAIN . "/");

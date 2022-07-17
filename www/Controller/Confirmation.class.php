@@ -30,8 +30,6 @@ class Confirmation {
         $getToken = $_GET['token'];
         $user->confirmUser($getId, $getToken);
 
-        //Handler::setDirectoryForUser($_SESSION['pseudo']);
-
         FlashMessage::setFlash('success', "Your account has been validated! You will be redirect to the login page in few secondes..");
         header("Refresh: 3; ".DOMAIN."/login" );
 
@@ -99,5 +97,23 @@ class Confirmation {
             header("Refresh: 3; ".DOMAIN."/login" );
 
         }
+    }
+
+    public function ConfirmInvitation(){
+        $user = new UserModel();
+        $view = new View("invitation");
+        $view->assign("user", $user);
+
+        if (empty($_GET['id']) && empty($_GET['token'])) {
+            FlashMessage::setFlash('errors', "Une erreur sait produite...");
+            header("Refresh: 3; ".DOMAIN."/" );
+        }
+
+        $getId = $_GET['id'];
+        $getToken = $_GET['token'];
+        $user->confirmUser($getId, $getToken);
+
+        FlashMessage::setFlash('success', "Your account has been validated! You will be redirect to the login page in few secondes..");
+        header("Refresh: 3; ".DOMAIN."/login" );
     }
 }

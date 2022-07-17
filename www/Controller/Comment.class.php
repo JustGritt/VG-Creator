@@ -37,32 +37,20 @@ class Comment {
         {
             $comments = new CommentModel();
             $data = json_decode(file_get_contents('php://input'));
-            var_dump($data->type == "Confirmer");
-            var_dump($data->type == "Bannir");
 
             if($data->type == "Confirmer") {
                 $comments = $comments->getComment($data->id);
                 $comments->setStatus(1);
-                var_dump($comments->save());
                 $comments->save();
             } else if($data->type == "Bannir") {
                 $comments = $comments->getComment($data->id);
                 $comments->setStatus(2);
-                var_dump($comments->save());
                 $comments->save();
             } else {
                 FlashMessage::setFlash("errors", "Impossible de traiter la demande");
             }
         }
 
-        // $uri = explode("/", $_GET['url']);
-        // $endpoint = end($uri);
-        // $id = (int)$endpoint;
-
-        // // var_dump($_SERVER['REQUEST_METHOD']);
-        // if($_SERVER['REQUEST_METHOD'] == "POST"){
-
-        // }
     }
 
 }
