@@ -267,7 +267,6 @@ class Admin
                 header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
                 return;
             }
-            
 
             $user_role = new User_role();
             $role_post = ucfirst(htmlspecialchars($_POST['roles']));
@@ -284,20 +283,29 @@ class Admin
                 header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
                 return;
             }
-            
-            $user_info = $user->getUserByEmail($_POST['email']);
-            $id = $user_info['id'];
-            // $user_verify = $user->getUserById($id) ?? null;
 
-            $user_verify = $user->getUserById($id) ?? null;
-
-            if(!$user_info) {
-                FlashMessage::setFlash("errors", "Cet utilisateur n'existe pas.");
-                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
-                return;
+            $user_info = null;
+            if (!empty($_POST['email'])) {
+                $user_info = $user->getUserByEmail($_POST['email']);
+                if(!$user_info) {
+                    FlashMessage::setFlash("errors", "Cet utilisateur n'existe pas.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                    return;
+                }
+            }else if (!empty($_POST['pseudo'])) {
+                if ($user->is_unique_pseudo($_POST['pseudo'])){
+                    FlashMessage::setFlash("errors", "Ce pseudo n'existe pas.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                    return;
+                }
+                $to_check = $user->getUserByPseudo($_POST['pseudo']);
+                $user_info  = $user->getUserByEmail($to_check->getEmail());
             }
+
+            $id = $user_info['id'];
+            $user_verify = $user->getUserById($id) ?? null;
             
-            if((!empty($_POST['email']) && !empty($user_info))) {
+            if(!empty($_POST['email'])  || !empty($_POST['pseudo'])){
                 $id = $user_info['id'];
 
                 $user_role->setIdUser($id);
@@ -306,21 +314,7 @@ class Admin
                 $user_role->generateToken();
                 $token = $user_role->getToken();
                 $user_role->save();
-            } 
-
-            if((!empty($_POST['pseudo']) && !empty($user_verify))) {
-                $id = $user_info['id'];
-
-                $user_role->setIdUser($id);
-                $user_role->setIdRoleSite($role_id);
-                $user_role->setStatus(0);
-                $user_role->generateToken();
-                $token = $user_role->getToken();
-                $user_role->save();
-            } 
-            
-
-            
+            }
 
             $toanchor = DOMAIN.'/invitation?id='. $user_verify->getId() .'&token='.$token;
 
