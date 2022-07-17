@@ -116,14 +116,14 @@ class Confirmation {
         $getToken = $_GET['token'];
         $user = $user->getUserById($getId);
         
-        if(!isset($user) || empty($user)){
+        if(empty($user)){
             FlashMessage::setFlash('errors', "Une erreur sait produite...");
             header("Refresh: 3; ".DOMAIN."/" );
             return;
         }
         
         $user_role = new User_role();
-        // $user_role->confirmInvitation($getId, $getToken);
+        //$user_role->confirmInvitation($getId, $getToken);
         if(!$user_role->updateStatus($getId, $getToken)){
             FlashMessage::setFlash('errors', "Une erreur sait produite...");
             header("Refresh: 3; ".DOMAIN."/" );

@@ -109,7 +109,7 @@ class User_role extends Sql
 
 
     public function updateStatus($getId, $getToken){
-        $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = 1 WHERE id = ? AND token = ?");
+        $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = 1 WHERE id_user = ? AND token = ?");
         return $updateStatus->execute(array($getId ,$getToken));
     }
 }
