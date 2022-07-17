@@ -193,6 +193,11 @@ class Admin
                 exit();
             }
             if (!$backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Active') {
+                if ($user->getEmail() == $_SESSION['email']) {
+                    FlashMessage::setFlash("errors", "Vous ne pouvez pas bannir votre propre compte");
+                    header('Refresh: 3; ' . DOMAIN . '/dashboard/clients');
+                    exit();
+                }
                 $backlist->setIdUser($_POST['id']);
                 $backlist->setIdSite($_SESSION['id_site']);
                 //$backlist->setReason($_POST['reason']);
@@ -247,13 +252,6 @@ class Admin
 
     
     public function inviteClient(){
-
-        // !TODO: Add the user to the site getAvailableRolesForSite($_SESSION['id_site'])
-        // Check if the role is available for the site
-        // If it is, add the user to the site else return an error message and redirect to the page with the form
-        
-        var_dump($_POST);
-        var_dump($_SESSION);
         $view = new View("invite_clients", "back");
         $user = new UserModel();
         $view->assign("user", $user);
@@ -356,7 +354,7 @@ class Admin
             $mail->sendMail($user_verify->getEmail() , $body, $subject);
 
             FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
-
+            header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
         }
     }
 

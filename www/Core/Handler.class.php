@@ -8,9 +8,9 @@ class Handler
 {
 
     public static function setMemberRole($id_user){
-        $request = "INSERT INTO `esgi_user_role` (`id_user`, `id_role_site`) VALUES (?, ?)";
+        $request = "INSERT INTO `esgi_user_role` (`id_user`, `id_role_site` , `status`) VALUES (?, ?, ?)";
         $sql = Sql::getInstance()->prepare($request);
-        $sql->execute(array($id_user, VGCREATORMEMBER));
+        $sql->execute(array($id_user, VGCREATORMEMBER, 1));
     }
 
     public static function getIdRoleSite($id_site, $role){
