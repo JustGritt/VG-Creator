@@ -3,13 +3,14 @@
     <h2>Creer votre site et revenez voir cette page !</h2>
 <?php } else { ?>
     <main>
-        <section id="new-client">
+        <section id="invite-client">
         
             <div class="wrapper flex center-transform">
 
                 <h1 class="title">Invitation de l'utilisateur</h1>
+                <p>Remplir le pseudo ou le mail pour l'utilisateur</p>
 
-                <?php $this->includePartial("form", $user->getAddClientForm()) ?>
+                <?php $this->includePartial("form", $user->getInviteClientForm()) ?>
 
                 <select name="roles" id="roleSelector">
                     <option value="Admin" selected>Admin</option>
@@ -32,4 +33,14 @@
         let roleValue = roleSelector.options[roleSelector.selectedIndex].value;
         formRole.value = roleSelector.value;
     });
+;
+    const email  = document.querySelector("form input[name='email']");
+    const pseudo  = document.querySelector("form input[name='pseudo']");
+    console.log('email', email);
+
+    document.addEventListener("keyup", function() {
+        email.value.length > 0 ? pseudo.setAttribute('disabled', pseudo) : pseudo.removeAttribute('disabled', pseudo) ;
+        pseudo.value.length > 0 ? email.setAttribute('disabled', email) : email.removeAttribute('disabled', email) ;
+    });
+
 </script>

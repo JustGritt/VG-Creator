@@ -73,7 +73,7 @@ class PaginatedQuery extends Sql
         $currentPage = $this->getCurrentPage();
         if ($currentPage <= 1) return null;
         if ($currentPage > 2) $link .= "?page=" . ($currentPage - 1);
-        return "<a href={$link}>Page precedente</a>";
+        return "<a href={$link} class='previous-btn'>Page precedente</a>";
     }
 
     public function nextLink(string $link): ?string
@@ -82,7 +82,7 @@ class PaginatedQuery extends Sql
         $page = $this->getPages();
         if ($currentPage >= $page) return null;
         $link .= "?page=" . ($currentPage + 1);
-        return "<a href={$link}>Page suivante</a>";
+        return "<a href={$link} class='next-btn'>Page suivante</a>";
     }
 
 

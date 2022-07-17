@@ -86,3 +86,19 @@
     ?>
 </body>
 </html>
+
+<script>
+    let errorCards = document.querySelectorAll(".error-card");
+    errorCards.forEach(function(card) {
+        card.querySelector(".error-close").addEventListener("click", function() {
+            card.remove();
+        });
+    });
+    
+    let successCards = document.querySelectorAll(".success-card");
+    successCards.forEach(function(card) {
+        card.querySelector(".success-close").addEventListener("click", function() {
+            card.remove();
+        });
+    });
+</script>

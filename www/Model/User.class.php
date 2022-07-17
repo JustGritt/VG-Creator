@@ -320,13 +320,13 @@ class User extends Sql{
         ];
     }
 
-    public function getInvitationForm(): array
+    public function getAddClientForm(): array
     {
         return [
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"Inviter",
+                "submit"=>"Ajouter",
                 "id"=>"formulaire"
             ],
             'inputs'=>[
@@ -382,6 +382,53 @@ class User extends Sql{
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
                     "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ],
+        ];
+    }
+
+    public function getInviteClientForm(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Inviter",
+                "id"=>"formulaire"
+            ],
+            'inputs'=>[
+                "email"=>[
+                    "type"=>"email",
+                    "placeholder"=>"Email",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+                "pseudo"=>[
+                    "type"=>"text",
+                    "placeholder"=>"@Pseudo",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"pseudoForm",
+                    "error"=>"@Pseudo incorrect",
+                    "unicity"=>"true",
+                    "errorUnicity"=>"@Pseudo already in use",
+                ],
+                "roles"=>[
+                    "type"=>"hidden",
+                    "name"=>"role",
+                    "value"=>"Admin",
+                    "label" => "Admin",
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
                 ],
                 'csrf_token'=>[
                     "type"=>"hidden",

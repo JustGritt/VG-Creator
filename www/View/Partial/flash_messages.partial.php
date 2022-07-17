@@ -27,24 +27,4 @@
             }
         }
     }
-
-    echo '
-        <script>
-            const errorCards = document.querySelectorAll(".error-card");
-            const successCards = document.querySelectorAll(".success-card");
-            
-            errorCards.forEach(function(card) {
-                card.querySelector(".error-close").addEventListener("click", function() {
-                    card.remove();
-                });
-            });
-
-            successCards.forEach(function(card) {
-                card.querySelector(".success-close").addEventListener("click", function() {
-                    card.remove();
-                });
-            });
-
-        </script>
-    '
 ?>

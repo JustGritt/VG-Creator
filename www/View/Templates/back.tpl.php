@@ -19,8 +19,6 @@
     <link rel="stylesheet" href="https://harvesthq.github.io/chosen/chosen.css">
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js" ></script>
 
-
-
 </head>
 
 <body>
@@ -34,13 +32,29 @@
             <?php  include "View/" . $this->view . ".view.php"; ?>
 
             <?php
-            use App\Core\FlashMessage;
-            $flash = new FlashMessage();
-            $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
-            $this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
+                use App\Core\FlashMessage;
+                $flash = new FlashMessage();
+                $this->includePartial("flash_messages", ['errors' => [$flash->getFlash('errors')]]);
+                $this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
             ?>
         </div>
     </main>
 </body>
 
 </html>
+
+<script>
+    let errorCards = document.querySelectorAll(".error-card");
+    errorCards.forEach(function(card) {
+        card.querySelector(".error-close").addEventListener("click", function() {
+            card.remove();
+        });
+    });
+    
+    let successCards = document.querySelectorAll(".success-card");
+    successCards.forEach(function(card) {
+        card.querySelector(".success-close").addEventListener("click", function() {
+            card.remove();
+        });
+    });
+</script>

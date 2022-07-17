@@ -18,15 +18,44 @@ section#clients {
 
     .table-container {
         margin-bottom: 50px;
-
+        position: relative;
+        
         .title-container {
             display: flex;
             justify-content: space-around;
             align-items: center;
+            
+
+            & ~ a {
+                position: absolute;
+                padding: 10px;
+                bottom: -55px;
+                text-decoration: none;
+                transition: all .2s ease-in-out;
+                border-radius: 8px;
+                &:hover {
+                    background: var(--color-black);
+                    color: var(--color-white);
+                }
+                &.next-btn {
+                    right: 0;
+                }
+            }
+
 
             a.button--primary {
                 margin-left: auto;
                 margin-right: 0;
+                background: transparent;
+                color: var(--color-text);
+                border: 1px solid var(--color-text);
+                &:hover {
+                    color: var(--color-background);
+                    background: var(--color-text);
+                }
+                &:nth-last-of-type(1) {
+                    margin-left: 25px;
+                }
             }
         }
 
@@ -127,7 +156,8 @@ section#clients {
     }
 }
 
-section#new-client {
+section#new-client,
+section#invite-client {
     display: flex;
     position: relative;
     width: calc(100vw - 300px);
@@ -185,6 +215,14 @@ section#new-client {
                     outline: none;
                 }
             }
+        }
+    }
+}
+
+section#invite-client {
+    .wrapper {
+        h1 {
+            margin-bottom: 0;
         }
     }
 }
