@@ -245,69 +245,120 @@ class Admin
         return $result;
     }
 
-    /*
-    private function addUser(){
+    
+    public function inviteClient(){
 
         // !TODO: Add the user to the site getAvailableRolesForSite($_SESSION['id_site'])
         // Check if the role is available for the site
         // If it is, add the user to the site else return an error message and redirect to the page with the form
+        
         var_dump($_POST);
         var_dump($_SESSION);
-        die();
+        $view = new View("invite_clients", "back");
         $user = new UserModel();
-        $user->setFirstname($_POST['firstname']);
-        $user->setLastname($_POST['lastname']);
-        $user->setEmail($_POST['email']);
-        $user->setPseudo($_POST['pseudo']);
-        $user->setPassword($_POST['password']);
-        $user->generateToken();
-        if (!$user->is_unique_pseudo($_POST['pseudo'])) {
-            FlashMessage::setFlash("errors", "Pseudo déjà utilisé");
-            return;
-        }
-        $user->save();
+        $view->assign("user", $user);
 
-        $id = $user->getIdFromEmail($user->getEmail());
-
-        // TODO: Add role to the user role table
-        // role site = new role site -> save();
-        $toanchor = DOMAIN.'/invitation?id='.$id.'&token='.$user->getToken();
-
-        $template_var = array(
-            "{{product_url}}" => "".DOMAIN."/",
-            "{{product_name}}" => "VG-CREATOR",
-            "{{name}}" => $user->getFirstname(),
-            "{{action_url}}" => $toanchor,
-            "{{login_url}}" => $toanchor,
-            "{{username}}" =>  $user->getEmail(),
-            "{{support_email}}" => "contact@vgcreator.fr",
-            "{{sender_name}}" => "VG-CREATOR",
-            "{{help_url}}" => "https://github.com/popokola/VG-CREATOR-SERVER.git",
-            "{{company_name}}" => "VG-CREATOR",
-        );
-
-        $template_file = "/var/www/html/Templates/confirmation_email.php";
-        if(file_exists($template_file)){
-            $body = file_get_contents($template_file);
-        }else{
-            die('ennable to load the templates');
-        }
-
-        //swapping the variable into the templates
-        foreach(array_keys($template_var) as $key){
-            if (strlen($key) > 2 && trim($key) != "") {
-                $body = str_replace($key, $template_var[$key], $body);
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
+            
+            if(!empty($_POST['email']) && !empty($_POST['pseudo'])){
+                FlashMessage::setFlash("errors", "Veuillez remplir seulement un champ");
+                header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+                return;
             }
+            
+
+            $user_role = new User_role();
+            $role_post = ucfirst(htmlspecialchars($_POST['roles']));
+            $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
+
+            foreach($roles_available as $role) {
+                if($role['name'] == $role_post) {
+                    $role_id = $role['id'];
+                }
+            }
+
+            if(!isset($role_id)) {
+                FlashMessage::setFlash("errors", "Ce rôle n'existe pas.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+            
+            $user_info = $user->getUserByEmail($_POST['email']);
+            $id = $user_info['id'];
+            // $user_verify = $user->getUserById($id) ?? null;
+
+            $user_verify = $user->getUserById($id) ?? null;
+
+            if(!$user_info) {
+                FlashMessage::setFlash("errors", "Cet utilisateur n'existe pas.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+            
+            if((!empty($_POST['email']) && !empty($user_info))) {
+                $id = $user_info['id'];
+
+                $user_role->setIdUser($id);
+                $user_role->setIdRoleSite($role_id);
+                $user_role->setStatus(0);
+                $user_role->generateToken();
+                $token = $user_role->getToken();
+                $user_role->save();
+            } 
+
+            if((!empty($_POST['pseudo']) && !empty($user_verify))) {
+                $id = $user_info['id'];
+
+                $user_role->setIdUser($id);
+                $user_role->setIdRoleSite($role_id);
+                $user_role->setStatus(0);
+                $user_role->generateToken();
+                $token = $user_role->getToken();
+                $user_role->save();
+            } 
+            
+
+            
+
+            $toanchor = DOMAIN.'/invitation?id='. $user_verify->getId() .'&token='.$token;
+
+            $site = new Site();
+            $site = $site->getSiteById($_SESSION['id_site']);
+
+            $template_var = array(
+                "{{name}}" => $user_verify->getFirstname(),
+                "{{sender_name}}" => $_SESSION['firstname'],
+                "{{sender_site}}" =>  $site->getName(),
+                "{{action_url}}" => $toanchor,
+                "{{sender_email}}" => $_SESSION['email'],
+                "{{password}}" =>  $password??null,
+            );
+
+            $template_file = "/var/www/html/Templates/invitation_email.php";
+            if(file_exists($template_file)){
+                $body = file_get_contents($template_file);
+            }else{
+                FlashMessage::setFlash("errors", "Impossible de trouver le template");
+                return;
+            }
+
+            //swapping the variable into the templates
+            foreach(array_keys($template_var) as $key){
+                if (strlen($key) > 2 && trim($key) != "") {
+                    $body = str_replace($key, $template_var[$key], $body);
+                }
+            }
+
+            $mail = new Mail();
+            $subject = "Veuillez valideez votre compte sur ".$site->getName();
+            $mail->sendMail($user_verify->getEmail() , $body, $subject);
+
+            FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
+
         }
-
-        $mail = new Mail();
-        $subject = "Veuillez confirmée votre email";
-        $mail->sendMail($user->getEmail() , $body, $subject);
-
-        //Handler::setRoleForUser($user->getId(), $_SESSION['id_site'],  $_POST['role']);
-        FlashMessage::setFlash("success", "L'utilisateur a bien été ajouté");
-        //header('Refresh: 3; '.DOMAIN.'/dashboard');
-    }*/
+    }
 
     public function setUploadMediaView()
     {
@@ -578,10 +629,10 @@ class Admin
 
             $mail = new Mail();
             $subject = "Veuillez valideez votre compte sur ".$site->getName();
-            $mail->sendMail($user->getEmail() , $body, $subject);
+            // $mail->sendMail($user->getEmail() , $body, $subject);
 
             FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
-            header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+            // header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
 
         }
     }

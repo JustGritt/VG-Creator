@@ -27,6 +27,8 @@ $router->group('/', function (Router $router) {
     $router->post('/forget', 'passwordrecovery@pwdforget');
     $router->get('/confirmation', 'confirmation@confirmation');
     $router->post('/confirmation', 'confirmation@confirmation');
+    $router->get('/invitation', 'confirmation@invitation');
+    $router->post('/invitation', 'confirmation@invitation');
     $router->get('/reset-new-password', 'confirmation@confirmationPwd');
     $router->post('/reset-new-password', 'confirmation@confirmationPwd');
 });
@@ -64,6 +66,8 @@ $router->group('/dashboard', function (Router $router) {
     $router->post('/clients', 'admin@setClientsView');
     $router->get('/clients/add', 'admin@addClient');
     $router->post('/clients/add', 'admin@addClient');
+    $router->get('/clients/invite', 'admin@inviteClient');
+    $router->post('/clients/invite', 'admin@inviteClient');
 
     $router->get('/comments', 'comment@showComments', 'comment.showComments');
     // $router->get('/comments-edit/:id', 'comment@editComment', 'comment.editComment')->with('id', '[0-9]+');
