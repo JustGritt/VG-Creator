@@ -149,9 +149,6 @@ class User
 
         $user = new UserModel();
 
-        //$view = new View("login");
-        //$view->assign("user", $user);
-
         $oauth_user = new OauthUser();
         $redirect_uri = DOMAIN . "/login";
         $data = $this->GetAccessToken(GOOGLE_ID, $redirect_uri, GOOGLE_SECRET, $_GET['code']);
@@ -160,13 +157,11 @@ class User
         $user_info = $this->GetUserProfileInfo($access_token);;
 
         if (!$user_info['verified_email']) {
-            echo "OOps sorry something went wrong with google";
+            FlashMessage::setFlash('errors', "OOps sorry something went wrong with google. Please try again.");
             unset($_SESSION['id']);
             unset($_SESSION['code']);
             unset($_SESSION['email']);
-            //var_dump(isset($_SESSION['id']));
-            var_dump($_SESSION);
-            header("Refresh: 5; " . DOMAIN . "/login ");
+            header("Refresh: 2; " . DOMAIN . "/login ");
         }
         $id = $user->getIdFromEmail($user_info['email']);
 
@@ -204,6 +199,7 @@ class User
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
 
+        unset($_SESSION['csrf_token']);
         header("Location: " . DOMAIN . "/dashboard");
     }
 

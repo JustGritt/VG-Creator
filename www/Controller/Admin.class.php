@@ -29,7 +29,6 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        var_dump($_SESSION);
         if (isset($_SESSION['NOT-SET'])) {
             $user = new UserModel();
             $user->setFirstname($_SESSION['firstname']);
@@ -102,6 +101,8 @@ class Admin
         $user->setFirstname($_SESSION['firstname']);
         $view = new View("back_home", "back");
         $view->assign('user', $user);
+        unset($_SESSION['csrf_token']);
+        var_dump($_SESSION);
 
     }
 
@@ -181,7 +182,6 @@ class Admin
         }
 
         if (Security::isVGdmin() || Security::isAdmin()) {
-            unset($_SESSION['csrf_token']);
             $backlist = new Backlist();
             $user = new UserModel();
 
@@ -547,8 +547,6 @@ class Admin
             $user_role->save();
             Handler::setMemberRole($user_info->getId());
 
-
-            //$toanchor = DOMAIN.'/invitation?id='.$user_info->getId().'&token='.$user->getToken();
             $toanchor = DOMAIN.'/confirmation?id='.$user_info->getId().'&token='.$user->getToken();
 
             $site = new Site();
@@ -586,8 +584,6 @@ class Admin
             header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
 
         }
-
-        return $view;
     }
 
     public function setClientOfSite()

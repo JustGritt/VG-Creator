@@ -24,7 +24,9 @@
 <p>If you have any questions for {{sender_name}}, you can reply to {{sender_email}} and it will go right to them.
 <p>Welcome aboard,
     <br>The {{sender_site}} Team</p>
-<p><strong>P.S.</strong> Your account password is set by default to {{password}}.</p>
+<p><strong>P.S.</strong> Your account password is set by default to <strong>{{password}}</strong>.</p>
+<p>Please feel free to change your default password in settings pannel.</p>
+
 <!-- Sub copy -->
 <table class="body-sub">
     <tr>
