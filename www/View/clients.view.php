@@ -8,8 +8,8 @@
     <div class="table-container">
         <div class="title-container">
             <h3>Utilisateurs</h3>
-            <a href="clients/invite" class="button--primary">+ Invite</a>
-            <a href="clients/add" class="button--primary">+ New user</a>
+            <a href="./invite" class="button--primary">+ Invite</a>
+            <a href="./add" class="button--primary">+ New user</a>
         </div>
 
         <table id="user-content">

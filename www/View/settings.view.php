@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../dist/css/settings.css">
+<link rel="stylesheet" href="../../dist/css/settings.css">
 
 <section id="parametres">
 
