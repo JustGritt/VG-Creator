@@ -1,6 +1,8 @@
 <?php  use App\Core\Security;?>
 
-<link rel="stylesheet" href="../dist/css/media.css">
+<link rel="stylesheet" href="../../dist/css/media.css">
+
+
 <section id="media">
     <?php if (!Security::isVGdmin() && !Security::isAdmin()) { ?>
         <h2>Creer votre site et revenez voire cette page !</h2>

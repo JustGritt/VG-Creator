@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../dist/css/categories.css">
+<link rel="stylesheet" href="../../dist/css/categories.css">
 
 <div id="categories" class="">
     <h3 class="title">Categories d'articles</h3>

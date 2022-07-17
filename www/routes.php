@@ -75,16 +75,16 @@ $router->group('/dashboard', function (Router $router) {
     $router->post('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
     // $router->get('/comments', 'admin@getAllComments');
 
-    $router->get('/media', 'admin@setUploadMediaView');
-    $router->post('/media', 'admin@setUploadMediaView');
-    $router->delete('/media/delete/:id', 'admin@deleteMedia')->with('id', '[0-9]+');
+    $router->get('/media', 'admin@setUploadMediaView', 'admin.uploadMedia');
+    $router->post('/media', 'admin@setUploadMediaView', 'admin.uploadMedia');
+    $router->delete('/media/delete/:id', 'admin@deleteMedia' , 'admin.deleteMedia')->with('id', '[0-9]+');
 
     $router->get('/sites', 'admin@chooseMySite');
     $router->post('/sites', 'admin@chooseMySite');
 
-    $router->get('/categories', 'category@show');
-    $router->post('/categories', 'category@createCategory');
-    $router->delete('/categories/:id', 'category@deleteCategory')->with('id', '[0-9]+');
+    $router->get('/categories', 'category@show', 'category.show');
+    $router->post('/categories', 'category@createCategory', 'category.createCategory');
+    $router->delete('/categories/:id', 'category@deleteCategory', 'category.deleteCategory')->with('id', '[0-9]+');
     //$router->get('/categorie/create', 'category@createCategory');
     //$router->post('/categorie/create', 'category@createCategory');
 

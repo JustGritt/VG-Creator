@@ -56,7 +56,7 @@ class Category
     public function editCategory()
     {
         $category = new CategoryModel();
-        $view = new View("category", "back");
+        $view = new View("categories", "back");
         $view->assign("categories", $category);
 
         $category->setId($_POST['id']);
