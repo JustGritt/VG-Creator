@@ -77,12 +77,14 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->get('/media', 'admin@setUploadMediaView');
     $router->post('/media', 'admin@setUploadMediaView');
+    $router->delete('/media/delete/:id', 'admin@deleteMedia')->with('id', '[0-9]+');
 
     $router->get('/sites', 'admin@chooseMySite');
     $router->post('/sites', 'admin@chooseMySite');
 
-    $router->get('/categorie', 'category@show');
-    $router->post('/categorie', 'category@createCategory');
+    $router->get('/categories', 'category@show');
+    $router->post('/categories', 'category@createCategory');
+    $router->delete('/categories/:id', 'category@deleteCategory')->with('id', '[0-9]+');
     //$router->get('/categorie/create', 'category@createCategory');
     //$router->post('/categorie/create', 'category@createCategory');
 

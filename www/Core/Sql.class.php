@@ -144,5 +144,10 @@ abstract class Sql
         return $this->_servers;
     }
 
-    
+    public function delete()
+    {
+        $sql = "DELETE FROM ".$this->table." WHERE id = " . $this->getId();
+        $queryPrepared = $this->pdo->prepare($sql);
+        return $queryPrepared->execute();
+    }
 }

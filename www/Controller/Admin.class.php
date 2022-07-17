@@ -358,6 +358,36 @@ class Admin
         }
     }
 
+    public function deleteMedia($id){
+        parse_str(file_get_contents('php://input'), $_DELETE);
+
+        $document = new Document();
+        $document = $document->getDocumentById($id);
+
+        $path = $document->getPath();
+        $delete = $_DELETE;
+
+        $src_url = explode("/", $path);
+        $src = end($src_url);
+
+        $path_url = explode("/", $path);
+        $path = end($path_url);
+        
+        if(!($src == $path)) {
+            FlashMessage::setFlash("errors", "Impossible de supprimer ce document.");
+            return;
+        }
+
+        $document->delete();
+        if(file_exists("uploads/".$path)){
+            unlink("uploads/".$path);
+        }
+
+        FlashMessage::setFlash("success", "Le média a été supprimé avec succès.");
+        header("Refresh: 3; " . DOMAIN . "/dashboard/media");
+        return;
+    }
+
     public function setUploadMediaView()
     {
         $user = new UserModel();

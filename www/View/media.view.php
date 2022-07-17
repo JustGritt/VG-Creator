@@ -1,29 +1,50 @@
 <?php  use App\Core\Security;?>
 
+<link rel="stylesheet" href="../dist/css/media.css">
+<section id="media">
+    <?php if (!Security::isVGdmin() && !Security::isAdmin()) { ?>
+        <h2>Creer votre site et revenez voire cette page !</h2>
+    <?php } else { ?>
+    
+        <form  method="post" enctype="multipart/form-data" class="flex">
+            <h3>Selectionner une image</h3>
+            <input type="file" name="fileToUpload" id="fileToUpload">
+            <input type="submit" value="Confirmer" name="submit">
+            <input type="hidden" id="csrf_token"  name="csrf_token" value="<?php echo Security::generateCsfrToken()?>">
+        </form>
+    
+        <div class="image-container flex">
+            <?php if(empty($documents)): ?>
+                <p>Aucun document</p>
+            <?php endif ?>
+            <?php foreach ($documents as $key => $value) { ?>
+                <div class="image-content flex">
+                    <img src="<?php echo DOMAIN . '/' . $value->getPath() ?>" alt="Image" width="300" height="200">
+                    <button class="button--secondary" id="<?php echo $value->getId() ?>">Supprimmer</button>
+                </div>
+            <?php } ?>
 
-<?php if (!Security::isVGdmin() && !Security::isAdmin()) { ?>
-    <h2>Creer votre site et revenez voire cette page !</h2>
-<?php } else { ?>
+            <div class="navigation">
+                <?php echo $previous ?>
+                <?php echo $next ?>
+            </div>
+        </div>
+        
+    <?php } ?>
+</section>
 
-    <form  method="post" enctype="multipart/form-data">
-        Select image to upload:
-        <input type="file" name="fileToUpload" id="fileToUpload">
-        <input type="submit" value="Upload Image" name="submit">
-        <input type="hidden" id="csrf_token"  name="csrf_token" value="<?php echo Security::generateCsfrToken()?>">
-    </form>
+<script>
+    $(".button--secondary").on("click", function(e){;
 
-    <div class="img-ctn">
-        <?php if(empty($documents)): ?>
-            <p>Aucun document</p>
-        <?php endif ?>
-        <?php foreach ($documents as $key => $value) { ?>
-            <?php var_dump($value->getPath()) ?>
+        $.ajax({
+            url: "/dashboard/media/delete/" + e.target.id,
+            type: 'DELETE',
+            data: {"src": e.target.previousElementSibling.src},
+        }).done(async function(){
+            window.location.href = "/dashboard/media";
+        }).fail(function (msg) {
+            console.log('FAIL');
+        })
 
-            <img src="<?php echo DOMAIN . '/' . $value->getPath() ?>" alt="Image" width="300" height="200">
-        <?php } ?>
-
-        <?php  echo $previous ?>
-
-        <?php echo $next ?>
-    </div>
-<?php } ?>
+    });
+</script>

@@ -46,6 +46,19 @@ class Router{
     }
 
     /**
+     * handle DELETE requests
+     *
+     * @param string $path
+     * @param $callable
+     * @param string|null $name
+     * @return Route
+     */
+    public function delete(string $path,  $callable, ?string $name=null):Route
+    {
+        return $this->add($path, $callable, $name, 'DELETE');
+    }
+
+    /**
      * handle POST requests
      *
      * @param string $path

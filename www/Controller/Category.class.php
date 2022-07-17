@@ -20,36 +20,36 @@ class Category
 
     public function show()
     {
-        var_dump($_SESSION);
         $category = new CategoryModel();
-        $categories = $category->getCategoriesFromSite($_SESSION['id_site']);
-        $view = new View("category", "back");
+        $categories = $category->getCategoriesBySite($_SESSION['id_site']);
+        $view = new View("categories", "back");
         $view->assign("categories", $categories);
     }
 
     public function createCategory()
     {
         var_dump($_SESSION);
-        var_dump($_POST);
-        $category = new CategoryModel();
-        $category->setName($_POST['name']);
-        $category->setIdSite($_SESSION['id_site']);
-        var_dump($category->save());
-
-
-        $result = Verificator::checkForm($category->getAddCategorieFrom(), $_POST);
+        // var_dump($_POST);
+        // $result = Verificator::checkForm($category->getAddCategorieFrom(), $_POST);
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_POST['csrf_token']);
-            var_dump($_POST);
-            $category = new CategoryModel($_POST['name'],$_SESSION['id_site'] );
-            //$category->setName($_POST['name']);
-            //$category->setIdSite($_SESSION['id_site']);
-            //var_dump($category);
-            var_dump($category->save());
-        }
 
+            $category = new CategoryModel();
+            if($category->isUniqueCategory($_POST['name'])){
+                header("Location: /dashboard/categories");
+                return;
+            }
+            $category->setName($_POST['name']);
+            $category->setIdSite($_SESSION['id_site']);
+            $category->save();
+            var_dump($_POST);
+
+            // $category = new CategoryModel($_POST['name'],$_SESSION['id_site'] );
+            // var_dump($category->save());
+            header("Location: /dashboard/categories");
+        } 
     }
 
 
@@ -63,5 +63,16 @@ class Category
         $category->setName($_POST['name']);
         $category->setIdSite($_POST['id_site']);
         $category->save();
+    }
+
+    public function deleteCategory($id)
+    {
+        parse_str(file_get_contents('php://input'), $_DELETE);
+        var_dump($_DELETE);
+        $category = new CategoryModel();
+        $category = $category->getCategoryById($id);
+        $category->delete();
+        FlashMessage::setFlash("success", "La catégorie " . $category->getName() . " a été supprimée");
+        header("Refresh: 3; /dashboard/categories");
     }
 }

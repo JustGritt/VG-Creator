@@ -48,6 +48,14 @@ class Category extends Sql{
         }, $result);
     }
 
+    public function getCategoriesBySite($id_site)
+    {
+        $sql = "SELECT * FROM esgi_category WHERE id_site = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_site]);
+        return $stmt->fetchAll(\PDO::FETCH_CLASS, Category::class);
+    }
+
     /**
      * @return null
      */
@@ -102,13 +110,13 @@ class Category extends Sql{
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"Create",
+                "submit"=>"Ajouter",
 
             ],
             'inputs'=>[
                 "name"=>[
                     "type"=>"text",
-                    "placeholder"=>"Creer une categorie",
+                    "placeholder"=>"Nouvelle categorie",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"categoryForm",
@@ -125,6 +133,20 @@ class Category extends Sql{
 
     }
 
-   
+    public function isUniqueCategory($name) 
+    {
+        $sql = "SELECT * FROM esgi_category WHERE name = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$name]);
+        return $stmt->rowCount() == 1;
+    }
+
+    public function getCategoryById($id) 
+    {
+        $sql = "SELECT * FROM esgi_category WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetchObject(Category::class);
+    }
 
 }

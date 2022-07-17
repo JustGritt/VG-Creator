@@ -69,6 +69,6 @@
     <div class="right-panel-menu-bottom">
         <img src="https://images.unsplash.com/photo-1645908698645-3513721e2ac7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" />
         <p><?php echo $_SESSION['firstname']?></p>
-        <a class="button" href="/logout">Logout</a>
+        <a class="button--secondary" href="/logout">Logout</a>
     </div>
 </section>
