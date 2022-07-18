@@ -1,7 +1,8 @@
 db_data
 www/.env*
 www/conf.inc.php
-www/dist/*
+www/dist/css
+www/dist/assets
 www/ideas/*
 conf.inc.php
 

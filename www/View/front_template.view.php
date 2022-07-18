@@ -1,9 +1,11 @@
 
 <?php
 $id_page = $page->getId();
-echo $page->getHtml();
+
 
 ?>
+<script src="https://unpkg.com/grapesjs-template-manager@1.0.7/dist/grapesjs-template-manager.min.js"></script>
+
 
 <style>
     <?php echo $page->getCss(); ?>
@@ -18,12 +20,30 @@ echo $page->getHtml();
         lp + 'work-desk.jpg', lp + 'phone-app.png', lp + 'bg-gr-v.png'
     ];
 
+
     const editor = grapesjs.init({
         avoidInlineStyle: 1,
         height: '100vh',
         container: '#gjs',
         fromElement: 1,
         showOffsets: 1,
+        canvas: {
+            styles: ['https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css']
+        },
+        pageManager: {
+            pages: [
+                {
+                    id: '<?php echo $id_page ?>',
+                    styles: `.my-class { color: red }`, // or a JSON of styles
+                    component: '<?php echo $page->getHtml();  echo "<style>". $page->getCss()."</style>"; ?>', // or a JSON of components
+                },
+                {
+                    id: 'page-id',
+                    styles: `.my-class { color: red }`, // or a JSON of styles
+                    component: '<div class="my-class">My element</div>', // or a JSON of components
+                }
+            ]
+        },
         assetManager: {
             embedAsBase64: 1,
             assets: images
@@ -49,8 +69,11 @@ echo $page->getHtml();
             'grapesjs-typed',
             'grapesjs-style-bg',
             'gjs-preset-webpage',
+            'grapesjs-template-manager'
         ],
+
         pluginsOpts: {
+            'grapesjs-template-manager': {  },
             'grapesjs-tui-image-editor': {
                 script: [
                     // 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.7/fabric.min.js',
@@ -339,7 +362,7 @@ echo $page->getHtml();
             },
         },
     });
-
+    const pageManager = editor.Pages;
 
     // Add the command
     editor.Commands.add
