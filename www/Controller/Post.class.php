@@ -15,7 +15,7 @@ class Post extends  Controller
     public function __construct()
     {
         $category=  new Category();
-        $categories =   $category->getCategoriesFromSite($_SESSION['id_site']);
+        $categories =   $category->getCategoriesBySite($_SESSION['id_site']);
         $this->render("post", "back", ['categories'=>$categories]  );
     }
 
@@ -26,17 +26,19 @@ class Post extends  Controller
         $queryBuilder = new $builder();
         $query = $queryBuilder
             ->select('esgi_post', ['*'])
-            ->limit(0, 10)
+            ->where('id_site', $_SESSION['id_site'])
             ->getQuery();
 
         $query_drafts = $queryBuilder
             ->select('esgi_post', ['*'])
             ->where('status', 0)
+            ->where('id_site', $_SESSION['id_site'])
             ->getQuery();
 
         $query_published = $queryBuilder
             ->select('esgi_post', ['*'])
             ->where('status', 1)
+            ->where('id_site', $_SESSION['id_site'])
             ->getQuery();
 
         $result = Sql::getInstance()
@@ -136,13 +138,15 @@ class Post extends  Controller
                         'body' => $body,
                         'metadescription' => $metadescription,
                         'metatitle' => $metatitle, ] = $_POST;
+
                     if(isset($id_post)) $post->setIdPost($post->getId());
                     $post->setTitle($title);
                     $post->setAuthor(isset($id_post) ? $post->getAuthor()->getId() : $_SESSION['id']);
                     $post->setCategory($category);
                     $post->setMetatitle($metatitle);
                     $post->setStatus($status);
-                    $post->setBody(htmlspecialchars($body));
+                    $post->setBody($body);
+                    $post->setIdSite($_SESSION['id_site']);
                     $post->setMetadescription($metadescription);
                     $post->save();
                     if(!isset($id_post)) Utils::redirect('admin.allPost');

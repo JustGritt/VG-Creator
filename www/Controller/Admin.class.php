@@ -442,22 +442,17 @@ class Admin
                     $media->setIdSite($_SESSION['id_site']);
                     $media->setIdUser($_SESSION['id']);
                     $media->save();
-                    echo 'OKkkkkk';
-                    var_dump($_SESSION);
                     header('Location:' . DOMAIN . $_SERVER['REQUEST_URI']);
                     return;
                 }
                 $_FILES = [];
                 unset($_SESSION['csrf_token']);
-                var_dump($_SESSION);
-                echo 'LOL';
                 header('Location:' . DOMAIN . '/dashboard/media');
                 return;
             }
             unset($_SESSION['csrf_token']);
         }
         unset($_SESSION['csrf_token']);
-        var_dump($_SESSION);
     }
 
     public function setSettingsView()
@@ -550,34 +545,29 @@ class Admin
 
             $user_role = new User_role();
             $user_roles = $user_role->getAllRolesForUserById($id);
-            var_dump($user_roles);
             foreach($user_roles as $user_role) {
                 $user_role->delete();
             }
 
-            // $media = new Document();
-            // $medias = $media->getAllMediaByUserId($id);
-            // foreach($medias as $media) {
-            //     $media->delete();
-            // }
+            $media = new Document();
+            $medias = $media->getAllMediaByUserId($id);
+            foreach($medias as $media) {
+                $media->delete();
+            }
 
-            // $comment = new CommentModel();
-            // $comments = $comment->getAllCommentsByUserId($id);
-            // foreach($comments as $comment) {
-            //     $comment->delete();
-            // }
+            $comment = new CommentModel();
+            $comments = $comment->getAllCommentsByUserId($id);
+            foreach($comments as $comment) {
+                $comment->delete();
+            }
 
-            // $post = new PostModel();
-            // $posts = $post->getAllPostsByUserId($id);
-            // foreach($posts as $post) {
-            //     $post->delete();
-            // }
+            $post = new PostModel();
+            $posts = $post->getAllPostsByUserId($id);
+            foreach($posts as $post) {
+                $post->delete();
+            }
 
             $user->delete();
-            var_dump($user->delete());
-            die();
-            FlashMessage::setFlash("success", "Votre compte a bien été supprimé.");
-            header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
         }
     }
 

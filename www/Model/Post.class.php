@@ -21,6 +21,7 @@ class Post extends Sql{
     protected $metadescription  = null;
     protected $category = null;
     protected $author  = null;
+    protected $id_site = null;
     protected $pdo = null;
 
 
@@ -69,6 +70,23 @@ class Post extends Sql{
         $this->id = $id_post;
     }
 
+
+    /**
+     * @return null|int
+     */
+    public function getIdSite(): ?int
+    {
+        return $this->id_site;
+    }
+
+    /**
+     * @param int $id_site
+     */
+    public function setIdSite(int $id_site): void
+    {
+        $this->id_site = $id_site;
+    }
+
     /**
      * @return string|null
      */
@@ -100,7 +118,7 @@ class Post extends Sql{
     {
 
        // $body = cleand($body);
-        $this->body = $body;
+        $this->body = htmlspecialchars($body);
     }
 
     /**
