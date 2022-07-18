@@ -11,7 +11,7 @@
     <div class="articles-content">
         <div class="articles-content-head">
             <h3 class="title-page"><?php echo $view_name ?></h3>
-            <button>Créer un site <i class="fa-solid fa-plus"></i></button>
+            <button class="button--primary create-website">Créer un site <i class="fa-solid fa-circle-plus"></i></button>
         </div>
         <p><?php echo $description ?></p>
         <br>
@@ -22,8 +22,8 @@
             </div>
             <hr>
         </div>
-      <div class="grid grid--flex grid--flex-4 grid--flex-3--t grid--flex-2--ms grid--flex-1--s articles-cards">
-          <?php
+    <div class="grid grid--flex grid--flex-4 grid--flex-3--t grid--flex-2--ms grid--flex-1--s articles-cards">
+            <?php
             foreach ($all_sites_filtered as $key => $value) {
             $kk = isset($mysites) ?  '<br/> <p class="description-card-site">Un template créer avec coeur par Alex dieudonne. Pour le site VGCréator en balllle.</p>': '';
             $choose = "Modifier";
@@ -33,7 +33,7 @@
                 </label>':'';
 
 
-              echo '  <article class="site-card">
+            echo '  <article class="site-card">
             <div class="card-header">
                 <h3 class="title-site-card">' . $value->getName() . '</h3>
                 <span>By: Alex D.</span>
@@ -42,12 +42,11 @@
                 '.  $kk.' </div>
             <div class="card-site-footer">
                 <button onclick="navigateSiteClient('.$value->getId().',\''."homepage".'\''.')">'.  $choose  .'</button>
-                   '.$show_toogle.'
+                '.$show_toogle.'
             </div>
         </article>';
-          }
-        ?>
-      </div>
+        }?>
+        </div>
     </div>
 
     <?php if (isset($mysites)) echo '<div class="info-card">
@@ -92,5 +91,9 @@
     function navigate(route) {
         location.href = "/<?php echo Router::getInstance()->url('post.editShowPost') ?>".replace(':id_post', '')+route
     }
+
+    $(".create-website").on('click',function() {
+        window.location.href = "/<?php echo Router::getInstance()->url('site.createSite') ?>"
+    });
 
 </script>

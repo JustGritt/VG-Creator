@@ -78,7 +78,7 @@ class Admin
         $site = $site->getAllSiteByIdUser2($_SESSION['id']);
         if(isset($_SESSION['choice'])){
 
-            $view2 = new View('login-step-2', 'back');
+            $view2 = new View('login-step-2', 'blank');
             $view2->assign('site', $site);
 
             if(!empty($_POST)) {

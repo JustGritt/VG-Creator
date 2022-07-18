@@ -8,6 +8,10 @@ use App\Core\PaginatedQuery;
 use App\Core\View;
 use App\Helpers\Utils;
 use App\Model\Page;
+use App\Model\Site as SiteModel;
+use App\Core\Security;
+use App\Core\FlashMessage;
+use App\Model\Role_site;
 
 class Site extends Controller
 {
@@ -68,9 +72,9 @@ class Site extends Controller
     public function setStatusSite($id_site){
         $site = new \App\Model\Site();
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-           parse_str(file_get_contents('php://input'), $_PUT);
-           $status = intval($_PUT['status']); //$_PUT contains put fields
-           if(!$site->updateStatus($id_site,$status )) http_send_status(400);
+            parse_str(file_get_contents('php://input'), $_PUT);
+            $status = intval($_PUT['status']); //$_PUT contains put fields
+            if(!$site->updateStatus($id_site,$status )) http_send_status(400);
         }
     }
 
@@ -95,4 +99,33 @@ class Site extends Controller
             header('Location: ' . DOMAIN . '/dashboard');
         }
     }
+
+    public function createSite()
+    {
+        $site = new SiteModel();
+        $this->render("create_site", "back");        
+        $this->view->assign('site', $site);
+        $this->view->assign('error', "gre");
+
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if(!empty($_POST ) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            $site->setName($_POST['name']);
+            $site->setStatus(0);
+            $site->generateToken();
+            $token = $site->getToken();
+
+            if(!$site->save()) {
+                FlashMessage::setFlash('errors', 'Erreur lors de la création du site.');
+                return;
+            }
+
+            $tmp = $site->getSiteByToken($token);
+            $role_site = new Role_site();
+            $role_site->createRoleForSite($tmp->getId());
+
+            FlashMessage::setFlash('success', 'Le site a bien été créer');
+            header('Refresh: 3; ' . DOMAIN . '/dashboard/sites');
+        }
+    }
+
 }

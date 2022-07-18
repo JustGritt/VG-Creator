@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/dist/css/register.css">
 <section id="chooseAccount" class="flex">
     <?php foreach ($site as $key => $value) { ?>
         <form class="test" method="POST">
@@ -15,4 +16,6 @@
     <?php if (isset($next))  echo $next ?>
 
 </section>
+
+
 

@@ -97,6 +97,8 @@ $router->group('/dashboard', function (Router $router) {
 
     // sites
     $router->get('/sites', 'site@showAll', 'post.showAll');
+    $router->get('/sites/create', 'site@createSite', 'site.createSite');
+    $router->post('/sites/create', 'site@createSite', 'site.createSite');
 
     $router->get('/sites/:id_site/edit/client_website/:slug', 'site@editClient', 'site.editClient')->with('id_site', '[0-9]+')->with('slug', '[A-Za-z0-9]+');
     $router->get('/sites/:id_site/client_website/:slug', 'site@showClient', 'site.showClient')->with('id_site', '[0-9]+')->with('slug', '[A-Za-z0-9]+');

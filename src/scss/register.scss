@@ -13,6 +13,7 @@ body main {
 
     display: block;
     width: 100%;
+    height: 100vh;
 
     section#register {
         width: 100vw;
@@ -30,10 +31,14 @@ body main {
 
         form {
             width: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
         input[type="submit"] {
-            margin-top: 50px;
+            margin-top: 0px;
         }
     }
 
@@ -120,3 +125,42 @@ body main {
     }
 }
 
+section#chooseAccount {
+    height: 100vh;
+    flex-direction: column;
+    form {
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 75px auto;
+        strong {
+            margin: 0 4px;
+        }
+        input {
+            position: absolute;
+            top: 25px;
+        }
+    }
+}
+
+section#create-site {
+    height: 100vh;
+    flex-direction: column;
+    form {
+        position: relative;
+        width: 100%;
+        max-width: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px auto;
+        flex-direction: column;
+        input[type="text"] {
+            width: 100%;
+            max-width: none;
+        }
+        
+    }
+}
