@@ -66,7 +66,7 @@ class Site extends Sql
             LEFT JOIN esgi_role_site rs on s.id = rs.id_site
             LEFT JOIN esgi_user_role ur on rs.id = ur.id_role_site
             LEFT JOIN esgi_user eu on ur.id_user = eu.id
-            WHERE eu.id = '".$id_user."'";
+            WHERE ur.status =1 AND eu.id = '".$id_user."'";
         $sql = $this->pdo->prepare($request);
         $sql->execute(array($id_user));
         return $sql->fetchAll(\PDO::FETCH_ASSOC);
