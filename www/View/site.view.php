@@ -17,17 +17,22 @@
         <br>
         <div class="bar-menu">
             <div class="bar-menu-head">
-                <span class="<?php if (isset($mysites)) echo ("active")  ?>" onclick="changeMenu('?my-sites')">Mes sites</span>
-                <span class="<?php if (!isset($mysites)) echo ("active")  ?>" onclick="changeMenu('')">Tous nos templates </span>
+                <span class="<?php echo ("active")  ?>" onclick="changeMenu('?my-sites')">Mes sites</span>
+<!--                <span class="--><?php //if (!isset($mysites)) echo ("active")  ?><!--" onclick="changeMenu('')">Tous nos templates </span>-->
             </div>
             <hr>
         </div>
       <div class="grid grid--flex grid--flex-4 grid--flex-3--t grid--flex-2--ms grid--flex-1--s articles-cards">
           <?php
             foreach ($all_sites_filtered as $key => $value) {
-            $kk = !isset($mysites) ?  '<br/> <p class="description-card-site">Un template créer avec coeur par Alex dieudonne. Pour le site VGCréator en balllle.</p>': '';
-            $choose = isset($mysites) ?  "Modifier" :"Choisir ce template";
-            $checked =  (isset($mysites) && $value->getStatus()) ? "checked": "";
+            $kk = isset($mysites) ?  '<br/> <p class="description-card-site">Un template créer avec coeur par Alex dieudonne. Pour le site VGCréator en balllle.</p>': '';
+            $choose = "Modifier";
+            $checked =  $value->getStatus() ? "checked": "";
+
+            $show_toogle = $value->getName() != "vg-creator"? '<label class="switcher"><input '. $checked.' id="'."card-".$value->getId(). '." class="check-box-card" type="checkbox">  <span class="slider-switcher round"></span>
+                </label>':'';
+
+
               echo '  <article class="site-card">
             <div class="card-header">
                 <h3 class="title-site-card">' . $value->getName() . '</h3>
@@ -37,10 +42,7 @@
                 '.  $kk.' </div>
             <div class="card-site-footer">
                 <button onclick="navigateSiteClient('.$value->getId().',\''."homepage".'\''.')">'.  $choose  .'</button>
-                <label class="switcher">
-                    <input '. $checked.' id="'."card-".$value->getId(). '." class="check-box-card" type="checkbox">
-                    <span class="slider-switcher round"></span>
-                </label>
+                   '.$show_toogle.'
             </div>
         </article>';
           }

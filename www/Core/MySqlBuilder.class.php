@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-class MysqlBuilder implements QueryBuilder
+class MySqlBuilder implements QueryBuilder
 {
     private $query;
 
