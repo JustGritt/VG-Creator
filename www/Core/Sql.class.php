@@ -109,7 +109,7 @@ abstract class Sql
         //$this->getInstance();
       }
     }
-    
+
     public function save()
     {
         $columns = get_object_vars($this);
@@ -119,7 +119,7 @@ abstract class Sql
 
         $id = preg_grep('/^id_(.*)/', array_keys($columns))[0] ?? "id";
 
-        if( $this->getId() == null){
+        if($this->getId() == null){
             $sql = "INSERT INTO ".$this->table." (".implode(",",array_keys($columns)).") 
             VALUES ( :".implode(",:",array_keys($columns)).")";
         }else{
@@ -138,6 +138,7 @@ abstract class Sql
         $queryPrepared = $this->pdo->prepare($sql);
         return $queryPrepared->execute( $columns);
     }
+
 
     public function getLink()
     {
