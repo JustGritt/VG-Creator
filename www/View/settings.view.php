@@ -118,7 +118,7 @@
                 data: {"csrf_token": csrf_token, "id_site": id_acc},
             }).done(async function(data){
                 console.log("Success", data);
-                // window.location.href = "/";
+                window.location.href = "/";
             }).fail(function (msg) {
                 console.log('FAIL');
             })
