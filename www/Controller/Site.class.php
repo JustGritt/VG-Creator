@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\Controller;
+use App\Core\Exceptions\Routing\RouterNotFoundException;
 use App\Core\PaginatedQuery;
 use App\Core\View;
 use App\Helpers\Utils;
@@ -21,12 +22,25 @@ class Site extends Controller
         parent::setDecription('Retrouvez ici, vos différents sites, choisissez et commencez à éditer.');
     }
 
-    public function editClient($id_site,$slug ){
+    /**
+     * @throws RouterNotFoundException
+     */
+    public function editClient($id_site, $slug ){
         $page = new Page();
         $page = $page->getPageBySiteAndSlug($id_site, $slug);
-        $this->render("front_template", "empty");
-        $this->view->assign('page', $page);
-        $this->view->assign('id_site', $id_site);
+        try {
+            if($page instanceof Page){
+                $_SESSION['id_site'] = $id_site;
+                $this->render("front_template", "empty");
+                $this->view->assign('page', $page);
+                $this->view->assign('id_site', $id_site);
+            }else{
+                throw new RouterNotFoundException("Merci de créer une page pour cet site.", 404, false);
+            }
+        }catch ( RouterNotFoundException $exception){
+            $this->render("404", "error", [], "/Errors");
+            $this->view->assign("error", $exception);
+        }
     }
 
     public function updateDataContent($id_site, $id_page){
@@ -48,7 +62,6 @@ class Site extends Controller
     public function getAllSiteByIdUser(){
         $site = new \App\Model\Site();
         $sites = $site->getAllSiteByIdUser($_SESSION['id']);
-
         $this->view->assign("all_sites_filtered", $sites);
     }
 
@@ -62,7 +75,6 @@ class Site extends Controller
     }
 
     public function chooseMySite(){
-        var_dump($_SESSION);
         $site = new Site();
         $pagination = new PaginatedQuery(
             $site->getQueryAllsiteByIdUser($_SESSION['id']),

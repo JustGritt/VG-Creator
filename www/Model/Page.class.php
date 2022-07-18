@@ -161,11 +161,20 @@ class Page extends Sql
     /**
      * @param mixed $id_site
      */
-    public function getPageBySiteAndSlug(int $id_site,string $slug): self
+    public function getPageBySiteAndSlug(int $id_site,string $slug)
     {
         $class_name = Utils::getDBNameFromClass($this);
-        $query_builder = new MysqlBuilder();
-        $request= $query_builder->select($class_name,["*"])->where("id_site", $id_site)->getQuery();
+        $query_builder = new MySqlBuilder();
+        $user_id = $_SESSION['id'];
+
+        $request = "SELECT ep.id, ep.slug, ep.is_active, ep.html, ep.css, ep.styles, ep.assets, ep.id_site
+         FROM $class_name ep 
+        LEFT JOIN esgi_role_site ers on ep.id_site = ers.id_site
+        LEFT JOIN esgi_site es on ers.id_site = es.id
+        LEFT JOIN esgi_user_role eur on ers.id_site = ers.id
+        LEFT JOIN esgi_user eu on eur.id_user = eu.id
+        WHERE eu.id = $user_id AND es.id = $id_site;";
+
         $sql = $this->pdo->prepare($request);
         $sql->execute();
         return $sql->fetchObject(Page::class, []);
