@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Core\FlashMessage;
 use App\Core\PaginatedQuery;
+use App\Core\Security;
 use App\Core\Sql;
 use App\Core\QueryBuilder;
 
@@ -74,6 +75,34 @@ class Document extends Sql
         return $this->id_user = $id_user;
     }
 
+
+    public function getUploadForm(){
+
+        return [
+            "config"=>[
+                "method"=>"POST",
+                'id' => 'uploadForm',
+                "submit"=>"submit",
+                "value"=>"Upload Image",
+                "name"=>"submit",
+                "enctype"=>"multipart/form-data"
+            ],
+            'inputs'=>[
+                "fileToUpload"=>[
+                    "type"=>"file",
+                    "id"=>"fileToUpload",
+                    "name"=>"fileToUpload",
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ]
+        ];
+    }
+
     /*
     public function uploadFile()
     {
@@ -83,12 +112,9 @@ class Document extends Sql
         $fileSize = $file['size'];
         $fileError = $file['error'];
         $fileType = $file['type'];
-
         $fileExt = explode('.', $fileName);
         $fileActualExt = strtolower(end($fileExt));
-
         $allowed = array('jpg', 'jpeg', 'png');
-
         if (in_array($fileActualExt, $allowed)) {
             if ($fileError === 0) {
                 if ($fileSize < 500000) {
@@ -112,6 +138,23 @@ class Document extends Sql
             FlashMessage::setFlash("errors", "You cannot upload files of this type {$fileActualExt}");
         }
     }
+    public function sendUploadedFileToDB($filePath, $type, $id_user, $id_site)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        return $result->execute([
+            $filePath,
+            $type,
+            $id_user,
+            $id_site,
+        ]);
+    }
+    */
+
 
     public function sendUploadedFileToDB($filePath, $type, $id_user, $id_site)
     {
@@ -130,7 +173,7 @@ class Document extends Sql
         ]);
     }
 
-    */
+    
 
 
     public function getAllDocumentsForSite($id_site)
@@ -144,6 +187,33 @@ class Document extends Sql
         $result = Sql::getInstance()->prepare($query);
         $result->execute(["id_site" => $id_site]);
         // return $result->fetchObject(Document::class);
+        return $result->fetchAll(\PDO::FETCH_CLASS, Document::class);
+    }
+
+    public function getDocumentById($id) 
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_document', ['*'])
+            ->where('id', ':id')
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id" => $id]);
+        // return $result->fetchObject(Document::class);
+        return $result->fetchObject(Document::class);
+    }
+
+    public function getAllMediaByUserId($id_user)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_document', ['*'])
+            ->where('id_user', ':id_user')
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_user" => $id_user]);
         return $result->fetchAll(\PDO::FETCH_CLASS, Document::class);
     }
 

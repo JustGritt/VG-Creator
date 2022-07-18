@@ -84,7 +84,7 @@
                         <div class="input-post w-300">
                             <label for="status">Status</label>
                             <select id="status" name="status">
-                                 <option value="0" <?php if (isset($post) && $post->getStatus() == 0 ) echo 'selected' ; ?> >Brouillon</option>
+                                <option value="0" <?php if (isset($post) && $post->getStatus() == 0 ) echo 'selected' ; ?> >Brouillon</option>
                                 <option value="1" <?php if (isset($post) && $post->getStatus() == 1 ) echo 'selected' ; ?>>Publié</option>
                             </select>
                         </div>

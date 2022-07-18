@@ -2,10 +2,17 @@
 
 namespace App\Model;
 
-class Comment
+use App\Core\Sql;
+use App\Core\SqlPDO;
+use App\Core\MySqlBuilder;
+use App\Core\QueryBuilder;
+use App\Core\Security;
+use App\Core\View;
+
+class Comment extends Sql
 {
 
-    protected $id_comment = null;
+    protected $id = null;
     protected $body = null;
     protected $created_at = null;
     protected $status = null;
@@ -24,12 +31,12 @@ class Comment
 
     public function getId(): ?int
     {
-        return $this->id_comment;
+        return $this->id;
     }
 
     public function setId($id): int
     {
-        return $this->id_comment = $id;
+        return $this->id = $id;
     }
 
     public function getBody(): ?string
@@ -97,7 +104,67 @@ class Comment
         return $this->id_comment_response = $id_comment_response;
     }
 
+    public function getAllCommentsPublished($id_site)
+    {
+        $sql = "SELECT ec.* 
+        FROM esgi_comment ec
+        LEFT JOIN esgi_post ep on ec.id_post = ep.id
+        LEFT JOIN esgi_user_role ur on ep.author = ur.id_user
+        LEFT JOIN esgi_role_site rs on ur.id_role_site = rs.id
+        WHERE rs.id_site = {$id_site} AND ec.status = 1;";
+        $query = $this->pdo->prepare($sql);
+        $query->execute(array($id_site));
+        $result_draft = $query->fetchAll(\PDO::FETCH_CLASS, Comment::class);
 
+        return $result_draft;
+    }
 
+    public function getAllCommentsDraft($id_site)
+    {
+        $sql = "SELECT ec.* 
+        FROM esgi_comment ec
+        LEFT JOIN esgi_post ep on ec.id_post = ep.id
+        LEFT JOIN esgi_user_role ur on ep.author = ur.id_user
+        LEFT JOIN esgi_role_site rs on ur.id_role_site = rs.id
+        WHERE rs.id_site = {$id_site} AND ec.status = 0;";
+        $query = $this->pdo->prepare($sql);
+        $query->execute(array($id_site));
+        $result_draft = $query->fetchAll(\PDO::FETCH_CLASS, Comment::class);
 
+        return $result_draft;
+    }
+
+    public function getAllCommentsBanned($id_site)
+    {
+        $sql = "SELECT ec.* 
+        FROM esgi_comment ec
+        LEFT JOIN esgi_post ep on ec.id_post = ep.id
+        LEFT JOIN esgi_user_role ur on ep.author = ur.id_user
+        LEFT JOIN esgi_role_site rs on ur.id_role_site = rs.id
+        WHERE rs.id_site = {$id_site} AND ec.status = 2;";
+        $query = $this->pdo->prepare($sql);
+        $query->execute(array($id_site));
+        $result_draft = $query->fetchAll(\PDO::FETCH_CLASS, Comment::class);
+
+        return $result_draft;
+    }
+
+    public function getComment($id_comment) 
+    {
+        $sql = "SELECT * FROM esgi_comment WHERE id = {$id_comment};";
+        $query = $this->pdo->prepare($sql);
+        $query->execute(array($id_comment));
+        
+        return $query->fetchObject(Comment::class);
+    }
+
+    public function getAllCommentsByUserId($id_user)
+    {
+        $sql = "SELECT * FROM esgi_comment WHERE id_user = {$id_user};";
+        $query = $this->pdo->prepare($sql);
+        $query->execute(array($id_user));
+        $result_draft = $query->fetchAll(\PDO::FETCH_CLASS, Comment::class);
+
+        return $result_draft;
+    }
 }

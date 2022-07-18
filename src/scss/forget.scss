@@ -1,0 +1,55 @@
+/* IMPORTS
+ ========== */
+
+@use './partials/buttons.scss';
+
+@use './mixins/global';
+
+/* CLASSES MAIN
+ ========== */
+
+main#password,
+main#reset  {
+    width: 100%;
+
+    section {
+    
+        width: 75%;
+        height: 75vh;
+        margin: 0 auto;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    
+        .title {
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: clamp(3rem, 5vw, 48px);
+            text-align: center;
+            color: var(--color-text);
+        }
+    
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            
+            input {
+                max-width: 600px;
+                width: 100%;
+
+                &[type="submit"] {
+                    width: fit-content;
+                    border: none;
+                    background: var(--color-button-background);
+                    color: var(--color-button-text);
+                }
+            }
+        }
+    }
+}
+
+
+

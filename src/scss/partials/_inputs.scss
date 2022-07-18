@@ -7,6 +7,15 @@
 /* CLASSES GLOBALES
 ======================= */
 
+:root {
+    --bezel: .5rem;
+    --radius: 4px;
+    font-size: calc(0.6rem + 0.4vw);
+    color: var(--color-text);
+    background: var(--color-background);
+
+}
+
 input {
     font-family: f.$primary;
     border-radius: 6px;
@@ -36,3 +45,85 @@ input {
 
 }
 
+
+
+
+.form-group, 
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    &:nth-last-child(1) {
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    input[type=text],
+    input[type=password],
+    input[type=mail] {
+        background: var(--color-white);
+        border: 1px solid var(--color-text);
+        padding: 18px 10px;
+        border-radius: 4px;
+        outline: 0;
+        transition: all 0.2s ease-in-out;
+        font-family: Poppins, sans-serif;
+        font-size: 1.1rem;
+        filter: none;
+    }
+    
+    .input {
+        position: relative;
+        width: 75%;
+        margin: 0 auto;
+    
+        .input__label {
+            position: absolute;
+            left: 0;
+            top: 12.5px;
+            padding: calc(var(--bezel) * 0.75) calc(var(--bezel) * 0.5 + 10px);
+            margin: calc(var(--bezel) * 0.75 + 3px) calc(var(--bezel) * 0.5);
+            white-space: nowrap;
+            transform: translate(0, 0);
+            transform-origin: 0 0;
+            background: var(--color-white);
+            transition: transform 120ms ease-in;
+            font-weight: bold;
+            font-size: 16px;
+            width: 25%;
+        }
+        
+        .input__field {
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+            padding: calc(var(--bezel) * 1.5 + var(--bezel));
+            background: transparent;
+            border-radius: var(--radius);
+        }
+        
+        .input__field:focus+.input__label,
+        .input__field:not(:placeholder-shown)+.input__label {
+            transform: translate(0.25rem, -65%) scale(0.8);
+            color: var(--color-danger);
+            background: var(--color-white);
+            padding: auto 8px;
+            width: fit-content;
+            
+        }
+    }
+    
+    input[type=submit] {
+        margin-bottom: 50px;
+    }
+}
+
+#register .input__label {
+    top: 25px;
+    background: var(--color-background);
+    color: var(--color-text);
+}

@@ -1,4 +1,4 @@
-<section>
+<section id="chooseAccount" class="flex">
     <?php foreach ($site as $key => $value) { ?>
         <form class="test" method="POST">
             Se connecter en tant que <strong><label for="role"> <?php echo $value['role']; ?></strong> </label> pour le site <strong><label for="site"> <?php echo strtoupper($value['site']); ?> </label></strong>
@@ -9,4 +9,10 @@
             
         </form>
     <?php } ?>
+
+
+    <?php if (isset($previous))  echo $previous ?>
+    <?php if (isset($next))  echo $next ?>
+
 </section>
+

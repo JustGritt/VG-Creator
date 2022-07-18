@@ -13,6 +13,7 @@
     }
     &-close {
         font-family: cursive;
+        text-transform: uppercase;
         position: absolute;
         z-index: 10;
         top: 4px;
@@ -32,6 +33,47 @@
     }
     &-message {
         color: var(--color-danger);
+        font-size: 1.5rem;
+        padding: 0 50px;
+        margin: 0 auto;
+    }
+}
+
+.success {
+    &-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        width: 500px;
+        height: 200px;
+        background: #fff;
+        border: 5px solid var(--color-success);
+        z-index: 100;
+    }
+    &-close {
+        font-family: cursive;
+        text-transform: uppercase;
+        position: absolute;
+        z-index: 10;
+        top: 4px;
+        right: 8px;
+        color: var(--color-success);
+        font-weight: bold;
+        cursor: pointer;
+        padding: 4px 12px;
+        border-radius: 100%;
+        &:hover {
+            animation: close-btn .4s ease-in-out 1;
+        }
+        @keyframes close-btn {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(180deg); }
+        }
+    }
+    &-message {
+        color: var(--color-success);
         font-size: 1.5rem;
         padding: 0 50px;
         margin: 0 auto;

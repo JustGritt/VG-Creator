@@ -45,13 +45,13 @@ class Post extends Sql{
     /**
      * @param string $id_post
      * @return bool
-     */
+     
     public function delete(string $id_post): bool
     {
         $queryBuilder = new MySqlBuilder();
         $request = $queryBuilder->delete(Utils::getDBNameFromClass($this))->where('id', $id_post)->getQuery();
         return $this->pdo->query($request)->execute();
-    }
+    }*/
 
     /**
      * @return null|int
@@ -218,5 +218,11 @@ class Post extends Sql{
         $this->metadescription = $metadescription;
     }
 
+    public function getAllPostsByUserId($id_user)
+    {
+        $queryBuilder = new MySqlBuilder();
+        $request = $queryBuilder->select(Utils::getDBNameFromClass($this), ['*'])->where('author', $id_user)->getQuery();
+        return $this->pdo->query($request)->fetchAll(\PDO::FETCH_CLASS, Post::class);
+    }
 
 }

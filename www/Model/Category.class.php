@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+use App\Core\Security;
 use App\Core\Sql;
 
 
@@ -11,12 +12,10 @@ class Category extends Sql{
     public $id_site = null;
     private $builder = BUILDER;
 
-    public function __construct($name= '',$id_site='', $id_category='' ){
+    public function __construct(){
+        $this->pdo = Sql::getInstance();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
-        $this->setName($name);
-        $this->setIdSite($id_site);
-        $this->setIdCategory($id_category);
     }
 
     /**
@@ -47,6 +46,14 @@ class Category extends Sql{
         return array_map(function ($v){
             return new Category($v['name'], $v['id_site'], $v['id']);
         }, $result);
+    }
+
+    public function getCategoriesBySite($id_site)
+    {
+        $sql = "SELECT * FROM esgi_category WHERE id_site = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id_site]);
+        return $stmt->fetchAll(\PDO::FETCH_CLASS, Category::class);
     }
 
     /**
@@ -92,12 +99,54 @@ class Category extends Sql{
     /**
      * @param string
      */
-    public function getIdCategory(): string
+    public function getId()
     {
        return $this->id ;
     }
-    
 
-   
+
+    public function getAddCategorieFrom(){
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Ajouter",
+
+            ],
+            'inputs'=>[
+                "name"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Nouvelle categorie",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"categoryForm",
+                    "error"=>"Category incorrect"
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ]
+        ];
+
+    }
+
+    public function isUniqueCategory($name, $id_site)
+    {
+        $sql = "SELECT * FROM esgi_category WHERE name = ? and id_site = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array($name, $id_site));
+        return $stmt->rowCount() == 1;
+    }
+
+    public function getCategoryById($id) 
+    {
+        $sql = "SELECT * FROM esgi_category WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetchObject(Category::class);
+    }
 
 }
