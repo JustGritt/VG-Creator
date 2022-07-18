@@ -35,7 +35,7 @@
 </section>
 
 <script>
-    $(".button--secondary").on("click", function(e){;
+    $(".button--secondary").on("click", function(e){
 
         $.ajax({
             url: "/dashboard/media/delete/" + e.target.id,

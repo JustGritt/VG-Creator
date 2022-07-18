@@ -20,6 +20,8 @@ use App\Model\User as UserModel;
 use App\Model\Document;
 use App\Model\Backlist;
 use App\Model\User_role;
+use App\Model\Comment as CommentModel;
+use App\Model\Post as PostModel;
 
 
 class Admin
@@ -539,8 +541,44 @@ class Admin
 
     public function deleteAccount($id) 
     {
-        var_dump($_DELETE);
-        die();
+        parse_str(file_get_contents('php://input'), $_DELETE);
+        if(!empty($_DELETE) && Security::checkCsrfToken($_DELETE['csrf_token'])) 
+        {
+            unset($_SESSION['csrf_token']);
+            $user = new UserModel();
+            $user = $user->getUserById($id);
+
+            $user_role = new User_role();
+            $user_roles = $user_role->getAllRolesForUserById($id);
+            var_dump($user_roles);
+            foreach($user_roles as $user_role) {
+                $user_role->delete();
+            }
+
+            // $media = new Document();
+            // $medias = $media->getAllMediaByUserId($id);
+            // foreach($medias as $media) {
+            //     $media->delete();
+            // }
+
+            // $comment = new CommentModel();
+            // $comments = $comment->getAllCommentsByUserId($id);
+            // foreach($comments as $comment) {
+            //     $comment->delete();
+            // }
+
+            // $post = new PostModel();
+            // $posts = $post->getAllPostsByUserId($id);
+            // foreach($posts as $post) {
+            //     $post->delete();
+            // }
+
+            $user->delete();
+            var_dump($user->delete());
+            die();
+            FlashMessage::setFlash("success", "Votre compte a bien été supprimé.");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+        }
     }
 
 

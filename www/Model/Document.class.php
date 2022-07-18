@@ -173,7 +173,7 @@ class Document extends Sql
         ]);
     }
 
-    */
+    
 
 
     public function getAllDocumentsForSite($id_site)
@@ -202,6 +202,19 @@ class Document extends Sql
         $result->execute(["id" => $id]);
         // return $result->fetchObject(Document::class);
         return $result->fetchObject(Document::class);
+    }
+
+    public function getAllMediaByUserId($id_user)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_document', ['*'])
+            ->where('id_user', ':id_user')
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_user" => $id_user]);
+        return $result->fetchAll(\PDO::FETCH_CLASS, Document::class);
     }
 
 }

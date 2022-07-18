@@ -29,7 +29,6 @@
 
 <script>
     $(".button--secondary").on("click", function(e){
-
         $.ajax({
             url: "/dashboard/categories/" + e.target.id,
             type: 'DELETE',

@@ -106,19 +106,25 @@ class User_role extends Sql
         return $request->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-
-    public function getAvailableRolesForSite($id_site)
+    public function getAllRolesForUserById($id_user) 
     {
-        $sql =
-            "SELECT id, name
-            FROM esgi_role_site
-            WHERE id_site = '".$id_site."'";
+        // $sql = "SELECT id, name
+        //     FROM esgi_role_site
+        //     WHERE id IN (
+        //         SELECT id_role_site
+        //         FROM esgi_user_role
+        //         WHERE id_user = '".$id_user."'
+        //     )";
+
+        $sql = "SELECT *
+            FROM esgi_user_role
+            WHERE id_user = '".$id_user."'";
+        
 
         $request = Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll(\PDO::FETCH_ASSOC);
+        $request->execute(array($id_user));
+        return $request->fetchAll(\PDO::FETCH_CLASS, User_role::class);
     }
-
 
     public function updateStatus($getId, $getToken){
         $updateStatus = $this->pdo->prepare("UPDATE ".$this->table." SET status = 1 WHERE id_user = ? AND token = ?");

@@ -43,7 +43,15 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->get('/settings', 'admin@setSettingsView');
     $router->post('/settings', 'admin@setSettingsView');
-    $router->delete('/settings/delete/:id', 'admin@deleteAccount')->with('id', '[0-9]+');
+    $router->delete('/settings/:id', 'admin@deleteAccount', 'admin.deleteAccount')->with('id', '[0-9]+');
+
+    $router->get('/categories', 'category@show', 'category.show');
+    $router->post('/categories', 'category@createCategory', 'category.createCategory');
+    $router->delete('/categories/:id', 'category@deleteCategory', 'category.deleteCategory')->with('id', '[0-9]+');
+
+    $router->get('/media', 'admin@setUploadMediaView', 'admin.uploadMedia');
+    $router->post('/media', 'admin@setUploadMediaView', 'admin.uploadMedia');
+    $router->delete('/media/delete/:id', 'admin@deleteMedia' , 'admin.deleteMedia')->with('id', '[0-9]+');
 
     $router->get('/history', 'admin@dashboard');
     $router->get('/articles', 'post@getAllArticles', 'admin.allPost');
@@ -70,17 +78,6 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/comments', 'comment@showComments', 'comment.showComments');
     $router->get('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
     $router->post('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
-
-
-    $router->get('/media', 'admin@setUploadMediaView', 'admin.uploadMedia');
-    $router->post('/media', 'admin@setUploadMediaView', 'admin.uploadMedia');
-    $router->delete('/media/delete/:id', 'admin@deleteMedia' , 'admin.deleteMedia')->with('id', '[0-9]+');
-
-
-    $router->get('/categories', 'category@show', 'category.show');
-    $router->post('/categories', 'category@createCategory', 'category.createCategory');
-    $router->delete('/categories/:id', 'category@deleteCategory', 'category.deleteCategory')->with('id', '[0-9]+');
-
 
     /*
     $router->get('/articles', 'admin@getAllArticles');

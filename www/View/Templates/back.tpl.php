@@ -41,7 +41,6 @@
                 $this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
             ?>
         </div>
-        <div id="snackbar">Some text some message..</div>
     </main>
 </body>
 

@@ -158,5 +158,13 @@ class Comment extends Sql
         return $query->fetchObject(Comment::class);
     }
 
-    
+    public function getAllCommentsByUserId($id_user)
+    {
+        $sql = "SELECT * FROM esgi_comment WHERE id_user = {$id_user};";
+        $query = $this->pdo->prepare($sql);
+        $query->execute(array($id_user));
+        $result_draft = $query->fetchAll(\PDO::FETCH_CLASS, Comment::class);
+
+        return $result_draft;
+    }
 }
