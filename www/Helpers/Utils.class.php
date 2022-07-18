@@ -56,4 +56,11 @@ class Utils
         $reflect = new \ReflectionClass($class);
         return DBPREFIXE.strtolower($reflect->getShortName());
     }
+
+    public static function showSnack($message):void
+    {
+        echo '<script type="text/javascript">',
+        'showSnackBar("'.$message.'")',
+        '</script>';
+    }
 }

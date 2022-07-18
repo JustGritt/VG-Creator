@@ -4,21 +4,23 @@ namespace App\Controller;
 
 use App\Core\CleanWords;
 use App\Core\FlashMessage;
+use App\Core\PaginatedQuery;
+use App\Core\Route;
+use App\Core\Routing\Router;
 use App\Core\Security;
 use App\Core\Sql;
 use App\Core\Uploader;
 use App\Core\Verificator;
 use App\Core\View;
-use App\Core\PaginatedQuery;
-use App\Model\Site;
-use App\Model\User as UserModel;
 use App\Core\Mail;
 use App\Core\QueryBuilder;
 use App\Core\Handler;
+use App\Model\Site;
+use App\Model\User as UserModel;
 use App\Model\Document;
 use App\Model\Backlist;
 use App\Model\User_role;
-use Stripe\Radar\ValueList;
+
 
 class Admin
 {
@@ -44,7 +46,7 @@ class Admin
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
                 unset($_SESSION['csrf_token']);
                 $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
-            
+
                 if(!$pseudotocheck) {
                     FlashMessage::setFlash('errors', 'Pseudo invalide');
                     header("Refresh: 3; ".DOMAIN."/register ");
@@ -71,12 +73,12 @@ class Admin
         }
 
         $site = new Site();
-        $site = $site->getAllSiteByIdUser($_SESSION['id']);
+        $site = $site->getAllSiteByIdUser2($_SESSION['id']);
         if(isset($_SESSION['choice'])){
 
             $view2 = new View('login-step-2', 'back');
             $view2->assign('site', $site);
-            
+
             if(!empty($_POST)) {
 
                 if($_POST['site'] == 'vg-creator')  {
@@ -96,7 +98,7 @@ class Admin
             }
             return;
         }
-    
+
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
         $view = new View("back_home", "back");
@@ -106,6 +108,16 @@ class Admin
 
     }
 
+    public function getSites(){
+        var_dump($_SESSION);
+    }
+
+    public function banSites(){
+        var_dump($_SESSION);
+
+    }
+
+    /*
     public function chooseMySite(){
         var_dump($_SESSION);
         $site = new Site();
@@ -130,8 +142,16 @@ class Admin
 
             header('Location: ' . DOMAIN . '/dashboard');
             return;
+
+        /*
+        if (!empty($_POST['submit'])) {
+            if (!empty($_FILES)) {
+                $this->uploadFile();
+            }
         }
-    }
+
+    
+    }*/
 
     public function setClientsView(){
         // var_dump($_SESSION);
@@ -175,7 +195,8 @@ class Admin
         return $view;
     }
     
-    public function updateUser(){
+    public function updateUser()
+    {
         if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
@@ -522,41 +543,7 @@ class Admin
         die();
     }
 
-    public function getAllArticles()
-    {
-        $view = new View('articles', 'back');
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->select('esgi_post', ['*'])
-            ->limit(0, 10)
-            ->getQuery();
 
-        $query_drafts = $queryBuilder
-            ->select('esgi_post', ['*'])
-            ->where('status', 0)
-            ->getQuery();
-
-        $query_published = $queryBuilder
-            ->select('esgi_post', ['*'])
-            ->where('status', 1)
-            ->getQuery();
-
-        $result = Sql::getInstance()
-            ->query($query)
-            ->fetchAll();
-
-        $result_draft = Sql::getInstance()->query($query_drafts)->fetchAll();
-        $result_published = Sql::getInstance()->query($query_published)->fetchAll();
-
-        if (isset($_GET['published'])) {
-            $view->assign("result", $result_published);
-        } else if (isset($_GET['drafts'])) {
-            $view->assign("result", $result_draft);
-        } else {
-            $view->assign("result", $result);
-        }
-    }
 
     public function addClient() 
     {
@@ -773,6 +760,22 @@ class Admin
         ]);
     }
  public function updateUser($colmuns, $values, $builder = BUILDER)
+
+
+    public function test()
+    {
+        $user = new User();
+        $view = new View('test', 'back');
+        //$view->assign('user', $user);
+    }
+
+    public function comment() {
+        $view = new View('front_template', 'front');  
+    }
+
+
+    /*
+    public function setClientOfSite()
     {
         $queryBuilder = new $builder();
         $query = $queryBuilder
@@ -824,6 +827,7 @@ class Admin
 
     public function getAllComments($id_site){
         $builder = BUILDER;
+    public function articles($builder = BUILDER){
         $queryBuilder = new $builder();
         $query = $queryBuilder
             ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
@@ -854,5 +858,56 @@ class Admin
         //  $view->assign("result", $result);
     }
 
- */
+ 
+    public function setOauthUser($user){
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            if(!$user->is_unique_pseudo($_POST['pseudo'])){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                header('Refresh: 3; '.DOMAIN.'/dashboard');
+                return;
+            }
+            $user->save();
+            Handler::setMemberRole($user->getId());
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+    }
+
+    public function getAllComments($id_site){
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
+            ->where('id_site', ':id_site')
+            ->limit(0, 10)
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_site" => $id_site]);
+        return $result->fetch() ?? null;
+    }
+
+    public function updateUser($colmuns, $values, $builder = BUILDER)
+    {
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->update('esgi_user', $colmuns, $values)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($query);
+        return $result;
+    }
+
+    public function deleteUserById($id, $builder = BUILDER)
+    {
+
+        $queryBuilder = new $builder();
+        $sql = $queryBuilder
+            ->delete('esgi_user')
+            ->where('id', $id)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($sql);
+        return $result;
+    }
+    */
+
 }

@@ -24,30 +24,24 @@ class Category
         $categories = $category->getCategoriesBySite($_SESSION['id_site']);
         $view = new View("categories", "back");
         $view->assign("categories", $categories);
+        $view->assign("category", $category);
     }
 
     public function createCategory()
     {
-        var_dump($_SESSION);
-        // var_dump($_POST);
-        // $result = Verificator::checkForm($category->getAddCategorieFrom(), $_POST);
-
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
             unset($_POST['csrf_token']);
 
             $category = new CategoryModel();
-            if($category->isUniqueCategory($_POST['name'])){
+            if($category->isUniqueCategory($_POST['name'],$_SESSION['id_site'])){
                 header("Location: /dashboard/categories");
                 return;
             }
             $category->setName($_POST['name']);
             $category->setIdSite($_SESSION['id_site']);
             $category->save();
-            var_dump($_POST);
 
-            // $category = new CategoryModel($_POST['name'],$_SESSION['id_site'] );
-            // var_dump($category->save());
             header("Location: /dashboard/categories");
         } 
     }

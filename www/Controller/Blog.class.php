@@ -15,7 +15,7 @@ class Blog
             header("Location: " . DOMAIN . "/login");
         }*/
 
-        $view = new View("editor", 'back');
+        $view = new View("editorCustom", 'back');
     }
 
     public function showArticles()

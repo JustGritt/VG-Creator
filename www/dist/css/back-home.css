@@ -19,6 +19,10 @@
   --color-border: #333333;
   --color-text: #333333;
   --color-pseudo: #333333;
+  --color-derived-grey: #5d5d5d;
+  --color-border: #000000;
+  --color-text: #000000;
+  --color-pseudo: #000000;
   --color-link: #1538B5;
   --color-main-blue: #2D4291;
   --color-shadow: #ffffff;

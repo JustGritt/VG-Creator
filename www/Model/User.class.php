@@ -600,6 +600,20 @@ class User extends Sql{
 
     }
 
+    public function getUserOfSite($id_site)
+    {
+        $sql =
+            "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function getCountUser($id_site){
         $sql =
             "SELECT count(1) FROM `esgi_user` u

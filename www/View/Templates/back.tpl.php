@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="/dist/fontawesome-pro-master/css/all.css">
     <link rel="stylesheet" href="https://harvesthq.github.io/chosen/chosen.css">
     <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js" ></script>
+    <script defer src="/dist/js/global.js" ></script>
+    <script  src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 </head>
 
@@ -39,6 +41,7 @@
                 $this->includePartial("flash_messages", ['success' => [$flash->getFlash('success')]]);
             ?>
         </div>
+        <div id="snackbar">Some text some message..</div>
     </main>
 </body>
 

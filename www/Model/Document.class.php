@@ -156,6 +156,26 @@ class Document extends Sql
     */
 
 
+    public function sendUploadedFileToDB($filePath, $type, $id_user, $id_site)
+    {
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+
+        return $result->execute([
+            $filePath,
+            $type,
+            $id_user,
+            $id_site,
+        ]);
+    }
+
+    */
+
+
     public function getAllDocumentsForSite($id_site)
     {
         $builder = BUILDER;

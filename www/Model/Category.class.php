@@ -133,11 +133,11 @@ class Category extends Sql{
 
     }
 
-    public function isUniqueCategory($name) 
+    public function isUniqueCategory($name, $id_site)
     {
-        $sql = "SELECT * FROM esgi_category WHERE name = ?";
+        $sql = "SELECT * FROM esgi_category WHERE name = ? and id_site = ?";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$name]);
+        $stmt->execute(array($name, $id_site));
         return $stmt->rowCount() == 1;
     }
 

@@ -25,6 +25,9 @@ class PaginatedQuery extends Sql
         $this->perPage = $perPage;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getItems(): array
     {
         $currentPage = $this->getCurrentPage();
@@ -59,16 +62,17 @@ class PaginatedQuery extends Sql
         return Handler::getPostiveInt('page', 1);
     }
 
+  
     private function getPages()
     {
         if ($this->count === null) {
             $this->count = $this->pdo->query($this->queryCount)
                 ->fetch(\PDO::FETCH_NUM)[0];
         }
-        return ceil($this->count / $this->perPage);
+        return  ceil($this->count / $this->perPage);
     }
 
-    public function previousLink(string $link): ?string
+    public function previousLink(String $link): ?String
     {
         $currentPage = $this->getCurrentPage();
         if ($currentPage <= 1) return null;

@@ -34,7 +34,8 @@ abstract class Sql
     */
 
     public static function getInstance()
-    {  
+    {
+
         if(is_null(self::$instance))
         {
             try{
@@ -123,15 +124,19 @@ abstract class Sql
             VALUES ( :".implode(",:",array_keys($columns)).")";
         }else{
             $update = [];
+            $column_local = [];
             foreach ($columns as $column=>$value)
             {
-                $update[] = $column."=:".$column;
+                if($value != null && $column != $id) {
+                    $update[] = "`".$column."`"." = :".$column;
+                    $column_local[$column] = $value;
+                }
             }
-            $sql = "UPDATE ".$this->table." SET ".implode(",",$update)." WHERE ".$id."=".$this->getId() ;
+            $columns = $column_local;
+            $sql = "UPDATE "."`".$this->table."`"." SET ".implode(",",$update)." WHERE "."`".$this->table."`."."`".$id."`"." = ".$this->getId() ;
         }
-
         $queryPrepared = $this->pdo->prepare($sql);
-        return $queryPrepared->execute( $columns );
+        return $queryPrepared->execute( $columns);
     }
 
     public function getLink()

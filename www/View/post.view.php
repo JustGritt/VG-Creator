@@ -106,12 +106,12 @@
 <!-- <span> 23%</span> -->
 <script defer>
     ClassicEditor
-        .create(document.querySelector('#editor'))
+        .create(document.querySelector('#editorCustom'))
         .then(editor => {
             <?php
                 if (isset($fields['body'])){
-                echo " editor.setData("."'".  $fields['body']."'" . ")";}
-                else if(isset($post)) echo " editor.setData("."'". htmlspecialchars_decode($post->getBody())  ."'" . ")";
+                echo " editorCustom.setData("."'".  $fields['body']."'" . ")";}
+                else if(isset($post)) echo " editorCustom.setData("."'". htmlspecialchars_decode($post->getBody())  ."'" . ")";
             ?>
             //  console.log(editor.setData('dsssd'));
         })

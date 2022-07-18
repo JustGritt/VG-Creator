@@ -2,7 +2,9 @@
 
 namespace App\Model;
 
+use App\Core\MysqlBuilder;
 use App\Core\Sql;
+use App\Helpers\Utils;
 
 class Site extends Sql
 {
@@ -15,7 +17,6 @@ class Site extends Sql
     protected $table;
 
     public function __construct(){
-
         $this->pdo = Sql::getInstance();
         $calledClassExploded = explode("\\",get_called_class());
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
@@ -53,6 +54,14 @@ class Site extends Sql
         $this->is_banned = $is_banned;
     }
 
+    public function updateStatus($id,$status):bool
+    {
+        $class_name= Utils::getDBNameFromClass($this);
+        $sql = $this->pdo->prepare("UPDATE ".$class_name." SET `status` = $status WHERE $class_name.`id` = $id");
+        return $sql->execute();
+    }
+
+
     public function getSiteByName($name){
         $request = "SELECT * FROM `".$this->table."` WHERE name = ?";
         $sql = $this->pdo->prepare($request);
@@ -60,7 +69,22 @@ class Site extends Sql
         return $sql->fetchObject(Site::class);
     }
 
-    public function getAllSiteByIdUser($id_user){
+    public function getAllSiteByIdUser($id_user)
+    {
+
+        $request = "SELECT s.id, s.name, rs.name as role, rs.id as role_id, s.status
+            FROM esgi_site s
+            LEFT JOIN esgi_role_site rs on s.id = rs.id_site
+            LEFT JOIN esgi_user_role ur on rs.id = ur.id_role_site
+            LEFT JOIN esgi_user eu on ur.id_user = eu.id
+            WHERE ur.status =1 AND eu.id = '".$id_user."'";
+        $sql = $this->pdo->prepare($request);
+        $sql->execute(array($id_user));
+        return $sql->fetchAll(\PDO::FETCH_CLASS, Site::class);
+    }
+
+    public function getAllSiteByIdUser2($id_user)
+    {
         $request = "SELECT s.id, s.name as site, rs.name as role, rs.id as role_id
             FROM esgi_site s 
             LEFT JOIN esgi_role_site rs on s.id = rs.id_site
@@ -71,7 +95,6 @@ class Site extends Sql
         $sql->execute(array($id_user));
         return $sql->fetchAll(\PDO::FETCH_ASSOC);
     }
-
     public function getQueryAllsiteByIdUser($id_user){
         return "SELECT s.id, s.name as site, rs.name as role, rs.id as role_id
             FROM esgi_site s 
@@ -108,6 +131,8 @@ class Site extends Sql
         $sql->execute(array($id_site));
         return $sql->fetchObject(Site::class);
     }
+
+
 
 
 

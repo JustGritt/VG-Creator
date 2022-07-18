@@ -20,7 +20,7 @@ class View
     {
         $this->setView($view);
         $this->setTemplate($template);
-        $this->path = $path;
+        $this->setPath($path);
     }
 
     public function setView($view):void
@@ -33,10 +33,14 @@ class View
         $this->template = strtolower($template);
     }
 
+    public function setPath($path):void
+    {
+        $this->path = $path;
+    }
 
     public function __toString():string
     {
-        return "La vue est : ". $this->view;
+        return ucfirst($this->view)."s";
     }
 
     public function includePartial($partial, $data):void
