@@ -516,6 +516,12 @@ class Admin
         }
     }
 
+    public function deleteAccount($id) 
+    {
+        var_dump($_DELETE);
+        die();
+    }
+
     public function getAllArticles()
     {
         $view = new View('articles', 'back');

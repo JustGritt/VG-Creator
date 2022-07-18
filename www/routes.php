@@ -48,6 +48,7 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->get('/settings', 'admin@setSettingsView');
     $router->post('/settings', 'admin@setSettingsView');
+    $router->delete('/settings/delete/:id', 'admin@deleteAccount')->with('id', '[0-9]+');
 
     $router->get('/history', 'admin@dashboard');
 

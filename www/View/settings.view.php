@@ -4,6 +4,24 @@
 
     <h1 class="title">Settings</h1>
 
+    <div class="hidden-popup">
+        <div class="popup-content">
+            <h3 class="popup-title">Supprimer le compte</h3>
+            <p class="popup-text">Voulez-vous vraiment supprimer ce compte ?</p>
+            <p class="popup-text">Entrer "SUPPRIMER <?php echo strtoupper($_SESSION['firstname']);?>"</p>
+            <input type="text" class="popup-input">
+            <div class="popup-buttons">
+                <input type="submit" value="Delete account" class="delete-button" disabled/>
+            </div>
+            <span class="close-popup">X</span>
+        </div>
+        <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo \App\Core\Security::generateCsfrToken()?>">
+    </div>
+
+    <div>
+        <button class="delete-button">Delete account</button>
+    </div>
+
     <form method="POST" class="form-group flex">
         <label class='input'>
             <input type="text" id="firstname" name="firstname" class="input__field" placeholder=" " value="<?php echo $user->getFirstname(); ?>">
@@ -59,3 +77,55 @@
     </form>
 
 </section>
+
+<script>
+
+    const id_site = <?php echo $_SESSION['id_site'] ?>;
+    const csrf = $('#csrf_token').val();
+
+    $(document).ready(function(){
+        $('.hidden-popup > *').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+        $('.hidden-popup input').on('keyup', function(){
+            if($(this).val() == "SUPPRIMER <?php echo strtoupper($_SESSION['firstname']);?>"){
+                $('.hidden-popup .delete-button').prop('disabled', false);
+            } else {
+                $('.hidden-popup .delete-button').prop('disabled', true);
+            }
+        });
+    
+        $(".delete-button").on("click", function(e){
+            e.preventDefault();
+            $('.hidden-popup').toggleClass('show');
+    
+            // Check if the popup-input is correct and if the delete button is enabled
+            if($('.hidden-popup input').val() == "SUPPRIMER <?php echo strtoupper($_SESSION['firstname']);?>" && $('.hidden-popup .delete-button').prop('disabled') == false){
+
+                $.ajax({
+                    url: "/dashboard/settings/delete/" + id_site,
+                    type: 'DELETE',
+                    data: {"csrf": csrf, "id_site": id_site},
+                }).done(async function(){
+                    console.log("Success");
+                    // window.location.href = "/dashboard/settings";
+                }).fail(function (msg) {
+                    console.log('FAIL');
+                })
+
+            }
+            
+
+        }); 
+
+        $(".close-popup").on("click", function(e){
+            $('.hidden-popup').toggleClass('show');
+        });
+
+    });
+    
+    
+
+
+</script>
