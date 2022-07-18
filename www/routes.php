@@ -67,7 +67,14 @@ $router->group('/dashboard', function (Router $router) {
 
     // sites
     $router->get('/sites', 'site@showAll', 'post.showAll');
-    $router->get('/client_website', 'site@client');
+
+
+    $router->get('/sites/:id_site/edit/client_website/:slug', 'site@editClient', 'site.editClient')->with('id_site', '[0-9]+')->with('slug', '[A-Za-z0-9]+');
+    $router->get('/sites/:id_site/client_website/:slug', 'site@showClient', 'site.showClient')->with('id_site', '[0-9]+')->with('slug', '[A-Za-z0-9]+');
+
+    $router->put('/sites/:id_site/update/page/:id_page', 'site@updateDataContent', 'site.updateDataContent')->with('id_site', '[0-9]+')->with('id_page', '[0-9]+');
+    //update status of a site
+    $router->put('/sites/:id', 'site@setStatusSite', 'site.setStatusSite')->with('id', '[0-9]+');
 
 
     $router->get('/comments', 'admin@getAllComments');

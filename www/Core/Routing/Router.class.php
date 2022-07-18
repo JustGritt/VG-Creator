@@ -46,6 +46,21 @@ class Router{
     }
 
     /**
+     * handle PUT requests
+     *
+     * @param string $path
+     * @param $callable
+     * @param string|null $name
+     * @return Route
+     */
+    public function put(string $path,  $callable, ?string $name=null):Route
+    {
+        return $this->add($path, $callable, $name, 'PUT');
+    }
+
+
+
+    /**
      * handle DELETE requests
      *
      * @param string $path

@@ -60,7 +60,7 @@ class Main {
         $builder = BUILDER;
         $queryBuilder = new $builder();
         $query = $queryBuilder
-            ->select('esgi_page', ['containts'])
+            ->select('esgi_page', ['html'])
             ->where("id_site",  ":id_site")
             ->where('slug', ':slug')
             ->getQuery();
@@ -68,8 +68,6 @@ class Main {
         $result->execute([
             "id_site" => $id_site,
             "slug" => $slug]);
-        return $result->fetch()['containts'] ?? null;
+        return $result->fetch()['html'] ?? null;
     }
-
-
 }
