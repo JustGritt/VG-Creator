@@ -12,6 +12,7 @@ use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 use App\Model\PasswordRecovery;
+use App\Model\User_role;
 
 
 class Confirmation {
@@ -29,8 +30,6 @@ class Confirmation {
         $getId = $_GET['id'];
         $getToken = $_GET['token'];
         $user->confirmUser($getId, $getToken);
-
-        //Handler::setDirectoryForUser($_SESSION['pseudo']);
 
         FlashMessage::setFlash('success', "Your account has been validated! You will be redirect to the login page in few secondes..");
         header("Refresh: 3; ".DOMAIN."/login" );
@@ -99,5 +98,39 @@ class Confirmation {
             header("Refresh: 3; ".DOMAIN."/login" );
 
         }
+    }
+
+    public function invitation(){
+        $user = new UserModel();
+        $view = new View("confirmation");
+        $view->assign("user", $user);
+
+        
+        if (empty($_GET['id']) && empty($_GET['token'])) {
+            FlashMessage::setFlash('errors', "Une erreur sait produite...");
+            header("Refresh: 3; ".DOMAIN."/" );
+            return;
+        }
+        
+        $getId = $_GET['id'];
+        $getToken = $_GET['token'];
+        $user = $user->getUserById($getId);
+        
+        if(empty($user)){
+            FlashMessage::setFlash('errors', "Une erreur sait produite...");
+            header("Refresh: 3; ".DOMAIN."/" );
+            return;
+        }
+        
+        $user_role = new User_role();
+        //$user_role->confirmInvitation($getId, $getToken);
+        if(!$user_role->updateStatus($getId, $getToken)){
+            FlashMessage::setFlash('errors', "Une erreur sait produite...");
+            header("Refresh: 3; ".DOMAIN."/" );
+            return;
+        }
+        
+        FlashMessage::setFlash('success', "Your account has been validated! You will be redirect to the login page in few secondes..");
+        header("Refresh: 3; ".DOMAIN."/login" );
     }
 }

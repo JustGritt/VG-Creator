@@ -3,6 +3,7 @@ namespace App\Controller;
 //session_start();
 
 use App\Core\CleanWords;
+use App\Core\FlashMessage;
 use App\Core\Security;
 use App\Core\Sql;
 use App\Core\SqlPDO;
@@ -18,7 +19,6 @@ class PasswordRecovery {
     public function pwdforget()
     {
         // var_dump($_SESSION);
-        echo "Mot de passe oublié"."<br>";
         $user = new UserModel();
         $password_recovery = new Recovery();
         
@@ -31,10 +31,10 @@ class PasswordRecovery {
             $usertoverify = $user->getUserByEmail($_POST['email']);
 
             if (empty($usertoverify)) {
-                echo 'Utilisateur inexistant'."<br>";
+                FlashMessage::setFlash('errors', 'Utilisateur inexistant');
                 return;
             }elseif (empty($usertoverify['status'])) {
-                echo 'Vous devez d\'abord confirmé votre email'."<br>";
+                FlashMessage::setFlash('errors', 'Vous devez d\'abord confirmé votre email');
                 return;
             }
 
@@ -71,7 +71,6 @@ class PasswordRecovery {
             foreach(array_keys($template_var) as $key){
                 if (strlen($key) > 2 && trim($key) != "") {
                     $body = str_replace($key, $template_var[$key], $body);
-                    
                 }
             }
 

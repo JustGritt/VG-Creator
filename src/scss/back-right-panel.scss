@@ -67,6 +67,10 @@ header {
         font-size: 18px;
         line-height: 22px;
     }
+    a {
+        margin: 15px 0;
+        padding: 5px 15px;
+    }
 }
 
 .right-panel-menu ul li {
@@ -109,6 +113,14 @@ header {
     & span {
         margin-left: 10px;
         display: block;
+    }
+}
+
+section#chooseAccount {
+    flex-direction: column;
+    form {
+        margin: 25px auto;
+        text-align: center;
     }
 }
 

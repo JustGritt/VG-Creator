@@ -9,6 +9,7 @@ use App\Core\Sql;
 use App\Core\Uploader;
 use App\Core\Verificator;
 use App\Core\View;
+use App\Core\PaginatedQuery;
 use App\Model\Site;
 use App\Model\User as UserModel;
 use App\Core\Mail;
@@ -17,6 +18,7 @@ use App\Core\Handler;
 use App\Model\Document;
 use App\Model\Backlist;
 use App\Model\User_role;
+use Stripe\Radar\ValueList;
 
 class Admin
 {
@@ -27,7 +29,6 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        var_dump($_SESSION);
         if (isset($_SESSION['NOT-SET'])) {
             $user = new UserModel();
             $user->setFirstname($_SESSION['firstname']);
@@ -41,6 +42,7 @@ class Admin
             $view2 = new View('register-step-2', 'blank');
             $view2->assign('user', $user);
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+                unset($_SESSION['csrf_token']);
                 $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
             
                 if(!$pseudotocheck) {
@@ -68,31 +70,26 @@ class Admin
             return;
         }
 
-
-        // Else 
-        $user_role = new User_role();
         $site = new Site();
         $site = $site->getAllSiteByIdUser($_SESSION['id']);
-       // $_SESSION['choice'] = 'choice';
-        // $choice = true;
         if(isset($_SESSION['choice'])){
 
             $view2 = new View('login-step-2', 'back');
             $view2->assign('site', $site);
             
-            if(!empty($_POST )) {
+            if(!empty($_POST)) {
 
-                var_dump($_POST['site']);
                 if($_POST['site'] == 'vg-creator')  {
                     unset($_SESSION['choice']);
                     header('Location: ' . DOMAIN . '/dashboard');
                     return;
                 }
-                
+
                 $_SESSION['id_site'] = $_POST['id_site'];
                 $_SESSION['role'] = $_POST['role'];
                 $_SESSION[strtoupper($_POST['site'])] = $_POST['role'];
-                
+
+                unset($_SESSION['csrf_token']);
                 unset($_SESSION['choice']);
                 header('Location: ' . DOMAIN . '/dashboard');
                 return;
@@ -102,43 +99,42 @@ class Admin
     
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
+        $view = new View("back_home", "back");
+        $view->assign('user', $user);
+        unset($_SESSION['csrf_token']);
+        var_dump($_SESSION);
 
-        if (!empty($_POST['submit'])) {
-            if (!empty($_FILES)) {
-                $this->uploadFile();
-            }
-        }
+    }
 
-        $explode_url = explode("/", $_SERVER["REQUEST_URI"]);
-        $page = end($explode_url);
-        switch ($page) {
-            case "clients":
-                $this->setClientsView();
-                break;
-            case "subscribe":
-                $view = new View("dashboard", "back");
-                $view->assign('user', $user);
-                break;
-            case "comments":
-                $view = new View("dashboard", "back");
-                var_dump($this->getAllComments(2));
-                $view->assign('user', $user);
-                break;
-            case "media":
-                // $view = new View("dashboard", "back");
-                $this->setUploadMediaView();
-                break;
-            case "settings":
-                $this->setSettingsView();
-                break;
-            default:
-                $view = new View("back_home", "back");
-                $view->assign('user', $user);
-                break;
+    public function chooseMySite(){
+        var_dump($_SESSION);
+        $site = new Site();
+        $pagination = new PaginatedQuery(
+            $site->getQueryAllsiteByIdUser($_SESSION['id']),
+            $site->getCountAllSiteByIdUser($_SESSION['id']),
+            10);
+
+        $result = $pagination->getItems();
+
+        $view = new View('login-step-2', 'back');
+
+        $view->assign('site', $result);
+        $view->assign('previous', $pagination->previousLink('sites'));
+        $view->assign('next', $pagination->nextLink('sites'));
+
+        if(!empty($_POST )) {
+
+            $_SESSION['id_site'] = $_POST['id_site'];
+            $_SESSION['role'] = $_POST['role'];
+            $_SESSION[strtoupper($_POST['site'])] = $_POST['role'];
+
+            header('Location: ' . DOMAIN . '/dashboard');
+            return;
         }
     }
 
     public function setClientsView(){
+        // var_dump($_SESSION);
 
         $view = new View('clients', 'back');
 
@@ -149,20 +145,38 @@ class Admin
         $user = new UserModel();
         $backlist = new Backlist();
         $backlist = $backlist->getBackListForSite($_SESSION['id_site']);
-        $result = $this->getUserOfSite($_SESSION['id_site']);
+        
+        $count = "SELECT COUNT(1)
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ={$_SESSION['id_site']}";
+
+        $sql =
+            "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ={$_SESSION['id_site']}";
+
+        $paginatedQuery = new PaginatedQuery($sql, $count, 4);
+        $result = $paginatedQuery->getItems();
         $view->assign("result", $result);
         $view->assign('user', $user);
         $view->assign('backlist', $backlist);
+        $view->assign('previous', $paginatedQuery->previousLink('clients'));
+        $view->assign('next', $paginatedQuery->nextLink('clients'));
 
-        if (!empty($_POST)) {
+        if (!empty($_POST) ) {
+            unset($_SESSION['csrf_token']);
             $this->updateUser();
         }
+
         return $view;
     }
-
+    
     public function updateUser(){
-
-        if (!Security::isVGdmin() || !Security::isAdmin()) {
+        if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
         }
@@ -170,7 +184,7 @@ class Admin
         if (Security::isVGdmin() || Security::isAdmin()) {
             $backlist = new Backlist();
             $user = new UserModel();
-            $user_role = new User_role();
+
             $user = $user->getUserById($_POST['id']);
 
             //Check if the user is already in the backlist and Update the user if he is
@@ -179,6 +193,11 @@ class Admin
                 exit();
             }
             if (!$backlist->isUserBacklisted($user->getId()) && $_POST['ban'] == 'Active') {
+                if ($user->getEmail() == $_SESSION['email']) {
+                    FlashMessage::setFlash("errors", "Vous ne pouvez pas bannir votre propre compte");
+                    header('Refresh: 3; ' . DOMAIN . '/dashboard/clients');
+                    exit();
+                }
                 $backlist->setIdUser($_POST['id']);
                 $backlist->setIdSite($_SESSION['id_site']);
                 //$backlist->setReason($_POST['reason']);
@@ -187,9 +206,10 @@ class Admin
                 $backlist->deleteUserFromBackList($_SESSION['id_site'], $user->getId());
             }
 
+            $user_role = new User_role();
             $role_post = ucfirst(htmlspecialchars($_POST['roles']));
             //Change the role for the user of the site
-            $roles_available = $this->getAvailableRolesForSite($_SESSION['id_site']);
+            $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
 
             $selected_role = 0;
             foreach ($roles_available as $role) {
@@ -204,17 +224,17 @@ class Admin
             $user_role->save();
 
             //$user->setUserRoleForSite($user->getId(), $role['id']);
-
-
         }
-
-
         //header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
-
     }
 
     public function getUserOfSite($id_site)
     {
+        $count = "SELECT COUNT(*)
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            WHERE rs.id_site ='.$id_site.'";
         $sql =
             "SELECT u.id, u.firstname, u.lastname, u.email, u.status, u.pseudo, rs.name 
             FROM `esgi_user` u
@@ -222,171 +242,284 @@ class Admin
             LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
             WHERE rs.id_site ='.$id_site.'";
 
-        $request = Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll(\PDO::FETCH_ASSOC);
+        $paginatedQuery = new PaginatedQuery($sql, $count, 4);
+        $result = $paginatedQuery->getItems();
+        //$request = Sql::getInstance()->prepare($sql);
+        //$request->execute(array($id_site));
+        //$request->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
     }
 
-    public function getAvailableRolesForSite($id_site)
-    {
-        $sql =
-            "SELECT id, name
-            FROM esgi_role_site
-            WHERE id_site = '".$id_site."'";
-
-        $request = Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    private function addUser(){
+    
+    public function inviteClient(){
+        $view = new View("invite_clients", "back");
         $user = new UserModel();
-        $user->setFirstname($_POST['firstname']);
-        $user->setLastname($_POST['lastname']);
-        $user->setEmail($_POST['email']);
-        $user->setPseudo($_POST['pseudo']);
-        $user->setPassword($_POST['password']);
-        $user->generateToken();
-        if (!$user->is_unique_pseudo($_POST['pseudo'])) {
-            FlashMessage::setFlash("errors", "Pseudo déjà utilisé");
+        $view->assign("user", $user);
+
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
+            
+            if(!empty($_POST['email']) && !empty($_POST['pseudo'])){
+                FlashMessage::setFlash("errors", "Veuillez remplir seulement un champ");
+                header('Refresh: 3; '.DOMAIN.'/dashboard/clients');
+                return;
+            }
+
+            $user_role = new User_role();
+            $role_post = ucfirst(htmlspecialchars($_POST['roles']));
+            $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
+
+            foreach($roles_available as $role) {
+                if($role['name'] == $role_post) {
+                    $role_id = $role['id'];
+                }
+            }
+
+            if(!isset($role_id)) {
+                FlashMessage::setFlash("errors", "Ce rôle n'existe pas.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $user_info = null;
+            if (!empty($_POST['email'])) {
+                $user_info = $user->getUserByEmail($_POST['email']);
+                if(!$user_info) {
+                    FlashMessage::setFlash("errors", "Cet utilisateur n'existe pas.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                    return;
+                }
+            }else if (!empty($_POST['pseudo'])) {
+                if ($user->is_unique_pseudo($_POST['pseudo'])){
+                    FlashMessage::setFlash("errors", "Ce pseudo n'existe pas.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                    return;
+                }
+                $to_check = $user->getUserByPseudo($_POST['pseudo']);
+                $user_info  = $user->getUserByEmail($to_check->getEmail());
+            }
+
+            if($user_info['email'] == $_SESSION['email']) {
+                FlashMessage::setFlash("errors", "Vous ne pourrez pas vous inviter vous-même.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $id = $user_info['id'];
+            $user_verify = $user->getUserById($id) ?? null;
+            
+            if(!empty($_POST['email'])  || !empty($_POST['pseudo'])){
+                $id = $user_info['id'];
+
+                $user_role->setIdUser($id);
+                $user_role->setIdRoleSite($role_id);
+                $user_role->setStatus(0);
+                $user_role->generateToken();
+                $token = $user_role->getToken();
+                $user_role->save();
+            }
+
+            $toanchor = DOMAIN.'/invitation?id='. $user_verify->getId() .'&token='.$token;
+
+            $site = new Site();
+            $site = $site->getSiteById($_SESSION['id_site']);
+
+            $template_var = array(
+                "{{name}}" => $user_verify->getFirstname(),
+                "{{sender_name}}" => $_SESSION['firstname'],
+                "{{sender_site}}" =>  $site->getName(),
+                "{{action_url}}" => $toanchor,
+                "{{sender_email}}" => $_SESSION['email'],
+                "{{password}}" =>  $password??null,
+            );
+
+            $template_file = "/var/www/html/Templates/invitation_email.php";
+            if(file_exists($template_file)){
+                $body = file_get_contents($template_file);
+            }else{
+                FlashMessage::setFlash("errors", "Impossible de trouver le template");
+                return;
+            }
+
+            //swapping the variable into the templates
+            foreach(array_keys($template_var) as $key){
+                if (strlen($key) > 2 && trim($key) != "") {
+                    $body = str_replace($key, $template_var[$key], $body);
+                }
+            }
+
+            $mail = new Mail();
+            $subject = "Veuillez valideez votre compte sur ".$site->getName();
+            $mail->sendMail($user_verify->getEmail() , $body, $subject);
+
+            FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+        }
+    }
+
+    public function deleteMedia($id){
+        parse_str(file_get_contents('php://input'), $_DELETE);
+
+        $document = new Document();
+        $document = $document->getDocumentById($id);
+
+        $path = $document->getPath();
+        $delete = $_DELETE;
+
+        $src_url = explode("/", $path);
+        $src = end($src_url);
+
+        $path_url = explode("/", $path);
+        $path = end($path_url);
+        
+        if(!($src == $path)) {
+            FlashMessage::setFlash("errors", "Impossible de supprimer ce document.");
             return;
         }
-        $user->save();
 
-        $id = $user->getIdFromEmail($user->getEmail());
-        $toanchor = DOMAIN.'/invitation?id='.$id.'&token='.$user->getToken();
-
-        $template_var = array(
-            "{{product_url}}" => "".DOMAIN."/",
-            "{{product_name}}" => "VG-CREATOR",
-            "{{name}}" => $user->getFirstname(),
-            "{{action_url}}" => $toanchor,
-            "{{login_url}}" => $toanchor,
-            "{{username}}" =>  $user->getEmail(),
-            "{{support_email}}" => "contact@vgcreator.fr",
-            "{{sender_name}}" => "VG-CREATOR",
-            "{{help_url}}" => "https://github.com/popokola/VG-CREATOR-SERVER.git",
-            "{{company_name}}" => "VG-CREATOR",
-        );
-
-        $template_file = "/var/www/html/Templates/confirmation_email.php";
-        if(file_exists($template_file)){
-            $body = file_get_contents($template_file);
-        }else{
-            die('ennable to load the templates');
+        $document->delete();
+        if(file_exists("uploads/".$path)){
+            unlink("uploads/".$path);
         }
 
-        //swapping the variable into the templates
-        foreach(array_keys($template_var) as $key){
-            if (strlen($key) > 2 && trim($key) != "") {
-                $body = str_replace($key, $template_var[$key], $body);
-            }
-        }
-
-        $mail = new Mail();
-        $subject = "Veuillez confirmée votre email";
-        $mail->sendMail($user->getEmail() , $body, $subject);
-
-        //Handler::setRoleForUser($user->getId(), $_SESSION['id_site'],  $_POST['role']);
-        FlashMessage::setFlash("success", "L'utilisateur a bien été ajouté");
-        //header('Refresh: 3; '.DOMAIN.'/dashboard');
+        FlashMessage::setFlash("success", "Le média a été supprimé avec succès.");
+        header("Refresh: 3; " . DOMAIN . "/dashboard/media");
+        return;
     }
-
-    /*
-    public function getAllComments($id_site){
-        $builder = BUILDER;
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
-            ->where('id_site', ':id_site')
-            ->limit(0, 10)
-            ->getQuery();
-        $result = Sql::getInstance()->prepare($query);
-        $result->execute(["id_site" => $id_site]);
-        return $result->fetch() ?? null;
-    }*/
 
     public function setUploadMediaView()
     {
-        var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
-        $document = new Document();
-        $documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
+
+        $query = "SELECT * FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
+        $count = "SELECT COUNT(1) FROM esgi_document WHERE id_site = {$_SESSION['id_site']}";
+        $pagination = new PaginatedQuery($query, $count,2, Document::class);
+
+        $pagination->getItems();
+        //$document = new Document();
         $view = new View("media", "back");
         $view->assign('user', $user);
-        $view->assign('documents', $documents);
+        //$view->assign('document', $document);
+        $view->assign('documents',  $pagination->getItems());
+        $view->assign('previous', $pagination->previousLink('media'));
+        $view->assign('next', $pagination->nextLink('media'));
 
-        if(!empty($_POST['submit']) && Security::checkCsrfToken($_POST['csrf_token'])) {
-            unset($_POST['csrf_token']);
-            if(!empty($_FILES)) {
-                $document = new Document();
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
+            if (!empty($_FILES)) {
+                $media = new Document();
                 $upload = new Uploader($_FILES);
                 if ($upload->upload()) {
-                    $document->setPath($upload->getFilePath());
-                    $document->setType($upload->getFileType());
-                    $document->setIdSite($_SESSION['id_site']);
-                    $document->setIdUser($_SESSION['id']);
-                    $document->save();
-                    $_FILES = [];
+                    unset($_SESSION['csrf_token']);
+                    $media->setPath($upload->getFilePath());
+                    $media->setType($upload->getFileType());
+                    $media->setIdSite($_SESSION['id_site']);
+                    $media->setIdUser($_SESSION['id']);
+                    $media->save();
+                    echo 'OKkkkkk';
+                    var_dump($_SESSION);
+                    header('Location:' . DOMAIN . $_SERVER['REQUEST_URI']);
+                    return;
                 }
                 $_FILES = [];
-            }
-        }
-    }
-
-    public function setOauthUser($user){
-        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
-            if(!$user->is_unique_pseudo($_POST['pseudo'])){
-                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
-                header('Refresh: 3; '.DOMAIN.'/dashboard');
+                unset($_SESSION['csrf_token']);
+                var_dump($_SESSION);
+                echo 'LOL';
+                header('Location:' . DOMAIN . '/dashboard/media');
                 return;
             }
-            $user->save();
-            Handler::setMemberRole($user->getId());
-            header("Location: " . DOMAIN . "/dashboard");
+            unset($_SESSION['csrf_token']);
         }
+        unset($_SESSION['csrf_token']);
+        var_dump($_SESSION);
     }
+
     public function setSettingsView()
     {
         $view = new View('settings', 'back');
-
         $user = new UserModel();
         $user = $user->getUserById($_SESSION['id']);
-
-        echo 'Le champ apparait lorsque vous auriez un site enregistré';
         $view->assign("user", $user);
 
-        if(!empty($_POST)) {
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
             
-            if(empty($_POST['newpwdconfirm']) && empty($_POST['newpwd']) && empty($_POST['newpwdconfirm']) ){
-                $user->setFirstname($_POST['firstname']);
-                $user->setLastname($_POST['lastname']);
-                
-                if(isset($_POST['pseudo']) && $user->getPseudo() == $_POST['pseudo'] && ($user->is_unique_pseudo($_POST['pseudo']))){
-                    FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+            $user->setFirstname(htmlspecialchars($_POST['firstname']));
+            $user->setLastname(htmlspecialchars($_POST['lastname']));
+            
+            $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            if(!$pseudotocheck) {
+                FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+                header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                return;
+            }
+
+            if(isset($_POST['pseudo']) && $user->getPseudo() != $_POST['pseudo'] && (!$user->is_unique_pseudo($_POST['pseudo']))){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                return;
+            }
+
+
+            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            $newpw = htmlspecialchars($_POST['newpwd']);
+
+            if(!isset($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm'])) {
+                if ( Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])){
+                    $user->setPassword($newpw);
+                    if (!password_verify($_POST['newpwdconfirm'], $user->getPassword())) {
+                        FlashMessage::setFlash("errors", "Votre mot de passe ne corresponds pas.");
+                        header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                        return;
+                    }
+                }elseif (!Verificator::checkPassword($_POST['newpwd']) && !Verificator::checkPassword($_POST['newpwdconfirm'])) {
+                    FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
                     header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
                     return;
-                } 
-                $user->setPseudo($_POST['pseudo']);
-
-                $user->setEmail($_POST['email']);
-                var_dump($user->save());
-
-                $user->save();
-                FlashMessage::setFlash("success", "Le mot de passe a bien été modifié");
+                }else{
+                    FlashMessage::setFlash("errors", "Votre mot de passe ne corresponds pas.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }
             }
-        }
-        var_dump($_POST);
 
-        return $view;
+            if(isset($_POST['oldpwd']) && !empty($_POST['oldpwd']) && !empty($_POST['newpwd']) && !empty($_POST['newpwdconfirm']) ) {
+
+                if (Verificator::checkPassword($_POST['newpwd']) && Verificator::checkPassword($_POST['newpwdconfirm'])
+                    && password_verify($_POST['oldpwd'], $user->getPassword())){
+                    $user->setPassword($newpw);
+                    if (!password_verify($_POST['newpwdconfirm'], $user->getPassword())) {
+                        FlashMessage::setFlash("errors", "Votre mot de passe ne corresponds pas");
+                        header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                        return;
+                    }
+                }elseif (!Verificator::checkPassword($_POST['newpwd']) && !Verificator::checkPassword($_POST['newpwdconfirm'])) {
+                    FlashMessage::setFlash("errors", "Votre mot de passe doit contenir au moins 6 caractères, une majuscule, une minuscule et un chiffre.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }elseif(!password_verify($_POST['oldpwd'], $user->getPassword()))  {
+                    FlashMessage::setFlash("errors", "Mot de passe incorrect.");
+                    header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+                    return;
+                }
+            }
+
+            $user->setEmail($_POST['email']);
+
+            $user->save();
+            FlashMessage::setFlash("success", "Votre modifications ont bien été enregistrées.");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/settings");
+            
+        }
     }
 
-    public function setEditorView()
+    public function deleteAccount($id) 
     {
-        $view = new View('editor', 'back');
-        // $result = $this->getUserOfSite();
-        //  $view->assign("result", $result);
+        var_dump($_DELETE);
+        die();
     }
 
     public function getAllArticles()
@@ -425,43 +558,167 @@ class Admin
         }
     }
 
-    public function selectAllUserOfBlog(QueryBuilder $queryBuilder, $id)
+    public function addClient() 
     {
+        $view = new View('add_clients', 'Templates/back');
+        $user = new UserModel();
+        $view->assign("user", $user);
+
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            unset($_SESSION['csrf_token']);
+            
+            $user_role = new User_role();
+            $role_post = ucfirst(htmlspecialchars($_POST['roles']));
+            $roles_available = $user_role->getAvailableRolesForSite($_SESSION['id_site']);
+
+            foreach($roles_available as $role) {
+                if($role['name'] == $role_post) {
+                    $role_id = $role['id'];
+                }
+            }
+
+            if(!isset($role_id)) {
+                FlashMessage::setFlash("errors", "Ce rôle n'existe pas.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            // check if user already exists
+            $user_exists2 = $user->getUserByEmail($_POST['email']);
+            if (isset($user_exists2) && !empty($user_exists2)) {
+                FlashMessage::setFlash("errors", "Cet utilisateur existe déjà.");
+                header("Refresh: 2; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $pseudotocheck = Verificator::checkPseudo($_POST['pseudo']);
+            if(!$pseudotocheck) {
+                FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
+                return;
+            }
+            if(isset($_POST['pseudo']) && (!$user->is_unique_pseudo($_POST['pseudo']))){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $password = $_POST['password'];
+            // Add client data
+            $user->setFirstname(htmlspecialchars($_POST['firstname']));
+            $user->setLastname(htmlspecialchars($_POST['lastname']));
+            $user->setEmail(htmlspecialchars($_POST['email']));
+            $user->setStatus(0);
+            $user->setPseudo(htmlspecialchars($_POST['pseudo']));
+            $user->setPassword(htmlspecialchars($_POST['password']));
+            $user->generateToken();
+
+            if(!$user->save()) {
+                FlashMessage::setFlash("errors", "Une erreur est survenue lors de l'ajout du client.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            $user_info = $user->getUserByPseudo($_POST['pseudo']);
+            $user_role->setIdUser($user_info->getId());
+            $user_role->setIdRoleSite($role_id);
+            $user_role->setStatus(1);
+            $user_role->save();
+            Handler::setMemberRole($user_info->getId());
+
+            $toanchor = DOMAIN.'/confirmation?id='.$user_info->getId().'&token='.$user->getToken();
+
+            $site = new Site();
+            $site = $site->getSiteById($_SESSION['id_site']);
+
+            $template_var = array(
+                "{{name}}" => $user->getFirstname(),
+                "{{sender_name}}" => $_SESSION['firstname'],
+                "{{sender_site}}" =>  $site->getName(),
+                "{{action_url}}" => $toanchor,
+                "{{sender_email}}" => $_SESSION['email'],
+                "{{password}}" =>  $password,
+            );
+
+            $template_file = "/var/www/html/Templates/invitation_email.php";
+            if(file_exists($template_file)){
+                $body = file_get_contents($template_file);
+            }else{
+                FlashMessage::setFlash("errors", "Impossible de trouver le template");
+                return;
+            }
+
+            //swapping the variable into the templates
+            foreach(array_keys($template_var) as $key){
+                if (strlen($key) > 2 && trim($key) != "") {
+                    $body = str_replace($key, $template_var[$key], $body);
+                }
+            }
+
+            $mail = new Mail();
+            $subject = "Veuillez valideez votre compte sur ".$site->getName();
+            $mail->sendMail($user->getEmail() , $body, $subject);
+
+            FlashMessage::setFlash("success", "Votre client a été ajouté avec succès.");
+            header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+
+        }
+    }
+
+    public function setClientOfSite()
+    {
+        $view = new View('settings', 'back');
+        $result = $this->getClientsOfSite();
+        $view->assign("result", $result);
+    }
+
+    public function getClientsOfSite()
+    {
+        $id_site = $_SESSION['id_site'];
+
+        $sql = "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name 
+            FROM `esgi_user` u
+            LEFT JOIN esgi_user_role ur on u.id = ur.id_user
+            LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
+            LEFT Join esgi_site s on s.id = rs.id_site 
+            WHERE s.id = ?";
+
+        $request =  Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll();
+    }
+
+    public function client()
+    {
+        $view = new View('front_template', 'front');
+    }
+
+    public function test()
+    {
+        $user = new User();
+        $view = new View('test', 'back');
+        //$view->assign('user', $user);
+    }
+
+    public function comment() {
+        $view = new View('front_template', 'front');  
+    }
+
+//TODO TEST
+/*
+  public function articles($builder = BUILDER){
+        $queryBuilder = new $builder();
         $query = $queryBuilder
             ->select('esgi_user', ['*'])
-            ->where('id', $id)
-            ->limit(0, 1)
-            ->getQuery();
-
-        return $query;
-    }
-
-    /*
-    public function updateUser($colmuns, $values, $builder = BUILDER)
-    {
-        $queryBuilder = new $builder();
-        $query = $queryBuilder
-            ->update('esgi_user', $colmuns, $values)
+            ->limit(0, 10)
             ->getQuery();
         $result = Sql::getInstance()
-            ->query($query);
-        return $result;
+            ->query($query)
+            ->fetchAll();
+
+        $view = new View('succes', 'back');
+        $view->assign('result', $result);
     }
-
-    public function deleteUserById($id, $builder = BUILDER)
-    {
-
-        $queryBuilder = new $builder();
-        $sql = $queryBuilder
-            ->delete('esgi_user')
-            ->where('id', $id)
-            ->getQuery();
-        $result = Sql::getInstance()
-            ->query($sql);
-        return $result;
-    }*/
-
-    public function uploadFile()
+   public function uploadFile()
     {
         $file = $_FILES['fileToUpload'];
         $fileName = $file['name'];
@@ -507,7 +764,7 @@ class Admin
             ->insert('esgi_document', ['path', 'type', 'id_user', 'id_site'])
             ->getQuery();
         $result = Sql::getInstance()->prepare($query);
-        
+
         return $result->execute([
             $filePath,
             $type,
@@ -515,60 +772,87 @@ class Admin
             $id_site,
         ]);
     }
-
-    public function setClientOfSite()
+ public function updateUser($colmuns, $values, $builder = BUILDER)
     {
-        $view = new View('settings', 'back');
-        $result = $this->getClientsOfSite();
-        $view->assign("result", $result);
-    }
-
-    public function getClientsOfSite()
-    {
-        $id_site = $_SESSION['id_site'];
-
-        $sql =
-            "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name FROM `esgi_user` u
-        LEFT JOIN esgi_user_role ur on u.id = ur.id_user
-        LEFT JOIN esgi_role_site rs on rs.id = ur.id_role_site
-        LEFT Join esgi_site s on s.id = rs.id_site WHERE s.id = ?";
-
-        $request =  Sql::getInstance()->prepare($sql);
-        $request->execute(array($id_site));
-        return $request->fetchAll();
-    }
-
-    public function client()
-    {
-        $view = new View('front_template', 'front');
-    }
-
-    /*
-    public function articles($builder = BUILDER){
         $queryBuilder = new $builder();
         $query = $queryBuilder
-            ->select('esgi_user', ['*'])
-            ->limit(0, 10)
+            ->update('esgi_user', $colmuns, $values)
             ->getQuery();
         $result = Sql::getInstance()
-            ->query($query)
-            ->fetchAll();
-
-        $view = new View('succes', 'back');
-        $view->assign('result', $result);
+            ->query($query);
+        return $result;
     }
-    */
 
-    public function test()
+    public function deleteUserById($id, $builder = BUILDER)
     {
-        $user = new User();
-        $view = new View('test', 'back');
-        //$view->assign('user', $user);
 
+        $queryBuilder = new $builder();
+        $sql = $queryBuilder
+            ->delete('esgi_user')
+            ->where('id', $id)
+            ->getQuery();
+        $result = Sql::getInstance()
+            ->query($sql);
+        return $result;
     }
 
-    public function comment() {
-        $view = new View('front_template', 'front');  
+
+    public function selectAllUserOfBlog(QueryBuilder $queryBuilder, $id)
+    {
+        $query = $queryBuilder
+            ->select('esgi_user', ['*'])
+            ->where('id', $id)
+            ->limit(0, 1)
+            ->getQuery();
+
+        return $query;
     }
 
+    public function setOauthUser($user){
+        if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+            if(!$user->is_unique_pseudo($_POST['pseudo'])){
+                FlashMessage::setFlash("errors", "Ce pseudo est déjà utilisé");
+                header('Refresh: 3; '.DOMAIN.'/dashboard');
+                return;
+            }
+            $user->save();
+            Handler::setMemberRole($user->getId());
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+    }
+
+
+    public function getAllComments($id_site){
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_comment', ['title', 'body', 'id_user', 'created_at', 'status'])
+            ->where('id_site', ':id_site')
+            ->limit(0, 10)
+            ->getQuery();
+        $result = Sql::getInstance()->prepare($query);
+        $result->execute(["id_site" => $id_site]);
+        return $result->fetch() ?? null;
+    }
+
+ public function getAvailableRolesForSite($id_site)
+    {
+        $sql =
+            "SELECT id, name
+            FROM esgi_role_site
+            WHERE id_site = '".$id_site."'";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_site));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+  public function setEditorView()
+    {
+        $view = new View('editor', 'back');
+        // $result = $this->getUserOfSite();
+        //  $view->assign("result", $result);
+    }
+
+ */
 }

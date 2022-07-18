@@ -36,7 +36,7 @@ class Main {
             echo 'OK';
             echo $content;
         }
-        return header('HTTP/1.1 404 Not Found');
+        //return header('HTTP/1.1 404 Not Found');
     }
 
     public function getSite($slug){

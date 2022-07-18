@@ -53,7 +53,7 @@ class Backlist extends Sql
 
     public function getBackListForSite($id_site)
     {
-        $request = "SELECT eu.firstname , eu.pseudo, rs.name
+        $request = "SELECT DISTINCT eu.firstname , eu.pseudo, rs.name
         FROM `esgi_backlist` eb
         LEFT JOIN esgi_site es on eb.id_site = es.id
         LEFT JOIN esgi_user_role ur on eb.id_user = ur.id_user

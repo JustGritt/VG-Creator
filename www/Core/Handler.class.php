@@ -8,9 +8,9 @@ class Handler
 {
 
     public static function setMemberRole($id_user){
-        $request = "INSERT INTO `esgi_user_role` (`id_user`, `id_role_site`) VALUES (?, ?)";
+        $request = "INSERT INTO `esgi_user_role` (`id_user`, `id_role_site` , `status`) VALUES (?, ?, ?)";
         $sql = Sql::getInstance()->prepare($request);
-        $sql->execute(array($id_user, VGCREATORMEMBER));
+        $sql->execute(array($id_user, VGCREATORMEMBER, 1));
     }
 
     public static function getIdRoleSite($id_site, $role){
@@ -47,5 +47,26 @@ class Handler
             mkdir($pseudo_site, 0777, true);
             copy('./View/client.tpl.php', $pseudo_site);
         }
+    }
+
+    public static function getInt($name, $default = null){
+        if (!isset($_GET[$name])) return $default;
+        if ($_GET[$name] === '0') return 0;
+
+        $page = $_GET['page'] ?? 1;
+
+        if (!filter_var($page, FILTER_VALIDATE_INT)){
+            throw new \Exception('Numero de page invalide');
+        }
+
+        return (int)$_GET[$name];
+    }
+
+    public static function getPostiveInt($name, $default = null){
+        $param = self::getInt($name, $default);
+        if ($param !== null && $param < 0){
+            throw new \Exception('Le parametre doit être positif');
+        }
+        return $param;
     }
 }

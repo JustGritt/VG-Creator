@@ -13,7 +13,7 @@ p {
 }
 
 
-$status: (('draft', var(--color-grey-dark)), ('publish', var(--color-real-green)));
+$status: (('draft', var(--color-grey-dark)), ('publish', var(--color-real-green)), ('banned', var(--color-red)));
 @each $property,
 $value in $status {
     $i: index(($status), ($property $value));
@@ -37,6 +37,13 @@ $value in $status {
     & section:nth-of-type(2) {
         overflow: scroll;
         width: calc(100% - 300px);
+    }
+}
+
+@media screen and (max-width: 1068px) {
+    .body-container-dashboard section:nth-of-type(2) {
+        width: 100vw;
+        min-height: 100vh;
     }
 }
 
@@ -338,4 +345,81 @@ $value in $status {
         align-items: center;
         justify-content: center;
     }
+}
+
+section#comments {
+
+    .comment-card {
+        
+        position: relative;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        cursor: pointer;
+        background: #FFFFFF;
+        border-radius: 8px;
+        border: 1px solid #E6E6E6;
+
+        .card {
+
+            &-badge {
+                position: absolute;
+                right: 20px;
+                width: fit-content;
+                display: inline-block;
+                border-radius: 8px;
+                span {
+                    padding: 10px;
+                }
+            }
+
+            &-title {
+                display: inline-block;
+                font-weight: bold;
+                font-size: 1.2rem;
+                padding-bottom: 20px;
+                padding-right: 40px;
+            }
+
+            &-body {
+                max-height: 2rem;
+                overflow: hidden;
+            }
+
+        }
+
+        &.selected-comment {
+            transition: all .2s ease-in-out;
+            width: 100%;
+        
+            .card {
+
+                &-badge {
+                    position: absolute;
+                    right: 20px;
+                    width: fit-content;
+                    display: inline-block;
+                    border-radius: 8px;
+                }
+    
+                &-title {
+                    display: inline-block;
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                    padding-bottom: 20px;
+                }
+    
+                &-body {
+                    max-height: none;
+                    overflow: auto;
+                    font-size: 1rem;
+                }
+    
+            }
+        
+        }
+    }
+
+
+
 }

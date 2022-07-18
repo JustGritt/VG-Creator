@@ -202,7 +202,7 @@ body {
     }
     a.link {
         text-decoration: none;
-        color: c.$link;
+        color: var(--color-link);
         display: inline-block;
         margin-left: 5px;
         &::after {
@@ -215,7 +215,7 @@ body {
             width: 0;
             height: 2px;
             border-radius: 100px;
-            background: #1538B5;
+            background: var(--color-link);
             transition: all .4s ease-in-out;
         }
         &:hover::after {

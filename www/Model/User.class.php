@@ -31,9 +31,6 @@ class User extends Sql{
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
 
-
-
-    
     /**
      * @return null|int
      */
@@ -97,7 +94,7 @@ class User extends Sql{
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -179,38 +176,41 @@ class User extends Sql{
         } else {
             $email = null;
         }
+
+        echo "<div class='form-container'>";
+
         return [
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
                 "submit"=>"S'inscrire",
-                "id"=>"formulaire"
+                "id"=>"formulaire",
+                "class"=>"form-group flex"
             ],
             'inputs'=>[
-                "firstname"=>[
-                    "type"=>"text",
-                    "placeholder"=>"Prénom",
-                    "class"=>"inputForm tmp",
-                    "id"=>"firstnameForm",
-                    "min"=>2,
-                    "max"=>50,
-                    "error"=>"Prénom incorrect",
+                "passwordConfirm"=>[
+                    "type"=>"password",
+                    "placeholder"=>" ",
+                    "required"=>true,
+                    "class"=>"inputForm input__field",
+                    "id"=>"pwdConfirmForm",
+                    "confirm"=>"password",
+                    "error"=>"Votre mot de passe de confirmation ne correspond pas",
                 ],
-                "lastname"=>[
-                    "type"=>"text",
-                    "placeholder"=>"Nom",
-                    "class"=>"inputForm tmp",
-                    "id"=>"lastnameForm",
-                    "min"=>2,
-                    "max"=>100,
-                    "error"=>"Nom incorrect"
+                "password"=>[
+                    "type"=>"password",
+                    "placeholder"=>" ",
+                    "required"=>true,
+                    "class"=>"inputForm input__field",
+                    "id"=>"pwdForm",
+                    "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
                 ],
                 "email"=>[
-                    "type"=>"email",
-                    "placeholder"=>"Email",
+                    "type"=>"mail",
+                    "placeholder"=>" ",
                     "required"=>true,
                     "value"=>$email,
-                    "class"=>"inputForm",
+                    "class"=>"inputForm input__field",
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
                 ],
@@ -218,28 +218,30 @@ class User extends Sql{
                     "type"=>"text",
                     "placeholder"=>"@Pseudo",
                     "required"=>true,
-                    "class"=>"inputForm",
+                    "class"=>"inputForm input__field",
                     "id"=>"pseudoForm",
                     "error"=>"@Pseudo incorrect",
                     "unicity"=>"true",
                     "errorUnicity"=>"@Pseudo already in use",
                 ],
-                "password"=>[
-                    "type"=>"password",
-                    "placeholder"=>"Mot de passe",
-                    "required"=>true,
-                    "class"=>"inputForm",
-                    "id"=>"pwdForm",
-                    "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
-                    ],
-                "passwordConfirm"=>[
-                    "type"=>"password",
-                    "placeholder"=>"Confirmation du mot de passe",
-                    "required"=>true,
-                    "class"=>"inputForm",
-                    "id"=>"pwdConfirmForm",
-                    "confirm"=>"password",
-                    "error"=>"Votre mot de passe de confirmation ne correspond pas",
+                "lastname"=>[
+                    "type"=>"text",
+                    "placeholder"=>" ",
+                    "class"=>"inputForm input__field",
+                    "id"=>"lastnameForm",
+                    "min"=>2,
+                    "max"=>100,
+                    "error"=>"Nom incorrect"
+                ],
+                
+                "firstname"=>[
+                    "type"=>"text",
+                    "placeholder"=>" ",
+                    "class"=>"inputForm input__field",
+                    "id"=>"firstnameForm",
+                    "min"=>2,
+                    "max"=>50,
+                    "error"=>"Prénom incorrect",
                 ],
                 'csrf_token'=>[
                     "type"=>"hidden",
@@ -249,6 +251,8 @@ class User extends Sql{
                 ]
             ]
         ];
+
+        echo "</div>";
     }
 
     public function getRegisterFormStep2(): array
@@ -316,20 +320,20 @@ class User extends Sql{
         ];
     }
 
-    public function getInvitationForm(): array
+    public function getAddClientForm(): array
     {
         return [
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"Inviter",
+                "submit"=>"Ajouter",
                 "id"=>"formulaire"
             ],
             'inputs'=>[
                 "firstname"=>[
                     "type"=>"text",
                     "placeholder"=>"Prénom",
-                    "class"=>"inputForm tmp",
+                    "class"=>"inputForm input__field",
                     "id"=>"firstnameForm",
                     "min"=>2,
                     "max"=>50,
@@ -338,7 +342,7 @@ class User extends Sql{
                 "lastname"=>[
                     "type"=>"text",
                     "placeholder"=>"Nom",
-                    "class"=>"inputForm tmp",
+                    "class"=>"inputForm input__field",
                     "id"=>"lastnameForm",
                     "min"=>2,
                     "max"=>100,
@@ -352,10 +356,10 @@ class User extends Sql{
                     "id"=>"emailForm",
                     "error"=>"Email incorrect"
                 ],
-                "role"=>[
-                    "type"=>"checkbox",
+                "roles"=>[
+                    "type"=>"hidden",
                     "name"=>"role",
-                    "value"=>"admin",
+                    "value"=>"Admin",
                     "label" => "Admin",
                     "class"=>"inputForm",
                     "id"=>"emailForm",
@@ -378,6 +382,53 @@ class User extends Sql{
                     "class"=>"inputForm",
                     "id"=>"pwdForm",
                     "error"=>"Votre mot de passe doit faire au min 8 caractères avec majuscule, minuscules et des chiffres",
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ],
+        ];
+    }
+
+    public function getInviteClientForm(): array
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Inviter",
+                "id"=>"formulaire"
+            ],
+            'inputs'=>[
+                "email"=>[
+                    "type"=>"email",
+                    "placeholder"=>"Email",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
+                ],
+                "pseudo"=>[
+                    "type"=>"text",
+                    "placeholder"=>"@Pseudo",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"pseudoForm",
+                    "error"=>"@Pseudo incorrect",
+                    "unicity"=>"true",
+                    "errorUnicity"=>"@Pseudo already in use",
+                ],
+                "roles"=>[
+                    "type"=>"hidden",
+                    "name"=>"role",
+                    "value"=>"Admin",
+                    "label" => "Admin",
+                    "class"=>"inputForm",
+                    "id"=>"emailForm",
+                    "error"=>"Email incorrect"
                 ],
                 'csrf_token'=>[
                     "type"=>"hidden",
@@ -414,16 +465,16 @@ class User extends Sql{
             "config"=>[
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"Se connecter"
+                "submit"=>"Envoyer un mail",
             ],
             'inputs'=>[
                 "email"=>[
                     "type"=>"email",
-                    "placeholder"=>"Votre email ...",
+                    "placeholder"=>"Votre addresse email ..",
                     "required"=>true,
                     "class"=>"inputForm",
                     "id"=>"emailForm",
-                    "error"=>"Email incorrect"
+                    "error"=>"Addresse email incorrect"
                 ],
                 'csrf_token'=>[
                     "type"=>"hidden",

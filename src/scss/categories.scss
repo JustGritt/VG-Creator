@@ -1,0 +1,56 @@
+/* CLASSES MAIN
+ ========== */
+
+#categories {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+
+    h3 {
+        padding-top: 70px;
+        text-align: center;
+    }
+
+    table {
+        width: 80%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 1px solid #ccc;
+        margin:  25px auto;
+        margin-bottom: 0;
+        thead {
+            background: #ccc;
+        }
+        tbody {
+            background: #fff;
+        }
+        tr {
+            border-bottom: 1px solid #ccc;
+            th, td {
+                text-align: center;
+                padding: 10px;
+                max-width: 80%;
+            }
+        }
+    }
+
+    form {
+        width: 80%;
+        margin: 0 auto;
+        text-align: center;
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0px 25px;
+            margin: 0;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            box-shadow: none;
+            filter: none;
+            border-top: none;
+            font-weight: bold;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+    }
+}

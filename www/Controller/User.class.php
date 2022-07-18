@@ -149,9 +149,6 @@ class User
 
         $user = new UserModel();
 
-        //$view = new View("login");
-        //$view->assign("user", $user);
-
         $oauth_user = new OauthUser();
         $redirect_uri = DOMAIN . "/login";
         $data = $this->GetAccessToken(GOOGLE_ID, $redirect_uri, GOOGLE_SECRET, $_GET['code']);
@@ -160,13 +157,11 @@ class User
         $user_info = $this->GetUserProfileInfo($access_token);;
 
         if (!$user_info['verified_email']) {
-            echo "OOps sorry something went wrong with google";
+            FlashMessage::setFlash('errors', "OOps sorry something went wrong with google. Please try again.");
             unset($_SESSION['id']);
             unset($_SESSION['code']);
             unset($_SESSION['email']);
-            //var_dump(isset($_SESSION['id']));
-            var_dump($_SESSION);
-            header("Refresh: 5; " . DOMAIN . "/login ");
+            header("Refresh: 2; " . DOMAIN . "/login ");
         }
         $id = $user->getIdFromEmail($user_info['email']);
 
@@ -204,6 +199,7 @@ class User
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
 
+        unset($_SESSION['csrf_token']);
         header("Location: " . DOMAIN . "/dashboard");
     }
 
@@ -212,7 +208,6 @@ class User
         $user = new UserModel();
         $view = new View("register");
         $view->assign("user", $user);
-        $errors = [];
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
@@ -233,7 +228,7 @@ class User
             
             if(!$pseudotocheck) {
                 FlashMessage::setFlash('errors', 'Votre pseudo doit commencer par @ et contenir au moins trois caractères alphanumerique.');
-                // header("Refresh: 3; ".DOMAIN."/register ");
+                header("Refresh: 3; ".DOMAIN."/register ");
                 return;
             } else {
                 $user->setPseudo(htmlspecialchars($_POST['pseudo']));
@@ -246,14 +241,14 @@ class User
             $verifyPassword = password_verify($_POST['passwordConfirm'], $user->getPassword());
 
             if (!$verifyPassword) {
-                echo 'Mot de passe different..';
-                header("Refresh: 5; " . DOMAIN . "/register ");
+                FlashMessage::setFlash('errors', 'Mot de passe different..');
+                header("Refresh: 3; " . DOMAIN . "/register ");
                 return;
             }
 
             if (!$user->is_unique_pseudo($_POST['pseudo'])) {
-                echo 'Pseudo deja utilisé';
-                header("Refresh: 5; " . DOMAIN . "/register ");
+                FlashMessage::setFlash('errors', 'Pseudo deja utilisé');
+                header("Refresh: 3; " . DOMAIN . "/register ");
                 return;
             }
 
@@ -296,12 +291,9 @@ class User
             $mail = new Mail();
             $subject = "Veuillez confirmée votre email";
             $mail->sendMail($_POST['email'], $body, $subject);
-            echo 'Merci pour votre inscription, confirmez votre email';
-
-            header("Refresh: 5; " . DOMAIN . "/");
+            FlashMessage::setFlash('success', 'Merci pour votre inscription, confirmez votre email');
+            header("Refresh: 3; " . DOMAIN . "/");
         }
-
-        $view->assign("errors", $errors);
     }
 
     public function logout(): void
@@ -309,7 +301,6 @@ class User
         if (!empty($_SESSION['code'])) {
             $this->revokeToken($_SESSION['code']);
         }
-
         unset($_SESSION['session_token']);
         unset($_SESSION['id']);
         unset($_SESSION['email']);
@@ -389,11 +380,9 @@ class User
         $site->getSiteByName($_GET['url']);
         $is_banned = $backlist->isUserBacklisted($id_user);
         if ($is_banned) {
-            //send 404 header
-            //new View("404", 'error', 'Errors');
             header("HTTP/1.0 403 Forbidden");
             FlashMessage::setFlash('errors', "Vous êtes banni de ce site");
-            header("Refresh: 3; " . DOMAIN . "/");
+            header("Refresh: 1; " . DOMAIN . "/");
             die();
         }
     }

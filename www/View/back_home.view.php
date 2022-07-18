@@ -62,7 +62,7 @@
                                 <div>
                                     <h4>Édition</h4>
                                     <h5>Gestionnaire de blog</h5>
-                                    <a href="http://localhost/blog/2">Editer</a>
+                                    <a href='./dashboard/articles'>Editer</a>
                                 </div>
                             </div>
                             <div class="right-part-card">
