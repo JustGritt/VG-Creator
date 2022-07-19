@@ -25,7 +25,7 @@
                 <aside>
                     <div class="input-post">
                         <label for="title">Titre de l’article</label>
-                        <input value="<?php if (isset($fields['title'])) echo  $fields['title']; else if(isset($post)) echo $post->getTitle() ?>" type="text" name="title" id="title" placeholder="Le poulet est trop bon">
+                        <input value="<?php if (isset($fields['title'])) echo  $fields['title']; else if(isset($post)) echo $post->getTitle() ?>" type="text" name="title" id="title" placeholder="Titre de l'article">
                         <span>Le titre ne doit pas excéder 30 charactères.</span>
                         <?php if (isset($errors['title'])) echo '<span class="err-txt">' . $errors['title'] . '</span>'; ?>
                     </div>
