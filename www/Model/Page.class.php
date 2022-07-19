@@ -186,20 +186,27 @@ class Page extends Sql
         $query_builder = new MySqlBuilder();
         $user_id = $_SESSION['id'];
 
+        $request = "SELECT ep.name,ep.slug,ep.id FROM esgi_page ep 
+        LEFT JOIN esgi_site es on ep.id_site = es.id 
+        LEFT JOIN esgi_role_site rs on rs.id_site = es.id 
+        LEFT JOIN esgi_user_role ur on rs.id = ur.id_role_site 
+        WHERE ur.id_user = $user_id and es.id = $id_site";
+
+        /*
         $request = "SELECT ep.id, ep.slug, ep.is_active, ep.html, ep.css, ep.styles, ep.assets, ep.id_site
         FROM $class_name ep 
         LEFT JOIN esgi_role_site ers on ep.id_site = ers.id_site
         LEFT JOIN esgi_site es on ers.id_site = es.id
-        WHERE es.id = $id_site;";
+        WHERE es.id = $id_site and ep.slug = '$slug' and ers.id_user = $user_id";*/
 
         $sql = $this->pdo->prepare($request);
         $sql->execute();
-        $result1 = $sql->fetchObject(Page::class, []);
+        //$result1 = $sql->fetchObject(Page::class, []);
 
         $user_role = new User_role();
         $user_role = $user_role->getRoleForSiteByIdUser($user_id);
 
-        if(!$_SESSION['id_site'] ==1 && !($user_role[0]['name'] == $_SESSION['role'])){
+        if(!$_SESSION['id_site'] == 1 && !($user_role[0]['name'] == $_SESSION['role'])){
             header('Location: /dashboard/site');
             return;
         }

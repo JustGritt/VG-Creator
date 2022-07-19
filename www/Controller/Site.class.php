@@ -30,7 +30,7 @@ class Site extends Controller
         $this->render("site", "back");
         if(isset($_GET['manage-pages']) && gettype($_GET['manage-pages']) == "string"){
             $pages = $this->getPagesBySite($_GET['manage-pages']);
-            if($pages) {
+            if(!empty($pages)) {
                 $this->view->assign('pages', $pages);
             }else{
                 Utils::redirect('not-found');
@@ -49,7 +49,8 @@ class Site extends Controller
      */
     public function editClient($id_site, $slug ){
         $page = new Page();
-        $page = $page->getPageBySiteAndSlug($id_site, $slug);
+        //$page = $page->getPageBySiteAndSlug($_SESSION['id_site'], $slug);
+        $page = $this->getHomgepageOfSite($_SESSION['id_site']);
         try {
             if($page instanceof Page){
                 $_SESSION['id_site'] = $id_site;
@@ -131,6 +132,20 @@ class Site extends Controller
         return Sql::getInstance()
             ->query($query)
             ->fetchAll(\PDO::FETCH_CLASS, Page::class);
+    }
+
+    public function getHomgepageOfSite ($id_site, $slug = 'homepage' )
+    {
+        $user_id = $_SESSION['id'];
+        $request = "SELECT ep.* FROM esgi_page ep 
+        LEFT JOIN esgi_site es on ep.id_site = es.id 
+        LEFT JOIN esgi_role_site rs on rs.id_site = es.id 
+        LEFT JOIN esgi_user_role ur on rs.id = ur.id_role_site 
+        WHERE es.id = $id_site and ep.slug = '$slug'";
+        $query = $request;
+        return Sql::getInstance()
+            ->query($query)
+            ->fetchObject(Page::class);
     }
 
 

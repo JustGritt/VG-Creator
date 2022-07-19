@@ -76,9 +76,7 @@
                 <td data-label="Name"><?php echo truncate($value->getName(), 23)  ?></td>
                 <td data-label="Url">/<?php echo truncate($value->getSlug(), 24, "...") ?></td>
                 <td data-label="Actions">
-                    <button onclick="navigateSiteClient(<?php echo $value->getId() .",". "'".$value->getSlug()."'" ?>)" class="btn--alex btn--normal">
-                        View <i class="fa-regular fa-eye"></i>
-                    </button>
+                    <button onclick="navigateSiteClient(<?php echo $manage_pages .",". "'".$value->getSlug()."'" ?>)" class="btn--alex btn--normal">View <i class="fa-regular fa-eye"></i></button>
                     <button id="edit-btn-<?php echo $value->getId()?>" onclick="updateSitePage(this, <?php echo $value->getId()  ?>)" class="btn--alex btn--blue">
                         Edit <i class="fa-regular fa-pen-to-square"></i>
                     </button>
