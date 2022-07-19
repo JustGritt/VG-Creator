@@ -160,7 +160,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
@@ -215,7 +215,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
@@ -296,7 +296,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
@@ -412,7 +412,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
@@ -451,7 +451,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
@@ -626,7 +626,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
@@ -757,7 +757,7 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
         

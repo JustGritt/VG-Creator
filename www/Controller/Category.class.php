@@ -23,7 +23,7 @@ class Category
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
-        if (Security::isMember()) {
+        if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
     }
