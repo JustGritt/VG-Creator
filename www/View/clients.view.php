@@ -50,7 +50,8 @@
                         <?php } else { ?>
                         <td>
                             <select name="roles" id="roles">
-                                <option value="Admin" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id'] )? $_POST['roles'] : $value['name']) == 'Admin')) { ?> selected <?php } ?>>Admin</option>
+                                <option disabled value="Admin" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id'] )? $_POST['roles'] : $value['name']) == 'Admin')) { ?> selected <?php } ?>>Admin</option>
+                                <option value="Manager" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id'] )? $_POST['roles'] : $value['name']) == 'Manager')) { ?> selected <?php } ?>>Manager</option>
                                 <option value="Moderator" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id']) ? $_POST['roles'] : $value['name']) == 'Moderator')) { ?> selected <?php } ?>>Moderator</option>
                                 <option value="Editor" <?php if (((isset($_POST['id'] ) &&($value['id'] == $_POST['id']) ? $_POST['roles'] : $value['name']) == 'Editor')) { ?> selected <?php } ?>>Editor</option>
                             </select>

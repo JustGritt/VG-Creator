@@ -186,6 +186,12 @@ class Admin
 
         if (!empty($_POST)) {
             unset($_SESSION['csrf_token']);
+            if($_POST['roles'] == 'Admin'){
+                FlashMessage::setFlash("errors", "Vous ne pouvez pas assigner un rôle admin");
+                header('Refresh: 3; ' . DOMAIN . '/dashboard/clients');
+                return;
+            }
+
             $this->updateUser();
         }
 
@@ -586,6 +592,12 @@ class Admin
 
             if (!isset($role_id)) {
                 FlashMessage::setFlash("errors", "Ce rôle n'existe pas.");
+                header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
+                return;
+            }
+
+            if($role_post == 'Admin') {
+                FlashMessage::setFlash("errors", "Ce rôle n'est pas disponible.");
                 header("Refresh: 3; " . DOMAIN . "/dashboard/clients");
                 return;
             }

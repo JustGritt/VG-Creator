@@ -161,13 +161,14 @@ section#invite-client {
     display: flex;
     position: relative;
     width: calc(100vw - 300px);
-    height: 100vh;
+    height: 100%;
     margin: 0 auto;
     padding: 50px;
     justify-content: center;
     align-items: center;
     @media screen and (max-width: 1068px) {
         width: 100vw;
+        height: 100vh;
     }
 
     .wrapper {
@@ -192,7 +193,7 @@ section#invite-client {
             width: 100%;
             input {
                 width: 100%;
-                margin-bottom: 15px;
+                margin-bottom: 0;
                 max-width: none;
             }
 

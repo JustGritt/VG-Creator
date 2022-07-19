@@ -116,6 +116,7 @@ class Site extends Controller
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
 
+
             if (!Verificator::checkName($_POST['name'])){
                 FlashMessage::setFlash('errors', 'Le nom de votre site doit contenir au moins 3 caracteres.');
                 return;

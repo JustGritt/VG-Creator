@@ -12,7 +12,7 @@
                 <?php $this->includePartial("form", $user->getAddClientForm()) ?>
 
                 <select name="roles" id="roleSelector">
-                    <option value="Admin" selected>Admin</option>
+                    <option value="Manager" selected>Manager</option>
                     <option value="Moderator">Moderator</option>
                     <option value="Editor">Editor</option>
                 </select>

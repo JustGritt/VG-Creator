@@ -359,11 +359,11 @@ class User extends Sql{
                 "roles"=>[
                     "type"=>"hidden",
                     "name"=>"role",
-                    "value"=>"Admin",
-                    "label" => "Admin",
+                    "value"=>"Manager",
+                    "label" => "Manager",
                     "class"=>"inputForm",
                     "id"=>"emailForm",
-                    "error"=>"Email incorrect"
+                    "error"=>"Role incorrect"
                 ],
                 "pseudo"=>[
                     "type"=>"text",

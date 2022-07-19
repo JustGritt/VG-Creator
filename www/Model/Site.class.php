@@ -143,6 +143,13 @@ class Site extends Sql
 
     }
 
+    public function getSiteById($id){
+        $request = "SELECT * FROM `".$this->table."` WHERE id = ?";
+        $sql = $this->pdo->prepare($request);
+        $sql->execute(array($id));
+        return $sql->fetchObject(Site::class);
+    }
+
     public function getSiteByToken($token){
         $request = "SELECT * FROM `".$this->table."` WHERE token = ?";
         $sql = $this->pdo->prepare($request);

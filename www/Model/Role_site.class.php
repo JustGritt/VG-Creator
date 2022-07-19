@@ -52,7 +52,7 @@ class Role_site extends Sql
 
     public function createRoleForSite($id_site) 
     {
-        $roles = ['Admin', 'Moderator', 'Editor', 'Subscriber'];
+        $roles = ['Admin', 'Manager', 'Moderator', 'Editor', 'Subscriber'];
         foreach($roles as $role)
         {
             // $sql = "INSERT INTO esgi_role_site(name, id_site) VALUES(".$role.", ". $id_site . ")" ;  
