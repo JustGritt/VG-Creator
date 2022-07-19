@@ -56,12 +56,13 @@
     function confirmDelete(id){
         console.log('Thing was saved to the database.');
         if (window.confirm('Êtes-vous sur de vouloir supprimer cet article?')) {
-            fetch('/<?php echo Router::getInstance()->url("post.deletePost") ?>'.replace(':id', '') +id, {
+            fetch('/<?php echo Router::getInstance()->url("post.deletePost") ?>'.replace(':id', '') + "/"+id, {
                 method: 'DELETE',
             }).then(async res => {
+                /*
                 if(res.status === 200){
                     window.location.reload();
-                }
+                }*/
                 console.log("Request complete! response:", await res.text());
             });
         }
