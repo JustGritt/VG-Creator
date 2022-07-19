@@ -18,7 +18,6 @@ use App\Model\Role_site;
 use App\Model\User_role;
 use App\Model\User as UserModel;
 
-
 class Site extends Controller
 {
     public function __construct()
@@ -248,6 +247,15 @@ class Site extends Controller
 
                 }
             }
+
+            $page = new Page();
+            $page->setIdSite($created_site->getId());
+            $page->setName('homepage');
+            $page->setSlug('homepage');
+            $page->setHtml(Utils::getHomepage());
+            $page->setCss(Utils::getCss());
+            $page->setIsActive(1);
+            $page->save();
 
             FlashMessage::setFlash('success', 'Le site a bien été créer');
             header('Refresh: 2; ' . DOMAIN . '/dashboard/sites');
