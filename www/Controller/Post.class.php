@@ -79,8 +79,14 @@ class Post extends  Controller
     public function deletePost(int $id_post): bool
     {
         $post = new \App\Model\Post();
+        $post = $post->getPostById($id_post);
+        if (!$post->getId_site() == $_SESSION['id_site']) {
+            return false;
+        }
+
         return $post->delete($id_post);
     }
+
 
 
 
