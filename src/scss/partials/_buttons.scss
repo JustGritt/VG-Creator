@@ -200,6 +200,34 @@ a.button, button {
     }
 }
 
+$colors-list:(
+        -normal: #f8f8f8,
+        -blue: #3492eb,
+        -alert: #eb3a34,
+);
+
+.btn--alex{
+    padding: 6px 7px;
+    border-radius: 6px;
+    cursor: pointer;
+    max-width: 150px;
+}
+
+@each $key,$val in $colors-list{
+    $ll: "" ;
+    @if($key == "-normal") {
+        $ll:black;
+    }
+    .btn-#{$key} {
+        background-color: #{$val};
+        color: $ll  ;
+        &:hover {
+           background-color:  darken($val, 10%);
+        }
+    }
+}
+
+
 /* INPUT BUTTON
  ========== */
 

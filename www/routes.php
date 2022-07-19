@@ -95,6 +95,7 @@ $router->group('/dashboard', function (Router $router) {
     $router->post('/clients/edit', 'admin@editClient');
     */
 
+
     // sites
     $router->get('/sites', 'site@showAll', 'post.showAll');
 
@@ -103,6 +104,10 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->put('/sites/:id_site/update/page/:id_page', 'site@updateDataContent', 'site.updateDataContent')->with('id_site', '[0-9]+')->with('id_page', '[0-9]+');
     $router->put('/sites/:id', 'site@setStatusSite', 'site.setStatusSite')->with('id', '[0-9]+');
+
+    $router->post('/sites/:id_site/page', 'site@handleSite', 'site.handleSite.Create')->with('id_site', '[0-9]+');
+    $router->post('/sites/:id_site/page/:id_page', 'site@handleUpdate','site.handleSite.Update')->with('id_site', '[0-9]+')->with('id_page', '[0-9]+');
+    $router->delete('/sites/:id_site/page/:id_page', 'site@handleSite', 'site.handleSite.Delete')->with('id_site', '[0-9]+')->with('id_page', '[0-9]+');
 
     $router->get('/comments', 'admin@getAllComments');
     $router->get('/media', 'media@setuploadmediaview' , 'dashboard.media');

@@ -4,12 +4,16 @@ $id_page = $page->getId();
 
 
 ?>
-<script src="https://unpkg.com/grapesjs-template-manager@1.0.7/dist/grapesjs-template-manager.min.js"></script>
 
+<div>
+
+</div>
 
 <style>
     <?php echo $page->getCss(); ?>
 </style>
+
+
 
 <script type="text/javascript">
     const lp = './img/';
@@ -55,6 +59,13 @@ $id_page = $page->getId();
             stepsBeforeSave: 1, // If autosave is enabled, indicates how many changes are necessary before the store method is triggered
             urlStore: <?php echo "'/".\App\Core\Routing\Router::getInstance()->url("site.updateDataContent", ["id_site"=> $id_site, "id_page"=> $id_page])."'" ?>,
             urlLoad: <?php echo "'/".\App\Core\Routing\Router::getInstance()->url("site.updateDataContent", ["id_site"=> $id_site, "id_page"=> $id_page])."'" ?>,
+            options:{
+                remote:{
+                    urlStore: 'https://api/templates/',// POST
+                    urlLoad: 'https://api/templates/',// GET
+                    urlDelete: 'https://api/templates/',// DELETE
+                }
+            }
         },
         selectorManager: {componentFirst: true},
         styleManager: {sectors: []},
@@ -364,6 +375,8 @@ $id_page = $page->getId();
     });
     const pageManager = editor.Pages;
 
+
+
     // Add the command
     editor.Commands.add
     ('save-db',
@@ -425,6 +438,7 @@ $id_page = $page->getId();
             setTimeout(function(){ localStorage.clear()}, 0)
         }
     });
+
     cmdm.add('set-device-desktop', {
         run: function(ed) { ed.setDevice('Desktop') },
         stop: function() {},
@@ -440,24 +454,31 @@ $id_page = $page->getId();
 
 
 
+
     // Add info command
-    var mdlClass = 'gjs-mdl-dialog-sm';
-    var infoContainer = document.getElementById('info-panel');
+    const mdlClass = 'gjs-mdl-dialog-sm';
+    const infoContainer = document.getElementById('info-panel');
     cmdm.add('open-info', function() {
-        var mdlDialog = document.querySelector('.gjs-mdl-dialog');
+        const mdlDialog = document.querySelector('.gjs-mdl-dialog');
         mdlDialog.className += ' ' + mdlClass;
         infoContainer.style.display = 'block';
-        modal.setTitle('About this demo');
-        modal.setContent(infoContainer);
         modal.open();
         modal.getModel().once('change:open', function() {
             mdlDialog.className = mdlDialog.className.replace(mdlClass, '');
         })
     });
+
+
+
     pn.addButton('options', {
         id: 'open-info',
         className: 'fa fa-question-circle',
-        command: function() { editor.runCommand('open-info') },
+
+        command: function() {
+            modal.setTitle('Sélectionnez une page');
+            modal.setContent('<a id="go" rel="leanModal" name="test" href="#test">Basic</a>');
+            modal.open();
+        },
         attributes: {
             'title': 'About',
             'data-tooltip-pos': 'bottom',

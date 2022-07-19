@@ -71,7 +71,6 @@ class Site extends Sql
 
     public function getAllSiteByIdUser($id_user)
     {
-
         $request = "SELECT s.id, s.name, rs.name as role, rs.id as role_id, s.status
             FROM esgi_site s
             LEFT JOIN esgi_role_site rs on s.id = rs.id_site
@@ -122,7 +121,6 @@ class Site extends Sql
         $sql = $this->pdo->prepare($request);
         $sql->execute(array($id_site));
         return $sql->fetchAll(\PDO::FETCH_ASSOC);
-
     }
 
     public function getSiteById($id_site){
@@ -131,9 +129,5 @@ class Site extends Sql
         $sql->execute(array($id_site));
         return $sql->fetchObject(Site::class);
     }
-
-
-
-
 
 }

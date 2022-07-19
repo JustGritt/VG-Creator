@@ -13,6 +13,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/dist/js/editor-custom.js">
     </script>
+    <script src="https://unpkg.com/grapesjs-template-manager@1.0.7/dist/grapesjs-template-manager.min.js"></script>
+    <link href="https://unpkg.com/grapesjs-project-manager/dist/grapesjs-project-manager.min.css" rel="stylesheet">
     <script defer src="/dist/js/global.js" ></script>
     <link rel="stylesheet" href="/dist/css/template.css">
 </head>
@@ -25,6 +27,7 @@
     </main>
     <div id="snackbar">Some text some message..</div>
 </body>
+
 
 
 </html>

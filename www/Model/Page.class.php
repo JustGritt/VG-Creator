@@ -11,7 +11,8 @@ class Page extends Sql
 
     protected $id;
     public $slug;
-    protected $is_active;
+    protected $is_active = 0;
+    protected $name;
     protected $html;
     protected $css;
     protected $styles;
@@ -37,6 +38,22 @@ class Page extends Sql
     }
 
     /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName():string
+    {
+        return $this->name;
+    }
+
+    /**
      * @param mixed $id
      */
     public function setId($id): void
@@ -55,9 +72,10 @@ class Page extends Sql
     /**
      * @param mixed $slug
      */
-    public function setSlug($slug): void
+    public function setSlug( $slug): void
     {
-        $this->slug = $slug;
+        $this->slug = (isset($slug) && strlen($slug) > 0) ? strtolower(str_replace(" ","-",$slug )):
+            strtolower(str_replace(" ","-",$this->getName()));
     }
 
     /**
