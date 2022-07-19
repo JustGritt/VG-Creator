@@ -60,7 +60,7 @@
                 <label for="acc2">2. L'origine du projet VG-CREATOR</label>
                 <div class="content">
                     <div class="inner">
-                    Le projet a été créé par un groupe d'étudiants en troisième année d'Ingénierie du Web à l'ESGI (Ecole Superieure de Gestion de l'Informatique) à l'aide d'un projet de fin d'études. Le projet a été réalisé dans le cadre d'un projet scolaire de fin d'année.
+                    Le projet a été créé par un groupe d'étudiants en troisième année d'Ingénierie du Web à l'ESGI (École supérieure de génie informatique) dans le cadre d'un projet annuel. 
                     </div>
                 </div>
                 <input type="radio" name="show-icon" id="acc3">

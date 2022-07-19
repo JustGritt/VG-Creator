@@ -15,7 +15,7 @@ $blue: #82ccdd;
 $cyan: #96F4DE;
 $rose: #FFBFE0;
 $pale: #FFC0FC;
-$link: #1538B5;
+$link: #2D4291;
 $red: #ED4C67;
 
 /* DASHBOARD PALETTE  
@@ -37,6 +37,8 @@ $mid-light-blue: #787C90;
 $white: #ffffff;
 $orange: #F39C12;
 $yellow: #FFE780;
+
+$dashboard-background: #e6e9f4;
 
 /* DARK MODE VARIABLES
  ========== */
@@ -79,6 +81,9 @@ $yellow: #FFE780;
     --color-border-invert: #{$white};
     --color-hover-text: #{$white};
     --color-hover-background: #{$black};
+
+    // Dashboard colors
+    --color-dashboard-background: #{$dashboard-background};
 }
 
 .dark {
@@ -106,4 +111,7 @@ $yellow: #FFE780;
     --color-border-invert: #{$black};
     --color-hover-text: #{$black};
     --color-hover-background: #{$white};
+
+    // Dashboard colors
+    --color-dashboard-background: #{$dashboard-background};
 }

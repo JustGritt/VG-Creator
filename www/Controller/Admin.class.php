@@ -68,7 +68,8 @@ class Admin
                 $_SESSION['id'] = $user->getId();
                 $_SESSION['pseudo'] = $_POST['pseudo'];
                 unset($_SESSION['NOT-SET']);
-                header('Refresh: 3; ' . DOMAIN . '/dashboard');
+                header("Location: " . DOMAIN . "/dashboard");
+                // header('Refresh: 3; ' . DOMAIN . '/dashboard');
                 return;
             }
             return;

@@ -20,7 +20,7 @@
   --color-border: #333333;
   --color-text: #333333;
   --color-pseudo: #333333;
-  --color-link: #1538B5;
+  --color-link: #2D4291;
   --color-main-blue: #2D4291;
   --color-shadow: #ffffff;
   --color-nav-link: #ED4C67;
@@ -33,6 +33,7 @@
   --color-border-invert: #ffffff;
   --color-hover-text: #ffffff;
   --color-hover-background: #333333;
+  --color-dashboard-background: #e6e9f4;
 }
 
 .dark {
@@ -55,6 +56,7 @@
   --color-border-invert: #333333;
   --color-hover-text: #333333;
   --color-hover-background: #ffffff;
+  --color-dashboard-background: #e6e9f4;
 }
 
 *,
@@ -111,10 +113,6 @@ p {
 .body-container-dashboard section:nth-of-type(2) {
   overflow: scroll;
   width: calc(100% - 300px);
-}
-
-.body-container-dashboard section {
-  height: 100% !important;
 }
 
 @media screen and (max-width: 1068px) {
@@ -330,7 +328,7 @@ p {
 .card-publications-dasboard > .all-articles-publications-dasboard article header span {
   position: absolute;
   background-color: #E6E9F4;
-  color: rgb(43, 51, 83);
+  color: #2b3353;
   font-family: Roboto;
   font-style: normal;
   right: 0;
@@ -353,26 +351,31 @@ p {
   .card-publications-dasboard > .all-articles-publications-dasboard {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .all-card-info-dasboard .other-cards-info-dasboard .first-part-other-cards-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 52px;
   }
+
   .left-panel-dasboard {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
   }
+
   .all-card-info-dasboard {
     width: 100%;
     min-width: 100%;
   }
+
   .all-card-info-dasboard .card-info-dasboard > div:nth-child(1) {
     flex-direction: column;
     align-items: center;
   }
+
   .all-card-info-dasboard .card-info-dasboard > div:nth-child(1) > div {
     margin: 27px 0px;
     align-items: center;
@@ -382,6 +385,7 @@ p {
   .body-container-dashboard section:nth-of-type(2) {
     width: 100% !important;
   }
+
   .card-publications-dasboard > .all-articles-publications-dasboard article {
     width: 100% !important;
   }

@@ -18,7 +18,7 @@
                 &::after {
                     content: "";
                     display: block;
-                    background-color: var(--color-main-blue);
+                    // background-color: var(--color-main-blue);
                     height: 1.5px;
                     width: -webkit-fill-available;
                     position: absolute;
@@ -141,6 +141,15 @@
                 line-height: 0px;
                 color: var(--color-main-blue);
             }
+        }
+    }
+}
+
+#comments,
+.articles-container {
+    span {
+        &.active {
+            background: transparent;
         }
     }
 }

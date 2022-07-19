@@ -119,11 +119,10 @@
         .catch(error => {
             console.error(error);
         });
-    console.log("zfozjroij", ClassicEditor.instance['#editor'])
+    ClassicEditor.instance['#editor'])
 
     document.getElementById('output').innerHTML = location.search;
     document.getElementsById('chosen-select').chosen();
-    //console.log($)
 </script>
 
 <script async>
