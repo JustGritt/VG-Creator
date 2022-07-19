@@ -14,7 +14,7 @@ use App\Core\Mail;
 use App\Model\PasswordRecovery as Recovery; 
 
 
-class PasswordRecovery {
+class Passwordrecovery {
 
     public function pwdforget()
     {
