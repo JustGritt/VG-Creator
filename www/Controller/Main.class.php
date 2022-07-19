@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Core\Sql;
 use App\Model\Page;
 use App\Model\User as UserModel;
+use App\Model\Site as SiteModel;
 
 class Main {
 
@@ -29,7 +30,11 @@ class Main {
         $content =  $this->getSiteHtml($id_site, $site_title);
         $user_info = $user->getUserByPseudo($author);
         $user_role = $user->getRoleOfUser($user_info->getId(), $id_site);
-
+        $site = new SiteModel();
+        $site_info = $site->getSiteById($id_site);
+        if($site_info->getStatus() == 0){
+            header("Location: " . DOMAIN . "/login");
+        }
 
         if(($user_role['role'] == 'Admin')  && !is_null($id_site) && !is_null($content)){
            echo $content->getHtml();
