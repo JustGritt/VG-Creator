@@ -1,8 +1,5 @@
 <link rel="stylesheet" href="/dist/css/register.css">
 
-<script>
-    document.querySelector('.right-panel-dasboard').remove()
-</script>
 
 <main>
     <section id="register-step-2">

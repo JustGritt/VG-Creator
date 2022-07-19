@@ -9,13 +9,21 @@ use App\Core\Uploader;
 use App\Core\View;
 use App\Model\Document;
 use App\Model\User as UserModel;
+use App\Core\Security;
 
 class Media
 {
 
     public function setuploadmediaview()
     {
-        var_dump($_SESSION);
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember() && !Security::isAdmin()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+        
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
         $documents = new Document();
@@ -26,8 +34,6 @@ class Media
         $pagination = new PaginatedQuery($query, $count, Document::class, 2);
         $pagination->getItems();
         $router = Router::getInstance();
-
-        //var_dump($router->url('dashboard.media', ['page' => $pagination->previousLink('dashboard/media')]));
 
         //$documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
         $view = new View("media", "back");

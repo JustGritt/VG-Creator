@@ -18,7 +18,7 @@
                 &::after {
                     content: "";
                     display: block;
-                    background-color: var(--color-main-blue);
+                    // background-color: var(--color-main-blue);
                     height: 1.5px;
                     width: -webkit-fill-available;
                     position: absolute;
@@ -87,7 +87,9 @@
                 img {
                     width: 100%;
                     height: 100%;
-                    border-radius: 28px;
+                    border-radius: 8px;
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
                 }
                 .btm-delete{
                     width: 30px;
@@ -98,8 +100,8 @@
                     justify-content: center;
                     color:black;
                     position: absolute;
-                    right:0;
-                    top:-10px;
+                    right:15px;
+                    top: 15px;
                     cursor: pointer;
                     &:hover{
                         color:var(--color-white)
@@ -141,6 +143,15 @@
                 line-height: 0px;
                 color: var(--color-main-blue);
             }
+        }
+    }
+}
+
+#comments,
+.articles-container {
+    span {
+        &.active {
+            background: transparent;
         }
     }
 }

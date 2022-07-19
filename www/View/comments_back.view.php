@@ -42,7 +42,8 @@
             <?php
                 $display_buttons = $status_name == "Brouillon" ? '<button class="button--primary" onclick="submitComment('.$value->getId().', \''."Bannir".'\')">Bannir</button> <button class="button--primary" onclick="submitComment('.$value->getId().', \''."Confirmer".'\')">Confirmer</button>' : '';
 
-                echo '<article class="comment-card">'.
+                echo 
+                    '<article class="comment-card">'.
                         '<div class="comment-container">
 
                             <div class="comment-body">

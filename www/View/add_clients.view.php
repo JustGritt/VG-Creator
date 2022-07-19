@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/dist/css/clients.css">
 <?php if (!\App\Core\Security::isVGdmin() && !\App\Core\Security::isAdmin()) { ?>
-    <h2>Creer votre site et revenez voir cette page !</h2>
+    <h2 class="title">Créez votre site et revenez voir cette page !</h2>
 <?php } else { ?>
     <main>
         <section id="new-client">
@@ -12,7 +12,7 @@
                 <?php $this->includePartial("form", $user->getAddClientForm()) ?>
 
                 <select name="roles" id="roleSelector">
-                    <option value="Admin" selected>Admin</option>
+                    <option value="Manager" selected>Manager</option>
                     <option value="Moderator">Moderator</option>
                     <option value="Editor">Editor</option>
                 </select>

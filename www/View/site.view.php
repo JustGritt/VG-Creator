@@ -16,7 +16,7 @@
     <div class="articles-content">
         <div class="articles-content-head">
             <h3 class="title-page"><?php echo $view_name ?></h3>
-            <button>Créer un site <i class="fa-solid fa-plus"></i></button>
+            <button class="button--primary create-website">Créer un site <i class="fa-solid fa-circle-plus"></i></button>
         </div>
         <p><?php echo $description ?></p>
         <br>
@@ -40,7 +40,7 @@
 
             //onclick="navigateSiteClient('.$value->getId().',\''."homepage".'\''.')
 
-              echo '  <article class="site-card">
+            echo '  <article class="site-card">
             <div class="card-header">
                 <h3 class="title-site-card">' . $value->getName() . '</h3>
                 <span>By: Alex D.</span>
@@ -211,5 +211,9 @@
     function navigate(route) {
         location.href = "/<?php echo Router::getInstance()->url('post.editShowPost') ?>".replace(':id_post', '')+route
     }
+
+    $(".create-website").on('click',function() {
+        window.location.href = "/<?php echo Router::getInstance()->url('site.createSite') ?>"
+    });
 
 </script>

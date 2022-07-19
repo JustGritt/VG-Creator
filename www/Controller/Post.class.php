@@ -7,13 +7,21 @@ use App\Core\Sql;
 use App\Core\View;
 use App\Helpers\Utils;
 use App\Model\Category;
-
+use App\Core\Security;
 
 class Post extends  Controller
 {
 
     public function __construct()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+        
+        if (Security::isMember() && !Security::isAdmin()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         $category=  new Category();
         $categories =   $category->getCategoriesBySite($_SESSION['id_site']);
         $this->render("post", "back", ['categories'=>$categories]  );
@@ -75,9 +83,12 @@ class Post extends  Controller
     public function deletePost(int $id_post): bool
     {
         $post = new \App\Model\Post();
-        return $post->delete($id_post);
+        $post = $post->getOnePost($id_post);
+        if (!$post->getIdSite() == $_SESSION['id_site']) {
+            return false;
+        }
+        return $post->delete();
     }
-
 
 
     /**
@@ -123,7 +134,7 @@ class Post extends  Controller
         $errors = $this->verifyForm($_REQUEST, $verify_fields);
 
         if (isset($errors) and count($errors) > 0) {
-             $this->view->assign('errors', $errors);
+            $this->view->assign('errors', $errors);
         }else{
             $post = new \App\Model\Post();
             if(isset($id_post)){
@@ -149,7 +160,8 @@ class Post extends  Controller
                     $post->setIdSite($_SESSION['id_site']);
                     $post->setMetadescription($metadescription);
                     $post->save();
-                    if(!isset($id_post)) Utils::redirect('admin.allPost');
+                    // if(!isset($id_post)) Utils::redirect('admin.allPost');
+                    Utils::redirect('admin.allPost');
             }
         }
 

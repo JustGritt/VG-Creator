@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-
 use App\Core\CleanWords;
 use App\Core\Sql;
 use App\Core\Verificator;
@@ -9,15 +8,23 @@ use App\Core\View;
 use App\Model\User as UserModel;
 use App\Model\Comment as CommentModel;
 use App\Core\FlashMessage;
+use App\Core\Security;
 
 class Comment {
 
-    public function showComments() {
+    public function showComments() 
+    {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember() && !Security::isAdmin()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         $view = new View("comments_back" , 'back');
         $user = new User();
         $comments = new CommentModel();
-
-        // var_dump($_POST);
 
         if (isset($_GET['published'])) {
             $view->assign("results", $comments->getAllCommentsPublished($_SESSION['id_site']));
@@ -29,7 +36,16 @@ class Comment {
 
     }
 
-    public function editComments() {
+    public function editComments() 
+    {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+        
+        if (Security::isMember() && !Security::isAdmin()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         $view = new View("comments_back" , 'back');
         $user = new User();
                 

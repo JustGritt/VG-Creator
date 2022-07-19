@@ -14,11 +14,10 @@ use App\Core\Mail;
 use App\Model\PasswordRecovery as Recovery; 
 
 
-class PasswordRecovery {
+class Passwordrecovery {
 
     public function pwdforget()
     {
-        // var_dump($_SESSION);
         $user = new UserModel();
         $password_recovery = new Recovery();
         
@@ -56,7 +55,7 @@ class PasswordRecovery {
                 $body = file_get_contents($template_file);
 
             //Send a special link with a expiry
-            $toanchor = 'http://localhost/reset-new-password?selector='.$selector.'&token='.$recovery_token;
+            $toanchor = DOMAIN . '/reset-new-password?selector='.$selector.'&token='.$recovery_token;
 
             $template_var = array(
                 "{{product_url}}" => DOMAIN."",

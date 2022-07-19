@@ -43,7 +43,7 @@ $value in $status {
 @media screen and (max-width: 1068px) {
     .body-container-dashboard section:nth-of-type(2) {
         width: 100vw;
-        min-height: 100vh;
+        height: 100vh;
     }
 }
 
@@ -169,10 +169,6 @@ $value in $status {
             & .left-part-card>div>h4 {
                 font-size: 1.2em;
                 color: c.$white;
-            }
-            & .right-part-card:nth-last-of-type(1) {
-                // width: 160px;
-                // height: 150px;
             }
             & .left-part-card>div>h5 {
                 font-size: 1em;

@@ -18,6 +18,16 @@ use App\Core\Handler;
 class Category
 {
 
+    public function __construct()
+    {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+        if (Security::isMember() && !Security::isAdmin()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+    }
+    
     public function show()
     {
         $category = new CategoryModel();
@@ -34,7 +44,15 @@ class Category
             unset($_POST['csrf_token']);
 
             $category = new CategoryModel();
-            if($category->isUniqueCategory($_POST['name'],$_SESSION['id_site'])){
+            if(empty($_POST['name']) || !Verificator::checkCategory($_POST['name']))
+            {
+                FlashMessage::setFlash("errors", "Le nom de la catégorie n'est pas valide.");
+                header("Location: /dashboard/categories");
+                return;
+            }
+            if($category->isUniqueCategory($_POST['name'],$_SESSION['id_site']))
+            {
+                FlashMessage::setFlash("errors", "Oops! la catégorie existe déjà.");
                 header("Location: /dashboard/categories");
                 return;
             }
@@ -62,7 +80,6 @@ class Category
     public function deleteCategory($id)
     {
         parse_str(file_get_contents('php://input'), $_DELETE);
-        var_dump($_DELETE);
         $category = new CategoryModel();
         $category = $category->getCategoryById($id);
         $category->delete();

@@ -7,14 +7,27 @@ use App\Core\Exceptions\Routing\RouterNotFoundException;
 use App\Core\MySqlBuilder;
 use App\Core\PaginatedQuery;
 use App\Core\Sql;
+use App\Core\Verificator;
 use App\Core\View;
+use App\Core\Security;
+use App\Core\FlashMessage;
 use App\Helpers\Utils;
 use App\Model\Page;
+use App\Model\Site as SiteModel;
+use App\Model\Role_site;
+use App\Model\User_role;
+use App\Model\User as UserModel;
+
 
 class Site extends Controller
 {
     public function __construct()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
+       
         $this->render("site", "back");
         if(isset($_GET['manage-pages']) && gettype($_GET['manage-pages']) == "string"){
             $pages = $this->getPagesBySite($_GET['manage-pages']);
@@ -162,11 +175,12 @@ class Site extends Controller
     public function setStatusSite($id_site){
         $site = new \App\Model\Site();
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-           parse_str(file_get_contents('php://input'), $_PUT);
-           $status = intval($_PUT['status']); //$_PUT contains put fields
-           if(!$site->updateStatus($id_site,$status )) http_send_status(400);
+            parse_str(file_get_contents('php://input'), $_PUT);
+            $status = intval($_PUT['status']); //$_PUT contains put fields
+            if(!$site->updateStatus($id_site,$status )) http_send_status(400);
         }
     }
+
 
     public function chooseMySite(){
         $site = new Site();
@@ -189,4 +203,55 @@ class Site extends Controller
             header('Location: ' . DOMAIN . '/dashboard');
         }
     }
+
+
+    public function createSite()
+    {
+        $site = new SiteModel();
+        $this->render("create_site", "back");        
+        $this->view->assign('site', $site);
+        $this->view->assign('error', "gre");
+
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+
+
+            if (!Verificator::checkName($_POST['name'])){
+                FlashMessage::setFlash('errors', 'Le nom de votre site doit contenir au moins 3 caracteres.');
+                return;
+            }
+            $site->setName($_POST['name']);
+            $site->setStatus(0);
+            $site->generateToken();
+            $token = $site->getToken();
+
+
+            if(!$site->save()) {
+                FlashMessage::setFlash('errors', 'Erreur lors de la création du site.');
+                return;
+            }
+
+            $created_site = $site->getSiteByToken($token);
+            $role_site = new Role_site();
+            $role_site->createRoleForSite($created_site->getId());
+
+            $user_role = new User_role();
+            $user_roles = $user_role->getAvailableRolesForSite($created_site->getId());
+            foreach ($user_roles as $role) {
+                if($role['name'] == 'Admin'){
+                   $user = new UserModel();
+                   $user = $user->getUserById($_SESSION['id']);
+                   $user_role->setIdUser($user->getId());
+                   $user_role->setIdRoleSite($role['id']);
+                   $user_role->setStatus(1);
+                   $user_role->save();
+
+                }
+            }
+
+            FlashMessage::setFlash('success', 'Le site a bien été créer');
+            header('Refresh: 2; ' . DOMAIN . '/dashboard/sites');
+        }
+    }
+
 }

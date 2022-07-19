@@ -66,10 +66,10 @@
         <div class="footer-credits">
             <p>© 2022 VG-CREATOR, Inc. All rights reserved</p>
             <div class="social-media">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-github"></i></a>
+                <a href="https://github.com/JustGritt/VG-Creator/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://github.com/JustGritt/VG-Creator/" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+                <a href="https://github.com/JustGritt/VG-Creator/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://github.com/JustGritt/VG-Creator/" target="_blank"><i class="fa-brands fa-github"></i></a>
             </div>
         </div>
     </footer>

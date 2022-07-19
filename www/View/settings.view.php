@@ -2,10 +2,10 @@
 
 <section id="parametres">
 
-    <h1 class="title">Settings</h1>
+    <h1 class="title">Paramètres</h1>
 
     <div>
-        <button class="delete-button">Delete account</button>
+        <button class="delete-button">Supprimer le compte</button>
     </div>
 
     <form method="POST" class="form-group flex">

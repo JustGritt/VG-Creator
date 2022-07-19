@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Core\MysqlBuilder;
 use App\Core\Sql;
 use App\Helpers\Utils;
+use App\Model\User_role;
 
 class Page extends Sql
 {
@@ -186,15 +187,23 @@ class Page extends Sql
         $user_id = $_SESSION['id'];
 
         $request = "SELECT ep.id, ep.slug, ep.is_active, ep.html, ep.css, ep.styles, ep.assets, ep.id_site
-         FROM $class_name ep 
+        FROM $class_name ep 
         LEFT JOIN esgi_role_site ers on ep.id_site = ers.id_site
         LEFT JOIN esgi_site es on ers.id_site = es.id
-        LEFT JOIN esgi_user_role eur on ers.id_site = ers.id
-        LEFT JOIN esgi_user eu on eur.id_user = eu.id
-        WHERE eu.id = $user_id AND es.id = $id_site;";
+        WHERE es.id = $id_site;";
 
         $sql = $this->pdo->prepare($request);
         $sql->execute();
+        $result1 = $sql->fetchObject(Page::class, []);
+
+        $user_role = new User_role();
+        $user_role = $user_role->getRoleForSiteByIdUser($user_id);
+
+        if(!$_SESSION['id_site'] ==1 && !($user_role[0]['name'] == $_SESSION['role'])){
+            header('Location: /dashboard/site');
+            return;
+        }
+        
         return $sql->fetchObject(Page::class, []);
     }
 

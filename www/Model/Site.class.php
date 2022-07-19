@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Core\MysqlBuilder;
 use App\Core\Sql;
 use App\Helpers\Utils;
+use App\Core\Security;
 
 class Site extends Sql
 {
@@ -15,6 +16,7 @@ class Site extends Sql
     protected $is_banned = null;
     protected $pdo = null;
     protected $table;
+    protected $token;
 
     public function __construct(){
         $this->pdo = Sql::getInstance();
@@ -48,6 +50,22 @@ class Site extends Sql
 
     public function setStatus($status){
         $this->status = $status;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    /**
+     * length : 255
+     */
+    public function generateToken(): void
+    {
+        $this->token = substr(bin2hex(random_bytes(128)), 0, 64);
     }
 
     public function setIsBanned($is_banned){
@@ -123,11 +141,46 @@ class Site extends Sql
         return $sql->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function getSiteById($id_site){
+    public function getSiteById($id){
         $request = "SELECT * FROM `".$this->table."` WHERE id = ?";
         $sql = $this->pdo->prepare($request);
-        $sql->execute(array($id_site));
+        $sql->execute(array($id));
         return $sql->fetchObject(Site::class);
+    }
+
+    public function getSiteByToken($token){
+        $request = "SELECT * FROM `".$this->table."` WHERE token = ?";
+        $sql = $this->pdo->prepare($request);
+        $sql->execute(array($token));
+        return $sql->fetchObject(Site::class);
+    }
+
+    public function getSiteForm()
+    {
+        return [
+            "config"=>[
+                "method"=>"POST",
+                "action"=>"",
+                "submit"=>"Créer un site",
+                "id"=>"formulaire"
+            ],
+            'inputs'=>[
+                "name"=>[
+                    "type"=>"text",
+                    "placeholder"=>"Site name",
+                    "required"=>true,
+                    "class"=>"inputForm",
+                    "id"=>"nameForm",
+                    "error"=>"Nom déjà pris"
+                ],
+                'csrf_token'=>[
+                    "type"=>"hidden",
+                    "class"=>"inputForm",
+                    "value"=> Security::generateCsfrToken(),
+                    "id"=>"csrf_token"
+                ]
+            ],
+        ];
     }
 
 }

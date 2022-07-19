@@ -63,7 +63,21 @@ class Verificator
     {
         $pattern = '/^@([A-Za-z-0-9]+)/';
         $pseudotocheck = htmlspecialchars($pseudo);
-        return strlen($pseudotocheck)>=4 && preg_match($pattern, $pseudotocheck, $matches) == 1;
+        return strlen($pseudotocheck)>=4 && strlen($pseudotocheck)<=45 && preg_match($pattern, $pseudotocheck, $matches) == 1;
+    }
+
+    public static function checkName($name): bool
+    {
+        $pattern = '/([A-Za-z ]+)/';
+        $nametocheck = htmlspecialchars($name);
+        return strlen($nametocheck)>=4 && preg_match($pattern, $nametocheck, $matches) == 1;
+    }
+
+    public static function checkCategory($category): bool
+    {
+        $pattern = '/([A-Za-z ]+)/';
+        $nametocheck = htmlspecialchars($category);
+        return strlen($nametocheck)>=3 && strlen($nametocheck)<=25 && preg_match($pattern, $nametocheck, $matches) == 1;
     }
 
 

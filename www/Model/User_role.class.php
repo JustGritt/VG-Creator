@@ -106,6 +106,19 @@ class User_role extends Sql
         return $request->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getRoleForSiteByIdUser($id_user)
+    {
+        $sql =
+            "SELECT esgi_role_site.id, name
+            FROM esgi_role_site
+            LEFT JOIN esgi_user_role ON esgi_role_site.id = esgi_user_role.id_role_site
+            WHERE id_user = {$id_user} AND id_site = {$_SESSION['id_site']};";
+
+        $request = Sql::getInstance()->prepare($sql);
+        $request->execute(array($id_user));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function getAllRolesForUserById($id_user) 
     {
         // $sql = "SELECT id, name

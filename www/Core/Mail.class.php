@@ -6,11 +6,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Execption;
 use PHPMailer\PHPMailer\SMTP;
 
-
 require 'libs/PHPMailer/src/PHPMailer.php';
 require 'libs/PHPMailer/src/SMTP.php';
 require 'libs/PHPMailer/src/Exception.php';
-
 
 class Mail
 {
@@ -57,7 +55,6 @@ class Mail
         $mail->addAddress($to);
         $mail->Send();
         $mail->smtpClose();
-        echo "Message have been send";
     }catch(Exception $e) {
       echo "Message could not be sent.";
     }
