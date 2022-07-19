@@ -180,8 +180,8 @@ class Page extends Sql
 
         $user_role = new User_role();
         $user_role = $user_role->getRoleForSiteByIdUser($user_id);
-        
-        if(! ($user_role[0]['name'] == $_SESSION['role'])){
+
+        if(!$_SESSION['id_site'] ==1 && !($user_role[0]['name'] == $_SESSION['role'])){
             header('Location: /dashboard/site');
             return;
         }
