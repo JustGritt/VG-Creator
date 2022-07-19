@@ -7,7 +7,7 @@ use App\Core\Sql;
 use App\Core\View;
 use App\Helpers\Utils;
 use App\Model\Category;
-
+use App\Core\Security;
 
 class Post extends  Controller
 {
