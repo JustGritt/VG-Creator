@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\Controller;
 use App\Core\Exceptions\Routing\RouterNotFoundException;
 use App\Core\PaginatedQuery;
+use App\Core\Verificator;
 use App\Core\View;
 use App\Core\Security;
 use App\Core\FlashMessage;
@@ -113,7 +114,12 @@ class Site extends Controller
         $this->view->assign('error', "gre");
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        if(!empty($_POST ) && Security::checkCsrfToken($_POST['csrf_token'])) {
+        if(!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
+
+            if (!Verificator::checkName($_POST['name'])){
+                FlashMessage::setFlash('errors', 'Le nom de votre site doit contenir au moins 3 caracteres.');
+                return;
+            }
             $site->setName($_POST['name']);
             $site->setStatus(0);
             $site->generateToken();

@@ -66,5 +66,12 @@ class Verificator
         return strlen($pseudotocheck)>=4 && preg_match($pattern, $pseudotocheck, $matches) == 1;
     }
 
+    public static function checkName($name): bool
+    {
+        $pattern = '/([A-Za-z]+)/';
+        $nametocheck = htmlspecialchars($name);
+        return strlen($nametocheck)>=4 && preg_match($pattern, $nametocheck, $matches) == 1;
+    }
+
 
 }
