@@ -18,9 +18,16 @@ use App\Core\Handler;
 use App\Model\Document;
 use App\Model\Backlist;
 use App\Model\User_role;
+use App\Core\Security; 
 
 class Page
 {
+    public function __construct()
+    {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+    }
 
     public function show()
     {
@@ -36,6 +43,7 @@ class Page
 
     public function create()
     {
+
         $view = new View("create" , 'create');
         $view->assign("title", "Hello World");
     }

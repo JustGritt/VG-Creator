@@ -21,6 +21,11 @@ class Site extends Controller
 {
     public function __construct()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
+       
         $this->render("site", "back");
         $this->getAllSiteByIdUser();
     }

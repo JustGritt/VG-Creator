@@ -9,10 +9,15 @@ use App\Core\View;
 use App\Model\User as UserModel;
 use App\Model\Comment as CommentModel;
 use App\Core\FlashMessage;
+use App\Core\Security;
 
 class Comment {
 
     public function showComments() {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         $view = new View("comments_back" , 'back');
         $user = new User();
         $comments = new CommentModel();
@@ -30,6 +35,10 @@ class Comment {
     }
 
     public function editComments() {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+        
         $view = new View("comments_back" , 'back');
         $user = new User();
                 

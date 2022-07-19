@@ -124,6 +124,10 @@ class Admin
 
     public function chooseMySite()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         $site = new Site();
         $pagination = new PaginatedQuery(
             $site->getQueryAllsiteByIdUser($_SESSION['id']),
@@ -153,6 +157,9 @@ class Admin
     {
         // var_dump($_SESSION);
 
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
         $view = new View('clients', 'back');
 
         if (isset($_SESSION['VGCREATOR']) && (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == '1'))) {
@@ -200,6 +207,10 @@ class Admin
 
     public function updateUser()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         if (!Security::isVGdmin() && !Security::isAdmin()) {
             FlashMessage::setFlash("errors", "Vous n'avez pas les droits pour effectuer cette action");
             exit();
@@ -274,6 +285,10 @@ class Admin
 
     public function inviteClient()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         $view = new View("invite_clients", "back");
         $user = new UserModel();
         $view->assign("user", $user);
@@ -382,6 +397,10 @@ class Admin
 
     public function deleteMedia($id)
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         parse_str(file_get_contents('php://input'), $_DELETE);
 
         $document = new Document();
@@ -413,6 +432,10 @@ class Admin
 
     public function setUploadMediaView()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
 
@@ -457,6 +480,10 @@ class Admin
 
     public function setSettingsView()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         $view = new View('settings', 'back');
         $user = new UserModel();
         $user = $user->getUserById($_SESSION['id']);
@@ -536,6 +563,10 @@ class Admin
 
     public function deleteAccount($id)
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         parse_str(file_get_contents('php://input'), $_DELETE);
         if (!empty($_DELETE) && Security::checkCsrfToken($_DELETE['csrf_token'])) {
             unset($_SESSION['csrf_token']);
@@ -573,6 +604,10 @@ class Admin
 
     public function addClient()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+
         $view = new View('add_clients', 'Templates/back');
         $user = new UserModel();
         $view->assign("user", $user);
@@ -685,6 +720,9 @@ class Admin
 
     public function setClientOfSite()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
         $view = new View('settings', 'back');
         $result = $this->getClientsOfSite();
         $view->assign("result", $result);
@@ -692,6 +730,10 @@ class Admin
 
     public function getClientsOfSite()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+        
         $id_site = $_SESSION['id_site'];
 
         $sql = "SELECT u.firstname, u.lastname , u.email, u.pseudo, rs.name 

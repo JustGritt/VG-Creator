@@ -18,6 +18,13 @@ use App\Core\Handler;
 class Category
 {
 
+    public function __construct()
+    {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+    }
+    
     public function show()
     {
         $category = new CategoryModel();

@@ -50,28 +50,21 @@
     
             <div class="faq-container">
                 <input type="radio" name="show-icon" id="acc1" checked="checked">
-                <label for="acc1">1.</label>
+                <label for="acc1">1. Qu'est-ce que VG-CREATOR ?</label>
                 <div class="content">
                     <div class="inner">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.
+                        VG-CREATOR est un CMS de création de site web. Il permet de créer des sites web personnalisés en utilisant des templates de sites web. Il est également possible de créer des sites web personnalisés en utilisant des templates de sites web. 
                     </div>
                 </div>
                 <input type="radio" name="show-icon" id="acc2">
-                <label for="acc2">2.</label>
+                <label for="acc2">2. L'origine du projet VG-CREATOR</label>
                 <div class="content">
                     <div class="inner">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.
+                    Le projet a été créé par un groupe d'étudiants en troisième année d'Ingénierie du Web à l'ESGI (Ecole Superieure de Gestion de l'Informatique) à l'aide d'un projet de fin d'études. Le projet a été réalisé dans le cadre d'un projet scolaire de fin d'année.
                     </div>
                 </div>
                 <input type="radio" name="show-icon" id="acc3">
-                <label for="acc3">3.</label>
-                <div class="content">
-                    <div class="inner">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.
-                    </div>
-                </div>
-                <input type="radio" name="show-icon" id="acc4">
-                <label for="acc4">4.</label>
+                <label for="acc3">3. </label>
                 <div class="content">
                     <div class="inner">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, non dicta itaque animi quia nihil rerum eaque voluptas! Inventore commodi fugiat neque eos vero eum provident odio maiores doloribus fugit.

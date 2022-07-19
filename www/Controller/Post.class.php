@@ -14,6 +14,10 @@ class Post extends  Controller
 
     public function __construct()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
+    
         $category=  new Category();
         $categories =   $category->getCategoriesBySite($_SESSION['id_site']);
         $this->render("post", "back", ['categories'=>$categories]  );

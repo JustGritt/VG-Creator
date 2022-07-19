@@ -9,12 +9,16 @@ use App\Core\Uploader;
 use App\Core\View;
 use App\Model\Document;
 use App\Model\User as UserModel;
+use App\Core\Security;
 
 class Media
 {
 
     public function setuploadmediaview()
     {
+        if (!Security::isLoggedIn()) {
+            header("Location: " . DOMAIN . "/login");
+        }
         var_dump($_SESSION);
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
