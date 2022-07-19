@@ -50,19 +50,18 @@
 </section>
 <script>
     function changeMenu(type) {
-        window.location.href = 'http://localhost/dashboard/articles/' + type
+        window.location.href = 'https://vgcreator.fr/dashboard/articles' + type
     }
 
     function confirmDelete(id){
         console.log('Thing was saved to the database.');
         if (window.confirm('Êtes-vous sur de vouloir supprimer cet article?')) {
-            fetch('/<?php echo Router::getInstance()->url("post.deletePost") ?>'.replace(':id', '') + "/"+id, {
+            fetch('/<?php echo Router::getInstance()->url("post.deletePost") ?>'.replace(':id', '') +'/'+id, {
                 method: 'DELETE',
             }).then(async res => {
-                /*
                 if(res.status === 200){
                     window.location.reload();
-                }*/
+                }
                 console.log("Request complete! response:", await res.text());
             });
         }
@@ -71,6 +70,6 @@
     function navigate(route) {
         var getUrl = window.location;
         var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
-        location.href = "/<?php echo Router::getInstance()->url('post.editShowPost') ?>".replace(':id_post', '') +"/"  +route
+        location.href = "/<?php echo Router::getInstance()->url('post.editShowPost') ?>".replace(':id_post', '') + route
     }
 </script>

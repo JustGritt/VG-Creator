@@ -2,7 +2,7 @@
 
 <section id="clients">
     <?php if (!\App\Core\Security::isVGdmin() && !\App\Core\Security::isAdmin()) { ?>
-    <h2>Creer votre site et revenez voir cette page !</h2>
+    <h2 class="title">Créez votre site et revenez voir cette page !</h2>
     <?php } elseif (empty($result)) { ?>
         <h2>Vous avez aucun membre</h2>
     <?php } else { ?>

@@ -54,6 +54,7 @@ class Admin
                     header("Refresh: 3; " . DOMAIN . "/register ");
                     return;
                 } else {
+
                     $user->setPseudo(htmlspecialchars($_POST['pseudo']));
                 }
 

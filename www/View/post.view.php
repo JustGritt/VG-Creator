@@ -106,23 +106,25 @@
 <!-- <span> 23%</span> -->
 
 <script defer>
+    <?php var_dump( $post); ?>
+    <?php var_dump( $post->getBody()); ?>
     ClassicEditor
         .create(document.querySelector('#editor'))
         .then(editor => {
+            "grehtheth"
             <?php
                 if (isset($fields['body'])){
                 echo " editor.setData("."'".  $fields['body']."'" . ")";}
-                else if(isset($post)) echo " editor.setData("."'". htmlspecialchars_decode($post->getBody())  ."'" . ")";
+                else if(isset($post)) echo " editor.setData("."'". $post->getBody()  ."'" . ")";
             ?>
-            // console.log(editor.setData('dsssd'));
         })
         .catch(error => {
             console.error(error);
         });
-    ClassicEditor.instance['#editor'])
 
-    document.getElementById('output').innerHTML = location.search;
-    document.getElementsById('chosen-select').chosen();
+    // document.getElementById('output').innerHTML = location.search;
+    // document.getElementsById('chosen-select').chosen();
+    //console.log($)
 </script>
 
 <script async>

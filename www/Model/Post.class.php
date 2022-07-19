@@ -108,7 +108,7 @@ class Post extends Sql{
      */
     public function getBody(): ?string
     {
-        return $this->body;
+        return htmlspecialchars_decode(addslashes($this->body));
     }
 
     /**

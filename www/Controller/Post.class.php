@@ -130,7 +130,7 @@ class Post extends  Controller
         $errors = $this->verifyForm($_REQUEST, $verify_fields);
 
         if (isset($errors) and count($errors) > 0) {
-             $this->view->assign('errors', $errors);
+            $this->view->assign('errors', $errors);
         }else{
             $post = new \App\Model\Post();
             if(isset($id_post)){

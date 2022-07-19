@@ -41,7 +41,15 @@ class Category
             unset($_POST['csrf_token']);
 
             $category = new CategoryModel();
-            if($category->isUniqueCategory($_POST['name'],$_SESSION['id_site'])){
+            if(empty($_POST['name']) || !Verificator::checkCategory($_POST['name']))
+            {
+                FlashMessage::setFlash("errors", "Le nom de la catégorie n'est pas valide.");
+                header("Location: /dashboard/categories");
+                return;
+            }
+            if($category->isUniqueCategory($_POST['name'],$_SESSION['id_site']))
+            {
+                FlashMessage::setFlash("errors", "Oops! la catégorie existe déjà.");
                 header("Location: /dashboard/categories");
                 return;
             }
