@@ -79,21 +79,8 @@ $router->group('/dashboard', function (Router $router) {
     $router->get('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
     $router->post('/comments/:id', 'comment@editComments', 'comment.changeStatus')->with('id', '[0-9]+');
 
-    /*
-    $router->get('/articles', 'admin@getAllArticles');
-    $router->get('/sites', 'admin@chooseMySite');
-    $router->post('/sites', 'admin@chooseMySite');
-    $router->get('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')->with('id_post', '[0-9]+');
-    $router->post('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')->with('id_post', '[0-9]+');
-    $router->get('/clients', 'admin@dashboard');
-    $router->get('/comments-edit/:id', 'comment@editComment', 'comment.editComment')->with('id', '[0-9]+');
-    $router->get('/categorie/create', 'category@createCategory');
-    $router->post('/categorie/create', 'category@createCategory');
-    $router->post('/clients', 'admin@dashboard');
-    $router->get('/comments', 'admin@getAllComments');
-    $router->get('/clients/edit', 'admin@editClient');
-    $router->post('/clients/edit', 'admin@editClient');
-    */
+    $router->get('/changeAccount', 'admin@chooseMySite');
+    $router->post('/changeAccount', 'admin@chooseMySite');
 
     // sites
     $router->get('/sites', 'site@showAll', 'post.showAll');

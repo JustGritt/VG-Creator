@@ -6,12 +6,15 @@ use App\Core\Controller;
 use App\Core\Exceptions\Routing\RouterNotFoundException;
 use App\Core\PaginatedQuery;
 use App\Core\View;
+use App\Core\Security;
+use App\Core\FlashMessage;
 use App\Helpers\Utils;
 use App\Model\Page;
 use App\Model\Site as SiteModel;
-use App\Core\Security;
-use App\Core\FlashMessage;
 use App\Model\Role_site;
+use App\Model\User_role;
+use App\Model\User as UserModel;
+
 
 class Site extends Controller
 {
@@ -78,6 +81,7 @@ class Site extends Controller
         }
     }
 
+
     public function chooseMySite(){
         $site = new Site();
         $pagination = new PaginatedQuery(
@@ -100,6 +104,7 @@ class Site extends Controller
         }
     }
 
+
     public function createSite()
     {
         $site = new SiteModel();
@@ -114,17 +119,32 @@ class Site extends Controller
             $site->generateToken();
             $token = $site->getToken();
 
+
             if(!$site->save()) {
                 FlashMessage::setFlash('errors', 'Erreur lors de la création du site.');
                 return;
             }
 
-            $tmp = $site->getSiteByToken($token);
+            $created_site = $site->getSiteByToken($token);
             $role_site = new Role_site();
-            $role_site->createRoleForSite($tmp->getId());
+            $role_site->createRoleForSite($created_site->getId());
+
+            $user_role = new User_role();
+            $user_roles = $user_role->getAvailableRolesForSite($created_site->getId());
+            foreach ($user_roles as $role) {
+                if($role['name'] == 'Admin'){
+                   $user = new UserModel();
+                   $user = $user->getUserById($_SESSION['id']);
+                   $user_role->setIdUser($user->getId());
+                   $user_role->setIdRoleSite($role['id']);
+                   $user_role->setStatus(1);
+                   $user_role->save();
+
+                }
+            }
 
             FlashMessage::setFlash('success', 'Le site a bien été créer');
-            header('Refresh: 3; ' . DOMAIN . '/dashboard/sites');
+            header('Refresh: 2; ' . DOMAIN . '/dashboard/sites');
         }
     }
 
