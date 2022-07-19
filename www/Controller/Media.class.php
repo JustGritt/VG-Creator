@@ -19,6 +19,10 @@ class Media
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
         
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);

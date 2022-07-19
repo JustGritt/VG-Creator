@@ -17,7 +17,11 @@ class Post extends  Controller
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
-    
+        
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         $category=  new Category();
         $categories =   $category->getCategoriesBySite($_SESSION['id_site']);
         $this->render("post", "back", ['categories'=>$categories]  );

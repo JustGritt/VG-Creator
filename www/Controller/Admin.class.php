@@ -120,9 +120,7 @@ class Admin
     public function banSites()
     {
         var_dump($_SESSION);
-
     }
-
 
     public function chooseMySite()
     {
@@ -157,9 +155,15 @@ class Admin
 
     public function setClientsView()
     {
+        
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         $view = new View('clients', 'back');
 
         if (isset($_SESSION['VGCREATOR']) && (($_SESSION['VGCREATOR'] == VGCREATORMEMBER && $_SESSION['id_site'] == '1'))) {
@@ -209,6 +213,10 @@ class Admin
     {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
         }
 
         if (!Security::isVGdmin() && !Security::isAdmin()) {
@@ -282,11 +290,14 @@ class Admin
         return $result;
     }
 
-
     public function inviteClient()
     {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
         }
 
         $view = new View("invite_clients", "back");
@@ -401,6 +412,10 @@ class Admin
             header("Location: " . DOMAIN . "/login");
         }
 
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         parse_str(file_get_contents('php://input'), $_DELETE);
 
         $document = new Document();
@@ -434,6 +449,10 @@ class Admin
     {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
         }
 
         $user = new UserModel();
@@ -601,11 +620,14 @@ class Admin
         }
     }
 
-
     public function addClient()
     {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
         }
 
         $view = new View('add_clients', 'Templates/back');
@@ -723,6 +745,7 @@ class Admin
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
+
         $view = new View('settings', 'back');
         $result = $this->getClientsOfSite();
         $view->assign("result", $result);
@@ -732,6 +755,10 @@ class Admin
     {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
         }
         
         $id_site = $_SESSION['id_site'];
@@ -747,22 +774,4 @@ class Admin
         $request->execute(array($id_site));
         return $request->fetchAll();
     }
-
-    /*
-    public function client()
-    {
-        $view = new View('front_template', 'front');
-    }
-
-    public function test()
-    {
-        $user = new User();
-        $view = new View('test', 'back');
-        //$view->assign('user', $user);
-    }
-
-    public function comment()
-    {
-        $view = new View('front_template', 'front');
-    }*/
 }

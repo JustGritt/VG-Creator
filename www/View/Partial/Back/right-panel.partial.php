@@ -30,8 +30,18 @@
                 <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "comments" ) ? "active" : "") : null ?>><a href="/dashboard/comments"><?php echo DynamicSvg::getIcon("articles", "dark"); ?> <span>Articles</span> </a></li>
                 <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "settings" ? "active" : "") : null ?>><a href="/dashboard/settings"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
                 <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "history" ? "active" : "") : null ?>><a href="/dashboard/history"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Historique</span> </a></li>
+            <?php elseif (Security::isMember()) : ?>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "settings" ? "active" : "") : null ?>><a href="/dashboard/settings"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "changeAccount" ? "active" : "") : null ?>><a href="/dashboard/changeAccount"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Changer de compte</span> </a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "sites" ) ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("sites", "dark"); ?> <span>Mes Sites</span> </a></li>
             <?php else : ?>
 
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "settings" ? "active" : "") : null ?>><a href="/dashboard/settings"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "changeAccount" ? "active" : "") : null ?>><a href="/dashboard/changeAccount"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Changer de compte</span> </a></li>
+                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "sites" ) ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("sites", "dark"); ?> <span>Mes Sites</span> </a></li>
+            
                 <button type="button" class="collapsible">Actions site</button>
                 <div class="content">
                     <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "media" ? "active" : "") : null ?>><a href="/dashboard/media"><?php echo DynamicSvg::getIcon("media", "dark"); ?> <span>Media</span> </a></li>
@@ -40,13 +50,9 @@
                     <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "clients" ? "active" : "") : null ?>><a href="/dashboard/clients"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Clients</span> </a></li>
                     <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "articles" ) ? "active" : "") : null ?>><a href="/dashboard/articles"><?php echo DynamicSvg::getIcon("articles", "dark"); ?> <span>Articles</span> </a></li>
                 </div>
-
-                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>
-                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "settings" ? "active" : "") : null ?>><a href="/dashboard/settings"><?php echo DynamicSvg::getIcon("settings", "dark"); ?> <span>Paramètres</span> </a></li>
-                <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (explode("/", $_SERVER["REQUEST_URI"])[2] === "changeAccount" ? "active" : "") : null ?>><a href="/dashboard/changeAccount"><?php echo DynamicSvg::getIcon("payment", "dark"); ?> <span>Changer de compte</span> </a></li>
             <?php endif; ?>
 
-            <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "sites" ) ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("sites", "dark"); ?> <span>Mes Sites</span> </a></li>
+            <!-- <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? (str_contains(explode("/", $_SERVER["REQUEST_URI"])[2], "sites" ) ? "active" : "") : null ?>><a href="/dashboard/sites"><?php echo DynamicSvg::getIcon("sites", "dark"); ?> <span>Mes Sites</span> </a></li> -->
                 
 
             <!-- <li class=<?= isset(explode("/", $_SERVER["REQUEST_URI"])[2]) ? "" : "active" ?>><a href="/dashboard"><?php echo DynamicSvg::getIcon("home", "dark"); ?> <span>Accueil</span></a></li>

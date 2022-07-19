@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-
 use App\Core\CleanWords;
 use App\Core\Sql;
 use App\Core\Verificator;
@@ -13,9 +12,14 @@ use App\Core\Security;
 
 class Comment {
 
-    public function showComments() {
+    public function showComments() 
+    {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
+        }
+
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
         }
 
         $view = new View("comments_back" , 'back');
@@ -32,11 +36,16 @@ class Comment {
 
     }
 
-    public function editComments() {
+    public function editComments() 
+    {
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
         
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
+
         $view = new View("comments_back" , 'back');
         $user = new User();
                 

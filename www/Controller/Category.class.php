@@ -23,6 +23,9 @@ class Category
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
+        if (Security::isMember()) {
+            header("Location: " . DOMAIN . "/dashboard");
+        }
     }
     
     public function show()
