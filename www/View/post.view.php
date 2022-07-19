@@ -106,12 +106,9 @@
 <!-- <span> 23%</span> -->
 
 <script defer>
-    <?php var_dump( $post); ?>
-    <?php var_dump( $post->getBody()); ?>
     ClassicEditor
         .create(document.querySelector('#editor'))
         .then(editor => {
-            "grehtheth"
             <?php
                 if (isset($fields['body'])){
                 echo " editor.setData("."'".  $fields['body']."'" . ")";}

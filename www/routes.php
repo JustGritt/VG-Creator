@@ -67,8 +67,6 @@ $router->group('/dashboard', function (Router $router) {
         ->with('id_post', '[0-9]+');
     $router->post('/articles-edit/:id_post', 'post@editShowPost', 'post.editShowPost')
         ->with('id_post', '[0-9]+');
-    $router->delete('/articles', 'post@editShowPost', 'post.editShowPost')
-        ->with('id_post', '[0-9]+');
 
     $router->get('/clients', 'admin@setClientsView');
     $router->post('/clients', 'admin@setClientsView');

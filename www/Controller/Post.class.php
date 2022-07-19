@@ -156,7 +156,8 @@ class Post extends  Controller
                     $post->setIdSite($_SESSION['id_site']);
                     $post->setMetadescription($metadescription);
                     $post->save();
-                    if(!isset($id_post)) Utils::redirect('admin.allPost');
+                    // if(!isset($id_post)) Utils::redirect('admin.allPost');
+                    Utils::redirect('admin.allPost');
             }
         }
 
