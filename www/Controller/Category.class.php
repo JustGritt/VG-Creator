@@ -69,7 +69,6 @@ class Category
     public function deleteCategory($id)
     {
         parse_str(file_get_contents('php://input'), $_DELETE);
-        var_dump($_DELETE);
         $category = new CategoryModel();
         $category = $category->getCategoryById($id);
         $category->delete();

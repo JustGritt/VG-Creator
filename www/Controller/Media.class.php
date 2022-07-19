@@ -19,7 +19,7 @@ class Media
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
-        var_dump($_SESSION);
+        
         $user = new UserModel();
         $user->setFirstname($_SESSION['firstname']);
         $documents = new Document();
@@ -30,8 +30,6 @@ class Media
         $pagination = new PaginatedQuery($query, $count, Document::class, 2);
         $pagination->getItems();
         $router = Router::getInstance();
-
-        //var_dump($router->url('dashboard.media', ['page' => $pagination->previousLink('dashboard/media')]));
 
         //$documents = $document->getAllDocumentsForSite($_SESSION['id_site']);
         $view = new View("media", "back");

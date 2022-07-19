@@ -22,8 +22,6 @@ class Comment {
         $user = new User();
         $comments = new CommentModel();
 
-        // var_dump($_POST);
-
         if (isset($_GET['published'])) {
             $view->assign("results", $comments->getAllCommentsPublished($_SESSION['id_site']));
         } else if (isset($_GET['banned'])) {

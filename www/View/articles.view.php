@@ -31,7 +31,7 @@
                 <div class="card-article__image">
                     <img src="https://via.placeholder.com/300.png/09f/fff" alt=""  onClick="navigate(' . $value['id'] . ')"}"/>
                     <button onClick="confirmDelete('.$value['id'].')" class="btm-delete"><i class="fa-solid fa-xmark"></i></button>
-                 <!--   <a href="#"></a>  -->
+                <!--   <a href="#"></a>  -->
                 </div>
                 <div class="card-article-body" onClick="navigate(' . $value['id'] . ')"}">
                     <h4>' . Utils::truncate($value['title']) . '</h4>
@@ -42,14 +42,12 @@
                     </div>
                 </div>
             </article>';
-            }
-            ?>
+            }?>
         </div>
 
         <a href="/<?php echo Router::getInstance()->url("post.createPost",[]) ?>" class="btm-btn">Créer un article</a>
     </div>
 </section>
-<!-- <span> 23%</span> -->
 <script>
     function changeMenu(type) {
         window.location.href = 'http://localhost/dashboard/articles' + type

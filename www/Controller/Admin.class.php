@@ -106,7 +106,7 @@ class Admin
         $view = new View("back_home", "back");
         $view->assign('user', $user);
         unset($_SESSION['csrf_token']);
-        var_dump($_SESSION);
+        
 
     }
 
@@ -155,8 +155,6 @@ class Admin
 
     public function setClientsView()
     {
-        // var_dump($_SESSION);
-
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }

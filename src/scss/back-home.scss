@@ -40,10 +40,14 @@ $value in $status {
     }
 }
 
+.body-container-dashboard section {
+    height: 100% !important;
+}
+
 @media screen and (max-width: 1068px) {
     .body-container-dashboard section:nth-of-type(2) {
         width: 100vw;
-        min-height: 100vh;
+        height: 100vh;
     }
 }
 

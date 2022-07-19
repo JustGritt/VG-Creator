@@ -8,11 +8,6 @@ class Facebook
 
     public function login($token)
     {
-       // $user = new UserModel();
-       // $view = new View("login");
-        //$view->assign("user", $user);
-        //var_dump($_REQUEST);
-        //var_dump($_GET);
         $url = "https://graph.facebook.com/v13.0/oauth/access_token?";
         $client_id = "343703544163557";
         $client_secret = "543b46d85481555a39f341f663706972";

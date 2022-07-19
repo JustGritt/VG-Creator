@@ -104,21 +104,22 @@
     </div>
 </section>
 <!-- <span> 23%</span> -->
+
 <script defer>
     ClassicEditor
-        .create(document.querySelector('#editorCustom'))
+        .create(document.querySelector('#editor'))
         .then(editor => {
             <?php
                 if (isset($fields['body'])){
-                echo " editorCustom.setData("."'".  $fields['body']."'" . ")";}
-                else if(isset($post)) echo " editorCustom.setData("."'". htmlspecialchars_decode($post->getBody())  ."'" . ")";
+                echo " editor.setData("."'".  $fields['body']."'" . ")";}
+                else if(isset($post)) echo " editor.setData("."'". htmlspecialchars_decode($post->getBody())  ."'" . ")";
             ?>
-            //  console.log(editor.setData('dsssd'));
+            // console.log(editor.setData('dsssd'));
         })
         .catch(error => {
             console.error(error);
         });
-    // console.log(ClassicEditor.instance['#editor'])
+    console.log("zfozjroij", ClassicEditor.instance['#editor'])
 
     document.getElementById('output').innerHTML = location.search;
     document.getElementsById('chosen-select').chosen();
@@ -133,7 +134,7 @@
         }
         window.location.href = 'http://localhost/dashboard/articles' + type
     }
-     var getUrl = window.location;
+    var getUrl = window.location;
     var baseUrl = window.location.href;
     document.querySelector('#form-post').setAttribute('action', baseUrl)
 </script>
