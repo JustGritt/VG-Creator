@@ -36,7 +36,7 @@ use League\OAuth2\Client\Token\AccessToken;
 class OAuth
 {
     /**
-     * An instance of the League OAuth Client Provider.
+     * An instance of the League OAuth Client Providers.
      *
      * @var AbstractProvider
      */

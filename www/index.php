@@ -7,6 +7,8 @@ use App\Core\Router;
 use App\Core\Route;
 use App\Core\Security;
 use App\Core\FlashMessage;
+use App\Core\ProviderInterface;
+use App\Core\Oauth\ProviderFactory;
 require "conf.inc.php";
 
 session_start();
@@ -25,3 +27,6 @@ spl_autoload_register("App\myAutoloader");
 $flash_message = new FlashMessage();
 
 require "routes.php";
+
+
+

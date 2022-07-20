@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\CleanWords;
 use App\Core\FlashMessage;
 use App\Core\Handler;
+use App\Core\Oauth\ProviderFactory;
 use App\Core\Sql;
 use App\Core\Verificator;
 use App\Core\View;
@@ -66,8 +67,10 @@ class User
         $user = new UserModel();
         $backlist = new Backlist();
 
+        $this->initialiseProvider();
         $view = new View("login");
         $view->assign("user", $user);
+
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
         if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
@@ -385,5 +388,27 @@ class User
             header("Refresh: 1; " . DOMAIN . "/");
             die();
         }
+    }
+
+    public function initialiseProvider(){
+        $config_file = "config.json";
+        if (!file_exists($config_file)) {
+            throw new \RuntimeException("Config file '$config_file' not found");
+        }
+
+        $configs = json_decode(file_get_contents($config_file), true);
+        $factory  = ProviderFactory::getInstance();
+
+        // Initilisation of providers
+        foreach ($configs as $config => $value) {
+
+            $provider = $config;
+            $client_id = $value["client_id"];
+            $client_secret = $value["client_secret"];
+            $redirect_uri = $value["redirect_uri"];
+            $factory->create($provider, $client_id, $client_secret, $redirect_uri);
+
+        }
+
     }
 }

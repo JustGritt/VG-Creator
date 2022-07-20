@@ -1,0 +1,17 @@
+{
+  "Facebook" : {
+    "client_id" : "364225935681947",
+    "client_secret" : "d5dc80c041c27320961fee6c12104749",
+    "redirect_uri" : "http://localhost/login"
+  },
+  "Spotify" : {
+    "client_id" : "75126d4175d545a8a82fce10cad9588a",
+    "client_secret" : "048bed7e66e44fa6b436536118baa7ad",
+    "redirect_uri" : "http://localhost/login"
+  },
+  "Discord" : {
+    "client_id" : "999360732284076052",
+    "client_secret" : "5EThVxSDcHFsn3aiwt3vtiKX7oP6Ls1u",
+    "redirect_uri" : "http://localhost/login"
+  }
+}

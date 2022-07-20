@@ -33,7 +33,7 @@
 namespace PHPMailer\PHPMailer;
 
 /**
- * Aliases for League Provider Classes
+ * Aliases for League Providers Classes
  * Make sure you have added these to your composer.json and run `composer install`
  * Plenty to choose from here:
  * @see http://oauth2-client.thephpleague.com/providers/thirdparty/
@@ -117,7 +117,7 @@ switch ($providerName) {
 }
 
 if (null === $provider) {
-    exit('Provider missing');
+    exit('Providers missing');
 }
 
 if (!isset($_GET['code'])) {
