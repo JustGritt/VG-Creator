@@ -6,7 +6,6 @@ namespace App\Core\Oauth;
 class ProviderFactory
 {
     protected $providers = [];
-    private static $_instance = null;
 
     /**
      * @param string $provider
@@ -45,12 +44,5 @@ class ProviderFactory
         throw new \RuntimeException("Providers '$name' not found");
     }
 
-    public static function getInstance(): ProviderFactory
-    {
-        if (self::$_instance == null) {
-            self::$_instance = new ProviderFactory();
-        }
-        return self::$_instance;
-    }
 
 }

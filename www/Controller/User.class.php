@@ -67,9 +67,10 @@ class User
         $user = new UserModel();
         $backlist = new Backlist();
 
-        $this->initialiseProvider();
+        $providers = $this->initialiseProvider();
         $view = new View("login");
         $view->assign("user", $user);
+        $view->assign("providers", $providers);
 
 
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -397,8 +398,9 @@ class User
         }
 
         $configs = json_decode(file_get_contents($config_file), true);
-        $factory  = ProviderFactory::getInstance();
+        $factory = new  ProviderFactory();
 
+        $providers = [];
         // Initilisation of providers
         foreach ($configs as $config => $value) {
 
@@ -406,9 +408,10 @@ class User
             $client_id = $value["client_id"];
             $client_secret = $value["client_secret"];
             $redirect_uri = $value["redirect_uri"];
-            $factory->create($provider, $client_id, $client_secret, $redirect_uri);
+            $providers[] = $factory->create($provider, $client_id, $client_secret, $redirect_uri);
 
         }
 
+        return $providers;
     }
 }
