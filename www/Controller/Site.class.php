@@ -25,8 +25,6 @@ class Site extends Controller
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
-
-       
         $this->render("site", "back");
         if(isset($_GET['manage-pages']) && gettype($_GET['manage-pages']) == "string"){
             $pages = $this->getPagesBySite($_GET['manage-pages']);
@@ -50,7 +48,7 @@ class Site extends Controller
     public function editClient($id_site, $slug ){
         $page = new Page();
         //$page = $page->getPageBySiteAndSlug($_SESSION['id_site'], $slug);
-        $page = $this->getHomgepageOfSite($_SESSION['id_site']);
+        $page = $this->getHomgepageOfSite($_SESSION['id_site'], $slug);
         try {
             if($page instanceof Page){
                 $_SESSION['id_site'] = $id_site;
@@ -87,29 +85,27 @@ class Site extends Controller
         };
     }
 
-    /**
-     *
-     */
     public function handleSite ($id_site, $id_page=null):void
     {
         $method = $_SERVER['REQUEST_METHOD'];
         switch ($method) {
             case ($method == "POST"):
                 if (isset($_SERVER["HTTP_REFERER"])) {
-                   header("Location: " . $_SERVER["HTTP_REFERER"]);
+                    header("Location: " . $_SERVER["HTTP_REFERER"]);
                 }
                 if(!$_POST['name']) return;
                 $page = new Page();
                 $page->setName($_POST['name'] );
                 $page->setSlug($_POST['slug']);
+                $page->setDefaultPage();
                 $page->setIdSite($id_site);
                 $page->save();
                 break;
             case ($method == "DELETE"):
                 if(!$id_page || !$id_site) return;
                 if(!$this->deletePageBySite($id_page , $id_site)){
-                   http_send_status(401);
-                   return;
+                    http_send_status(401);
+                    return;
                 };
                 break;
             default:
@@ -222,7 +218,7 @@ class Site extends Controller
     public function createSite()
     {
         $site = new SiteModel();
-        $this->render("create_site", "back");        
+        $this->render("create_site", "back");
         $this->view->assign('site', $site);
         $this->view->assign('error', "gre");
 
@@ -234,11 +230,22 @@ class Site extends Controller
                 FlashMessage::setFlash('errors', 'Le nom de votre site doit contenir au moins 3 caracteres.');
                 return;
             }
+
+            if (strpos($_POST['name'], ' ') !== false){
+                FlashMessage::setFlash('errors', 'Le site ne dois pas contenir de caracteres speciaux et ni d\'espace.');
+                return;
+            }
+            $get_site_of_user = $site->getAllSiteByIdUser($_SESSION['id']);
+            foreach ($get_site_of_user as $site_of_user) {
+                if ($site_of_user->getName() == $_POST['name']){
+                    FlashMessage::setFlash('errors', 'Ce nom de site existe déjà.');
+                    return;
+                }
+            }
             $site->setName($_POST['name']);
             $site->setStatus(0);
             $site->generateToken();
             $token = $site->getToken();
-
 
             if(!$site->save()) {
                 FlashMessage::setFlash('errors', 'Erreur lors de la création du site.');
@@ -253,12 +260,12 @@ class Site extends Controller
             $user_roles = $user_role->getAvailableRolesForSite($created_site->getId());
             foreach ($user_roles as $role) {
                 if($role['name'] == 'Admin'){
-                   $user = new UserModel();
-                   $user = $user->getUserById($_SESSION['id']);
-                   $user_role->setIdUser($user->getId());
-                   $user_role->setIdRoleSite($role['id']);
-                   $user_role->setStatus(1);
-                   $user_role->save();
+                    $user = new UserModel();
+                    $user = $user->getUserById($_SESSION['id']);
+                    $user_role->setIdUser($user->getId());
+                    $user_role->setIdRoleSite($role['id']);
+                    $user_role->setStatus(1);
+                    $user_role->save();
 
                 }
             }
@@ -267,8 +274,7 @@ class Site extends Controller
             $page->setIdSite($created_site->getId());
             $page->setName('homepage');
             $page->setSlug('homepage');
-            $page->setHtml(Utils::getHomepage());
-            $page->setCss(Utils::getCss());
+            $page->setDefaultPage();
             $page->setIsActive(1);
             $page->save();
 
