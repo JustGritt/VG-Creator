@@ -637,4 +637,17 @@ class User extends Sql{
         return 0;
     }
 
+    public function getSitesOfUser($id_user){
+        $sql=
+            "SELECT urole.id_role_site, s.name, rs.name as role, s.id
+        FROM esgi_user_role urole 
+        LEFT JOIN esgi_role_site rs ON urole.id_role_site = rs.id 
+        LEFT JOIN esgi_site s ON s.id = rs.id_site 
+        LEFT JOIN esgi_user u ON urole.id_user = u.id WHERE u.id = ?";
+
+        $request =  $this->pdo->prepare($sql);
+        $request->execute(array($id_user));
+        return $request->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 }

@@ -29,6 +29,7 @@ class Admin
 
     public function dashboard()
     {
+
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
@@ -43,6 +44,8 @@ class Admin
             $user->setOauthId($_SESSION['oauth_id']);
             $user->setOauthProvider($_SESSION['oauth_provider']);
             $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
+            var_dump($_SESSION);
+            var_dump($user);
             $view2 = new View('register-step-2', 'blank');
             $view2->assign('user', $user);
             if (!empty($_POST) && Security::checkCsrfToken($_POST['csrf_token'])) {
@@ -63,10 +66,11 @@ class Admin
                     header('Refresh: 3; ' . DOMAIN . '/dashboard');
                     return;
                 }
-                $user->save();
+                var_dump($user->save());
                 Handler::setMemberRole($user->getIdFromEmail($_SESSION['email']));
 
-                $_SESSION['id'] = $user->getId();
+                $user_info = $user->getUserByPseudo($_POST['pseudo']);
+                $_SESSION['id'] =  $user_info->getId();//$user->getId();
                 $_SESSION['pseudo'] = $_POST['pseudo'];
                 unset($_SESSION['NOT-SET']);
                 header("Location: " . DOMAIN . "/dashboard");

@@ -2,65 +2,175 @@
 
 namespace App\Controller;
 
-use App\Core\CleanWords;
 use App\Core\FlashMessage;
 use App\Core\Handler;
 use App\Core\Oauth\ProviderFactory;
-use App\Core\Sql;
 use App\Core\Verificator;
 use App\Core\View;
 use App\Model\User as UserModel;
 use App\Core\Mail;
-use App\Model\PasswordRecovery;
-use App\Model\OauthUser;
-use App\Core\Facebook;
 use App\Core\Security;
 use App\Model\Backlist;
 use App\Model\Site;
-use App\Model\User_role;
 
 class User
 {
-    public function loginwithfb()
+    public function loginFacebook($providers)
     {
         $user = new UserModel();
-        $view = new View("login");
-        $view->assign("user", $user);
-        $facebooklogin = new Facebook();
-        $token =  (string)$_GET['code'];
-        $user_info = $facebooklogin->login($token);
-
-        if (!$user_info) {
-            echo "OOps sorry something went wrong with facebook";
+        $backlist = new Backlist();
+        foreach ($providers as $provider) {
+            if ($provider->getName() == 'Facebook') {
+                try {
+                    $token = $provider->getAccessToken();
+                    $user_info = $provider->validateToken($token);
+                } catch (\Exception $e) {
+                    FlashMessage::setFlash('errors', "OOps sorry something went wrong with ".$provider->getName()." Please try again.");
+                    unset($_SESSION['id']);
+                    unset($_SESSION['code']);
+                    unset($_SESSION['email']);
+                    header("Refresh: 2; " . DOMAIN . "/login ");
+                    exit;
+                }
+            }
+        }
+        if (!$user_info['id'] || !isset($user_info['email'])) {
+            FlashMessage::setFlash('errors', "OOps sorry something went wrong with ".$provider->getName()." Please try again.");
             unset($_SESSION['id']);
             unset($_SESSION['code']);
             unset($_SESSION['email']);
-            header("Refresh: 5; " . DOMAIN . "/login ");
+            header("Refresh: 2; " . DOMAIN . "/login ");
+            return;
         }
 
-        $oauth_user = new OauthUser();
-        $user_name =  explode(" ", $user_info['name']);
+        $id = $user->getIdFromEmail($user_info['email']);
 
-        $_SESSION['id'] = $user_info['id'];
+        //Check if user is backlisted
+        $this->checkIfUserIsBaned($id);
         $_SESSION['email'] = $user_info['email'];
-        $_SESSION['code'] = $token;
-        $_SESSION['lastname'] = $user_name[1];
-        $_SESSION['firstname'] = $user_name[0];
-        //$_SESSION['username'] = $user_info['name'];
-        $_SESSION['role'] = ($user_info['id_role'] == 1) ? 'admin' : 'user';
+        $_SESSION['id'] =  $id;
+        $_SESSION['email'] = $user_info['email'];
+        $_SESSION['firstname'] = $user_info['username'];
 
-        if (!$oauth_user->isUserExist($user_info['email'])) {
-            $oauth_user->setFirstname($user_name[0]);
-            $oauth_user->setLastname($user_name[1]);
-            $oauth_user->setEmail($user_info['email']);
-            $oauth_user->setOauth_id($user_info['id']);
-            $oauth_user->setOauth_provider('facebook_api');
-            $oauth_user->setRole(1);
-            $oauth_user->save();
+        //Check if user role for URI
+        $this->checkIfUserRoleForURI($user, $id);
+
+        if (!$user->getUserByEmail($user_info['email'])) {
+            $_SESSION['NOT-SET'] = 'NOT-SET';
+            $_SESSION['email'] = $user_info['email'];
+            $_SESSION['token'] = $user->generateToken();
+            $_SESSION['firstname'] = $user_info['username'];
+            $_SESSION['lastname'] = $user_info['lastname'] ?? '';
+            $_SESSION['id'] =  hash('sha256', $user_info['id']);
+            $_SESSION['oauth_provider'] = 'discord_api';
+            $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
         }
-        echo "Bienvenue";
+
+        unset($_SESSION['csrf_token']);
+        header("Location: " . DOMAIN . "/dashboard");
+
+    }
+
+    public function loginwithGoogle($providers)
+    {
+
+        $user = new UserModel();
+
+        foreach ($providers as $provider) {
+            if ($provider->getName() == 'Google') {
+                $user_info = $this->getUser_info($provider);
+            }
+        }
+
+        if (!$user_info['verified_email']) {
+            FlashMessage::setFlash('errors', "OOps sorry something went wrong with google. Please try again.");
+            unset($_SESSION['id']);
+            unset($_SESSION['code']);
+            unset($_SESSION['email']);
+            header("Refresh: 2; " . DOMAIN . "/login ");
+            return;
+        }
+        $id = $user->getIdFromEmail($user_info['email']);
+
+        //Check if user is backlisted
+        $this->checkIfUserIsBaned($id);
+
+        $_SESSION['id'] =  $id;
+        $_SESSION['email'] = $user_info['email'];
+        $_SESSION['firstname'] = $user_info['given_name'];
+        $_SESSION['lastname'] = $user_info['family_name'];
+
+        //Check if user role for URI
+        $this->checkIfUserRoleForURI($user, $id);
+
+        if (!$user->getUserByEmail($user_info['email'])) {
+            $_SESSION['NOT-SET'] = 'NOT-SET';
+            $_SESSION['email'] = $user_info['email'];
+            $_SESSION['firstname'] = $user_info['given_name'];
+            $_SESSION['lastname'] = $user_info['family_name'];
+            $_SESSION['token'] = $user->generateToken();
+            $_SESSION['oauth_provider'] = 'google_api';
+            $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['id'] =  hash('sha256', $user_info['id']);
+            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
+        }
+
+        unset($_SESSION['csrf_token']);
         header("Location: " . DOMAIN . "/dashboard");
     }
+
+    public function loginwithDiscord($providers)
+    {
+        $user = new UserModel();
+        $backlist = new Backlist();
+        foreach ($providers as $provider) {
+            if ($provider->getName() == 'Discord') {
+                $user_info = $this->getUser_info($provider);
+            }
+
+        }
+
+        if (!$user_info['verified']) {
+            FlashMessage::setFlash('errors', "OOps sorry something went wrong with google. Please try again.");
+            unset($_SESSION['id']);
+            unset($_SESSION['code']);
+            unset($_SESSION['email']);
+            header("Refresh: 2; " . DOMAIN . "/login ");
+            return;
+        }
+
+
+        $id = $user->getIdFromEmail($user_info['email']);
+
+        //Check if user is backlisted
+        $this->checkIfUserIsBaned($id);
+        $_SESSION['email'] = $user_info['email'];
+        $_SESSION['id'] =  $id;
+        $_SESSION['email'] = $user_info['email'];
+        $_SESSION['firstname'] = $user_info['username'];
+
+
+        //Check if user role for URI
+        $this->checkIfUserRoleForURI($user, $id);
+
+        if (!$user->getUserByEmail($user_info['email'])) {
+            $_SESSION['NOT-SET'] = 'NOT-SET';
+            $_SESSION['email'] = $user_info['email'];
+            $_SESSION['token'] = $user->generateToken();
+            $_SESSION['firstname'] = $user_info['username'];
+            $_SESSION['lastname'] = $user_info['lastname'] ?? '';
+            $_SESSION['id'] =  hash('sha256', $user_info['id']);
+            $_SESSION['oauth_provider'] = 'discord_api';
+            $_SESSION['oauth_id'] = $user_info['id'];
+            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
+        }
+
+        unset($_SESSION['csrf_token']);
+        header("Location: " . DOMAIN . "/dashboard");
+
+    }
+
 
     public function login()
     {
@@ -87,24 +197,19 @@ class User
             $this->checkIfUserIsBaned($userverify['id']);
 
             if (is_null($userverify)) {
-                //echo 'Utilisateur non retouvé dans la bdd';
                 FlashMessage::setFlash('errors', "Utilisateur non retouvé dans la bdd");
-                //header("Location: ".DOMAIN."/login" );
                 return;
 
             }elseif (empty($userverify['status'])) {
-                //echo "Veuillez confirmé votre email";
                 FlashMessage::setFlash('errors', "Veuillez confirmer votre email");
-                //header("Location: ".DOMAIN."/login" );
                 return;
             }
 
             if (!password_verify($getPwd, $userverify['password'])) {
-                //echo "<strong class='alert'>mot de passe incorrect</strong>";
                 FlashMessage::setFlash('errors', "Mot de passe incorrect");
-                //header("Location: ".DOMAIN."/login" );
                 return;
             }
+
             //Check if user role for URI
             if ($_GET['url'] == 'login') {
                 $userRoleForVG = $user->getRoleOfUser($userverify['id'], VGCREATORID);
@@ -133,11 +238,15 @@ class User
         //Logins with Oauth
         if (!empty($_GET) && !empty($_GET['state'])) {
             switch ($_GET['state']) {
-                case 'VG-CREATOR-FACEBOOK':
-                    $this->loginFacebook();
+                case 'Facebook':
+                    $this->loginFacebook($providers);
                     break;
-                case 'VG-CREATOR-GOOGLE':
-                    $this->loginwithGoogle();
+                case 'Google':
+                    $this->loginwithGoogle($providers);
+                    unset($_SESSION['csrf_token']);
+                    break;
+                case 'Discord':
+                    $this->loginwithDiscord($providers);
                     unset($_SESSION['csrf_token']);
                     break;
                 default:
@@ -146,65 +255,6 @@ class User
                 }
         }
         unset($_SESSION['csrf_token']);
-    }
-
-    public function loginwithGoogle()
-    {
-
-        $user = new UserModel();
-
-        $oauth_user = new OauthUser();
-        $redirect_uri = DOMAIN . "/login";
-        $data = $this->GetAccessToken(GOOGLE_ID, $redirect_uri, GOOGLE_SECRET, $_GET['code']);
-        //var_dump('client_id=' . GOOGLE_ID . '&redirect_uri=' . $redirect_uri . '&client_secret=' . GOOGLE_SECRET . '&code='. $_GET['code'] . '&grant_type=authorization_code');
-        $access_token = $data['access_token'];
-        $user_info = $this->GetUserProfileInfo($access_token);;
-
-        if (!$user_info['verified_email']) {
-            FlashMessage::setFlash('errors', "OOps sorry something went wrong with google. Please try again.");
-            unset($_SESSION['id']);
-            unset($_SESSION['code']);
-            unset($_SESSION['email']);
-            header("Refresh: 2; " . DOMAIN . "/login ");
-        }
-        $id = $user->getIdFromEmail($user_info['email']);
-
-        //Check if user is backlisted
-        $this->checkIfUserIsBaned($id);
-
-        $_SESSION['id'] =  $id;
-        $_SESSION['email'] = $user_info['email'];
-        $_SESSION['firstname'] = $user_info['given_name'];
-        $_SESSION['lastname'] = $user_info['family_name'];
-
-        //Check if user role for URI
-        if ($_GET['url'] == 'login') {
-            $userRoleForVG = $user->getRoleOfUser( $id, VGCREATORID);
-            $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
-            $_SESSION['id_site'] = $userRoleForVG['id'];
-
-            $site = new Site();
-            $site = $site->getAllSiteByIdUser($id);
-
-            if(count($site) >= 2) {
-                $_SESSION['choice'] = 'choice';
-            }
-        }
-
-        if (!$user->getUserByEmail($user_info['email'])) {
-            $_SESSION['NOT-SET'] = 'NOT-SET';
-            $_SESSION['email'] = $user_info['email'];
-            $_SESSION['firstname'] = $user_info['given_name'];
-            $_SESSION['lastname'] = $user_info['family_name'];
-            $_SESSION['token'] = $user->generateToken();
-            $_SESSION['oauth_provider'] = 'google_api';
-            $_SESSION['oauth_id'] = $user_info['id'];
-            $_SESSION['id'] =  hash('sha256', $user_info['id']);
-            $_SESSION['VGCREATOR'] = VGCREATORMEMBER;
-        }
-
-        unset($_SESSION['csrf_token']);
-        header("Location: " . DOMAIN . "/dashboard");
     }
 
     public function register()
@@ -313,65 +363,6 @@ class User
         header("Location: " . DOMAIN . "/login");
     }
 
-    public function GetAccessToken($client_id, $redirect_uri, $client_secret, $code)
-    {
-        $url = 'https://www.googleapis.com/oauth2/v4/token';
-
-        $curl = 'client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&client_secret=' . $client_secret . '&code=' . $code . '&grant_type=authorization_code';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
-        $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code != 200) {
-            //echo 'Error : Failed to receieve access token';
-            return false;
-        }
-
-        return $data;
-    }
-
-    public function GetUserProfileInfo($access_token)
-    {
-        $url = 'https://www.googleapis.com/oauth2/v2/userinfo?fields=id,given_name,family_name,email,verified_email';
-        //$url2 = 'https://www.googleapis.com/userinfo/v2/me?';
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $access_token));
-        $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code != 200) {
-            //echo 'Error : Failed to get user information';
-            return false;
-        }
-
-        return $data;
-    }
-
-    public function revokeToken($token)
-    {
-        $url = 'https://oauth2.googleapis.com/revoke?token=' . $token;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
-        $data = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code != 200)
-            echo 'Error : Failed to revoke access token';
-
-        return $data;
-    }
-
     public function checkIfUserIsBaned($id_user)
     {
         //Check if user is backlisted
@@ -398,8 +389,8 @@ class User
         }
 
         $configs = json_decode(file_get_contents($config_file), true);
-        $factory = new  ProviderFactory();
 
+        $factory = new ProviderFactory();
         $providers = [];
         // Initilisation of providers
         foreach ($configs as $config => $value) {
@@ -414,4 +405,37 @@ class User
 
         return $providers;
     }
+
+    public function checkIfUserRoleForURI($user, $id)
+    {
+        if ($_GET['url'] == 'login') {
+            $userRoleForVG = $user->getRoleOfUser($id, VGCREATORID);
+            $_SESSION['VGCREATOR'] = ($userRoleForVG['role'] == 'Admin') ? IS_ADMIN : IS_MEMBER;
+            $_SESSION['id_site'] = $userRoleForVG['id'];
+
+            $site = new Site();
+            $site = $site->getAllSiteByIdUser($id);
+
+            if (count($site) >= 2) {
+                $_SESSION['choice'] = 'choice';
+            }
+        }
+    }
+
+    public function getUser_info($provider)
+    {
+        try {
+            $token = $provider->getAccessToken();
+            $user_info = $provider->validateToken($token);
+        } catch (\Exception $e) {
+            FlashMessage::setFlash('errors', "OOps sorry something went wrong with google. Please try again.");
+            unset($_SESSION['id']);
+            unset($_SESSION['code']);
+            unset($_SESSION['email']);
+            header("Refresh: 2; " . DOMAIN . "/login ");
+            exit;
+        }
+        return $user_info;
+    }
+
 }

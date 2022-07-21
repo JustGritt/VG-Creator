@@ -3,6 +3,7 @@
 namespace App\Core\Oauth\Providers;
 
 use App\Core\Oauth\ProviderInterface;
+use Stripe\Radar\ValueList;
 
 abstract class Provider implements ProviderInterface{
 
@@ -67,6 +68,7 @@ abstract class Provider implements ProviderInterface{
     }
 
     public function GetAccessToken() {
+        /*
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ["username" => $username, "password" => $password] = $_POST;
             $specifParams = [
@@ -87,12 +89,13 @@ abstract class Provider implements ProviderInterface{
             }
             $token = json_decode($response, true);
             return $token;
-        }
+        }*/
 
         ["code" => $code, "state" => $state] = $_GET;
         $url = $this->getBaseAccessTokenUrl();
-        $redirect_uri = "http://localhost:8081/callback";
+        $redirect_uri = "http://localhost/login";
         $curl = 'client_id=' . $this->getclientId() . '&redirect_uri=' . $redirect_uri . '&client_secret=' . $this->getClientSecret() . '&code='. $code . '&grant_type=authorization_code';
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -100,6 +103,7 @@ abstract class Provider implements ProviderInterface{
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $curl);
         $data = json_decode(curl_exec($ch), true);
+        var_dump($data);
         $http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
 
         if ( !isset($data['access_token']) && $http_code != 200) {

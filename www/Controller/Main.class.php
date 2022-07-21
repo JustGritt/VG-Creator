@@ -7,6 +7,7 @@ use App\Core\Sql;
 use App\Model\Page;
 use App\Model\User as UserModel;
 use App\Model\Site as SiteModel;
+use App\Helpers\Utils;
 
 class Main {
 
@@ -26,21 +27,41 @@ class Main {
         $author = $url_parse[0];
         $site_title = $url_parse[1] ?? "";
         $user = new UserModel();
-        $id_site = $this->getSite($site_title);
-        $content =  $this->getSiteHtml($id_site, $site_title);
-        $user_info = $user->getUserByPseudo($author);
-        $user_role = $user->getRoleOfUser($user_info->getId(), $id_site);
+        $user = $user->getUserByPseudo($author);
+        $site_of_user = $user->getSitesOfUser($user->getId());
+
+        foreach ($site_of_user as $site) {
+            if(in_array($site_title, $site)) {
+                $id_site = $site['id'];
+            }
+        }
+        if (!isset($id_site)) {
+            Utils::redirect('not-found');
+        }
+
+        $user_role = $user->getRoleOfUser($user->getId(), $id_site);
+        $content =  $this->getSiteHtml($id_site, $site_title, $author);
         $site = new SiteModel();
         $site_info = $site->getSiteById($id_site);
-        if($site_info->getStatus() == 0){
+
+        if(!$site_info || $site_info->getStatus() == 0){
             header("Location: " . DOMAIN . "/login");
         }
 
         if(($user_role['role'] == 'Admin')  && !is_null($id_site) && !is_null($content)){
-           echo $content->getHtml();
-           echo "<style>". $content->getCss()."</style>";
-           die();
+            echo $content->getHtml();
+            echo "<style>". $content->getCss()."</style>";
+            if(isset($url_parse[2]) && $url_parse[2]  == "articles"){
+                $articles = $this->getArticles($id_site);
+                foreach($articles as $article){
+                    echo '<article>' . $article->getBody() . '</article>';
+                    echo "<a href='".DOMAIN."/{$author}/{$site_title}/articles/{$article->getArticletSlug()}'>{$article->getTitle()}</a>";
+                }
+                echo "<a href='".DOMAIN."/{$author}/{$site_title}/'>Retour</a>";
+            }
         }
+        die();
+
         //return header('HTTP/1.1 404 Not Found');
     }
 
@@ -56,11 +77,38 @@ class Main {
         return $result->fetch()['id'] ?? null;
     }
 
-    public function getSiteHtml($id_site, $site_title){
+    public function getArticles($id_site){
+        $builder = BUILDER;
+        $queryBuilder = new $builder();
+        $query = $queryBuilder
+            ->select('esgi_post', ['*'])
+            ->where('id_site', $id_site)
+            ->getQuery();
+        $result = Sql::getInstance()->query($query);
+        $result->execute();
+        $articles = $result->fetchAll(\PDO::FETCH_CLASS, 'App\Model\Post');
+        return $articles;
+
+    }
+
+    public function getSiteHtml($id_site, $site_title, $author){
         $uri = explode("{$site_title}", $_SERVER['REQUEST_URI']);
         $slug = $uri[1];
         if ($uri[1] == "" || $uri[1] == "/"){
             $slug  = "homepage";
+        }elseif($uri[1] == "/articles" || $uri[1] == "/articles/"){
+            $slug = "articles";
+        }elseif(in_array("articles", explode("/",$uri[1])) && count(explode("/",$slug)) >= 2){
+            echo '<link rel="stylesheet" href="/dist/css/articles.css">';
+            $articles = $this->getArticles($id_site);
+            foreach($articles as $article){
+                echo '<article class="card-article">' . $article->getBody() . '</article>';
+                echo "<a href='".DOMAIN."/{$author}/{$site_title}/articles/'>Retour</a>";
+            }
+            return;
+        }
+        else {
+            $slug = str_replace("/", "", $slug);
         }
         $builder = BUILDER;
         $queryBuilder = new $builder();
