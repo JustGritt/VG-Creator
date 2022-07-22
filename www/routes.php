@@ -7,6 +7,8 @@ use App\Core\Security;
 
 $router =  Router::getInstance();
 
+$router->post('/subscribe-newsletter', 'main@subscribeNewsletter');
+
 $router->group('/', function (Router $router) {
     $router->get('/', 'main@home', 'home');
     $router->get('/login', 'user@login');
@@ -81,6 +83,10 @@ $router->group('/dashboard', function (Router $router) {
 
     $router->get('/changeAccount', 'admin@chooseMySite');
     $router->post('/changeAccount', 'admin@chooseMySite');
+
+
+    // newsletter endpoint
+    
 
 
     // sites
