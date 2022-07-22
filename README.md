@@ -33,9 +33,11 @@
 ## Design Patterns
 
 We were asked to implement a few design pattern to make our code more readable and maintainable. We used the following ones:
-- 2 [Singleton](https://refactoring.guru/design-patterns/singleton) > Core/Sql.class.php & Core/Routing/Router.class.php
-- [Factory](https://refactoring.guru/design-patterns/factory-method) > Core/Oauth
-- [Observer](https://refactoring.guru/design-patterns/observer) > Core/Observer in Newsletter.php
+- [Singleton](https://refactoring.guru/design-patterns/singleton) > [Core/Sql.class.php](https://github.com/JustGritt/VG-Creator/blob/main/www/Core/Sql.class.php) (line 36) Mandatory for the project to keep a unique connection to the database.
+- [Singleton](https://refactoring.guru/design-patterns/singleton) > [Core/Routing/Router.class.php](https://github.com/JustGritt/VG-Creator/blob/main/www/Core/Routing/Router.class.php) (called in Route.php line 8) To make a SASS solution, it is essential for the framework to have a single instance of a Router object.
+- [Builder](https://refactoring.guru/design-patterns/builder) > [Core/QueryBuilder](https://github.com/JustGritt/VG-Creator/blob/main/www/Core/MySqlBuilder.class.php) to simplify the creation of queries and make the code more readable, it is called every time we use SQL. (to decide which query builder is used, you have to refer to the conf.inc.php file).
+- [Factory](https://refactoring.guru/design-patterns/factory-method) > [Core/Oauth](https://github.com/JustGritt/VG-Creator/tree/main/www/Core/Oauth) (called [User.class.php](https://github.com/JustGritt/VG-Creator/blob/main/www/Controller/User.class.php) in line 393) to implement an Oauth solution, we decided to use this design pattern to generate Oauth providers.
+- [Observer](https://refactoring.guru/design-patterns/observer) > [Core/Observer](https://github.com/JustGritt/VG-Creator/tree/main/www/Core/Observer) (initialized in [index.php](https://github.com/JustGritt/VG-Creator/blob/main/www/index.php) at line 32 and used in [Core/Main.class.php](https://github.com/JustGritt/VG-Creator/blob/main/www/Controller/Main.class.php), line 26) notifies all newsletter subscribers using a dispatcher and a listener.
 
 ## Download instructions
 
