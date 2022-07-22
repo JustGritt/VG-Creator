@@ -47,7 +47,7 @@
                         <div class="space-bar2"></div>
                         <div class="input-post flex-05">
                             <label for="auteur">Auteur</label>
-                            <input readonly type="text" name="auteur" id="auteur" placeholder="Auteur" value="<?php if(isset($fields['auteur']) && !empty($fields['auteur'])) echo $fields['auteur'] ;  else if(isset($post)) echo $post->getAuthor()->getFirstname().' '.$post->getAuthor()->getLastname(); else echo $_SESSION['firstname'].' '.$_SESSION['lastname']  ?>">
+                            <input readonly type="text" name="auteur" id="auteur" placeholder="Auteur" value="<?php if(isset($fields['auteur']) && !empty($fields['auteur'])) echo $fields['auteur'] ;  else if(isset($post)) echo $post->getAuthor()->getFirstname().' '.$post->getAuthor()->getLastname(); else echo $_SESSION['firstname'].' '.($_SESSION['lastname']?? "")  ?>">
                         </div>
 
                         <input type="hidden" name="author" id="author" value="<?php if(isset($fields['auteur']) && !empty($fields['auteur'])) echo $fields['author'] ; elseif(isset($post)) echo $post->getAuthor()->getId() ; else echo $_SESSION['id'] ?>">

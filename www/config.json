@@ -1,17 +1,17 @@
 {
   "Facebook" : {
-    "client_id" : "364225935681947",
-    "client_secret" : "d5dc80c041c27320961fee6c12104749",
-    "redirect_uri" : "http://localhost/login"
-  },
-  "Spotify" : {
-    "client_id" : "75126d4175d545a8a82fce10cad9588a",
-    "client_secret" : "048bed7e66e44fa6b436536118baa7ad",
+    "client_id" : "322693883221126",
+    "client_secret" : "71d8f450a7a1b9b953dcf5cfdb7b68a3",
     "redirect_uri" : "http://localhost/login"
   },
   "Discord" : {
     "client_id" : "999360732284076052",
     "client_secret" : "5EThVxSDcHFsn3aiwt3vtiKX7oP6Ls1u",
+    "redirect_uri" : "http://localhost/login"
+  },
+  "Google" : {
+    "client_id" : "158468091523-k9rdagaqclul2r7vtk6evgv8tnen866i.apps.googleusercontent.com",
+    "client_secret" : "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",
     "redirect_uri" : "http://localhost/login"
   }
 }

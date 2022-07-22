@@ -28,12 +28,10 @@ class Main
         $email =  $_POST['email'];
         $newsletter =  Newsletter::getInstance();;
         $newsletter->subscribe($email);
-  
     }
 
     public function initContent()
     {
-
         $url_parse = explode("/", $_GET['url']);
         $author = $url_parse[0];
         $site_title = $url_parse[1] ?? "";

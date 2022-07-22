@@ -30,6 +30,12 @@ class Page extends Sql
         $this->table = strtolower(DBPREFIXE.end($calledClassExploded));
     }
 
+    public function setDefaultPage(): void
+    {
+        $this->html = Utils::getHomepage();
+        $this->css = Utils::getCss();
+    }
+
     /**
      * @return mixed
      */

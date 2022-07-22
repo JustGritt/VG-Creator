@@ -1,83 +1,78 @@
-# VG-Creator - Your Open Source CMS Framework
+# VG-Creator
 
-[![Feature Requests](https://img.shields.io/apm/l/VG-Creator)](#)
-[![Bugs](https://img.shields.io/appveyor/build/JustGritt/VG-Creator)](#)
+![License](https://img.shields.io/static/v1?label=license&message=MIT&color=green) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/JustGritt/VG-Creator) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/JustGritt/VG-Creator)
+![VG-Creator Landing](https://github.com/JustGritt/VG-Creator/blob/main/src/assets/landing.png?raw=true "VG-Creator Landing")
 
-![Contributors](https://contrib.rocks/image?repo=JustGritt/VG-Creator)
+## What is VG-Creator?
 
-## VG-Creator
+[VG-Creator](#VG-Creator) is a easy to use CMS solution for creating and managing your own videogames blog. It is a SAAS solution like [Wix](https://www.wix.com/) or [Wordpress](https://wordpress.com/) but with a lot of extra features and mainly focused on videogames related content.
 
-<p align="center">
-  <img alt="VS Code in action" src="https://user-images.githubusercontent.com/35271042/118224532-3842c400-b438-11eb-923d-a5f66fa6785a.png">
-</p>
-
-
-[VG Creator](#vg-creator) or [VGC](#vg-creator) for short is a highly customizable open-source framework focused on creating custom CMS (Content Management System). Fast and responsive, it offers a complete easy-to-use interface so that even **non-developers can use VGC to freely express their creativity.**
-
-VG Creator is updated every two months with new features and bug fixes. You can download it for Windows, MacOS, and Linux on 
-
-> There is no download links yet.
-> You can freely clone or fork this repo.
-
+> In this project, we were asked to create a CMS from scratch using PHP and no javascript librairies except for jQuery or Graph and WYSIWYG editor. We also wanted to create a simple and clean interface that would be easy to use. We also wanted to create a SAAS application that would be easy to use and easy to manage.
 
 ## Table of Contents
 
 1. **Getting Started**
-    - [What is VG Creator](#vg-creator)
-    - [Download instructions](#vg-creator)
+    - [What is VG-Creator ?](#VG-Creator)
+    - [Design Patterns](#Design-patterns)
+    <br>
 
-2. **Contribute**
+2. **Download & Prerequisites**
+    - [Download instructions](#Download)
+    - [Live Test](https://vgcreator.fr/)
+    <br>
+
+3. **Contribute**
     - [Submit bugs and feature requests](#contributing)
     - [Support and donations](#contributing)
+    <br>
 
-3. **Prerequesites**
-    - [Prerequisites](#prerequisites)
-
-4. **Donations** 
+4. **Donations**
     - [Supporting the project](#supporting-the-project)
+    <br>
 
+## Design Patterns
 
+We were asked to implement a few design pattern to make our code more readable and maintainable. We used the following ones:
+- 2 [Singleton](https://refactoring.guru/design-patterns/singleton) > Core/Sql.class.php & Core/Routing/Router.class.php
+- [Factory](https://refactoring.guru/design-patterns/factory-method) > Core/Oauth
 
-## Contributing
-
-Want to help us improve VG-Creator :
-
-* [Submit bugs and feature requests](#), and help us verify as they are checked in
-* Review [source code changes](#)
-* Review the [documentation](#) and make pull requests for anything from typos to additional and new content
-
-If you are interested in fixing issues and contributing directly to the code base,
-please see the document [How to Contribute](#), which covers the following:
-
-
-## Prerequisites
+## Download instructions
 
 **Installing Docker**
 
-Make sure that you have [Docker](https://www.docker.com/get-started) and [NodeJS](https://nodejs.dev/download/) on your machine.
+Make sure that you have a recent version of [Docker](https://www.docker.com/get-started/), this project is built with docker containers and it is recommended to have a recent version of docker before running this project.
 
-You might want to use an IDE of your choice, we recommand [Visual Studio Code](https://code.visualstudio.com/Download).   
-
-Depending on your installation you might have access to both packages either by
-running the following commands. 
-
-You may check your node version by running:
+You can download the latest version of docker from [Docker Hub](https://hub.docker.com/) or using the command below.
 
 ```bash
-npm --version && node --version
+sudo apt-get install docker-ce
 ```
 
-Note that in this repository whenever you see `npm` it will be assumed that it is the latest version of **NodeJS**.
+**You may check your Docker version by running**:
+
+```bash
+docker --version 
+```
+
+<br>
 
 **Installing dependencies**
 
-Install all dependencies that are required for the project by running:
+There is no hard requirement to run this project, but it is recommended to compile the [SCSS](https://sass-lang.com/install) stylesheets using the command below.
 
 ```bash
-npm install -g
+sass --watch src/scss:www/dist/css
 ```
+
+## Contributing
+
+If you want to help us improve VG-Creator here's what you can do:
+
+- [Submit bugs and feature requests](#), and help us verify as they are checked in
+- Review [source code changes](#)
+
+If you are interested in fixing issues and contributing directly to the code, please join our [discord](#) or join us on our social medias ✨
 
 ## Supporting the project
 
 You may support this project via ❤️️ [GitHub](https://github.com/sponsors/JustGritt).
-

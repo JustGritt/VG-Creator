@@ -42,6 +42,13 @@ class Mail
         $mail->Username = '84aad762c7fb11';
         $mail->Password = 'a20617c616a704';
 
+        $mail->isSMTP();
+        $mail->Host = 'smtp-broadcasts.postmarkapp.com';
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = "tls";
+        $mail->Ports = 587;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PWD;
         $mail->CharSet = 'utf-8';
         $mail->isHTML(true);
         $mail->Subject = $subject;
