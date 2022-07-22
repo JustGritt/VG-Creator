@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Core\Controller;
+use App\Core\Observer\Newsletter;
+use App\Core\Observer\ForumNewsLetterObserver;
 use App\Core\Sql;
 use App\Core\View;
 use App\Helpers\Utils;
@@ -17,19 +19,19 @@ class Post extends  Controller
         if (!Security::isLoggedIn()) {
             header("Location: " . DOMAIN . "/login");
         }
-        
+
         if (Security::isMember() && !Security::isAdmin()) {
             header("Location: " . DOMAIN . "/dashboard");
         }
 
-        $category=  new Category();
+        $category =  new Category();
         $categories =   $category->getCategoriesBySite($_SESSION['id_site']);
-        $this->render("post", "back", ['categories'=>$categories]  );
+        $this->render("post", "back", ['categories' => $categories]);
     }
 
     public function getAllArticles()
     {
-        $this->render("articles", "back"  );
+        $this->render("articles", "back");
         $builder = BUILDER;
         $queryBuilder = new $builder();
         $query = $queryBuilder
@@ -66,7 +68,9 @@ class Post extends  Controller
     }
 
 
-    public function editShowPost($id_post){
+    public function editShowPost($id_post)
+    {
+
         $this->sendDataPost($id_post);
     }
 
@@ -82,6 +86,7 @@ class Post extends  Controller
      */
     public function deletePost(int $id_post): bool
     {
+
         $post = new \App\Model\Post();
         $post = $post->getOnePost($id_post);
         if (!$post->getIdSite() == $_SESSION['id_site']) {
@@ -114,9 +119,13 @@ class Post extends  Controller
     }
 
 
-    public function sendDataPost($id_post= null)
+    public function sendDataPost($id_post = null)
     {
+        $newsletter =  Newsletter::getInstance();
+        $forumNewsLetter = new ForumNewsLetterObserver();
+        $newsletter->newEvent("id_post".$id_post);
 
+        die();
         $verify_fields = [
             'title' => [
                 "min_size" => 9,
@@ -135,37 +144,39 @@ class Post extends  Controller
 
         if (isset($errors) and count($errors) > 0) {
             $this->view->assign('errors', $errors);
-        }else{
+        } else {
             $post = new \App\Model\Post();
-            if(isset($id_post)){
+            if (isset($id_post)) {
                 $post = $post->getOnePost($id_post);
                 $this->view->assign('id_post', $id_post);
                 $this->view->assign('post', $post);
             }
-            if($_SERVER['REQUEST_METHOD'] == "POST"){
-                    ['title' => $title,
-                        'status' => $status,
-                        'category' => $category,
-                        'body' => $body,
-                        'metadescription' => $metadescription,
-                        'metatitle' => $metatitle, ] = $_POST;
+            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                [
+                    'title' => $title,
+                    'status' => $status,
+                    'category' => $category,
+                    'body' => $body,
+                    'metadescription' => $metadescription,
+                    'metatitle' => $metatitle,
+                ] = $_POST;
 
-                    if(isset($id_post)) $post->setIdPost($post->getId());
-                    $post->setTitle($title);
-                    $post->setAuthor(isset($id_post) ? $post->getAuthor()->getId() : $_SESSION['id']);
-                    $post->setCategory($category);
-                    $post->setMetatitle($metatitle);
-                    $post->setStatus($status);
-                    $post->setBody($body);
-                    $post->setIdSite($_SESSION['id_site']);
-                    $post->setMetadescription($metadescription);
-                    $post->save();
-                    // if(!isset($id_post)) Utils::redirect('admin.allPost');
-                    Utils::redirect('admin.allPost');
+                if (isset($id_post)) $post->setIdPost($post->getId());
+                $post->setTitle($title);
+                $post->setAuthor(isset($id_post) ? $post->getAuthor()->getId() : $_SESSION['id']);
+                $post->setCategory($category);
+                $post->setMetatitle($metatitle);
+                $post->setStatus($status);
+                $post->setBody($body);
+                $post->setIdSite($_SESSION['id_site']);
+                $post->setMetadescription($metadescription);
+                $post->save();
+                // if(!isset($id_post)) Utils::redirect('admin.allPost');
+                Utils::redirect('admin.allPost');
             }
         }
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->view->assign('fields', $_POST);
         }
     }
