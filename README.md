@@ -35,6 +35,7 @@
 We were asked to implement a few design pattern to make our code more readable and maintainable. We used the following ones:
 - 2 [Singleton](https://refactoring.guru/design-patterns/singleton) > Core/Sql.class.php & Core/Routing/Router.class.php
 - [Factory](https://refactoring.guru/design-patterns/factory-method) > Core/Oauth
+- [Observer](https://refactoring.guru/design-patterns/observer) > Core/Observer in Newsletter.php
 
 ## Download instructions
 
